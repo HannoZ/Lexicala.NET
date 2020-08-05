@@ -24,7 +24,7 @@ A basic search query can be executed by specifying the search text and source la
 Entries is the most interesting part of the api because it contains the detailed information on a search result ('sense'). As with the search response, I've tried to have the response as complete as possible. 
 
 ## Basic usage
-The Lexicala.NET.Parser project contains extion methods to register the ILexicalaClient in a .NET Core startup class:
+The Lexicala.NET.Parser project contains extension methods to register the ILexicalaClient in a .NET Core startup class:
 `services.RegisterLexicala(Configuration)`
 This overload depends on a Lexicala section in your appsettings.json file:
 ```json
