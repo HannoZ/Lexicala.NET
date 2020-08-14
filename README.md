@@ -6,11 +6,10 @@ The repository contains two main projects: Lexicala.NET.Client and Lexicala.NET.
 
 Not all parts of the api are (fully) implemented. I have begun to write this library for a personal project of mine where I'm using api's to get automated translations from Spanish to Dutch (my native language) or English when Dutch translation is not available.
 
-**NOT** implemented: 
+**NOT** implemented (but currently in progress): 
 - `/test`
 - `/users/me`
 
-(easier to just use Postman for those two)
 - `/senses` (because it seems to be almost equal to `/entries` only with less useful information)
 
 *Partially* implemented: 
@@ -36,3 +35,8 @@ This overload depends on a Lexicala section in your appsettings.json file:
 }
 ```
 Now you can either inject and use the ILexicalaClient directly, or use the ILexicalaSearchParser. 
+
+## TODO
+- exception handling
+- extend search api calls (advanced search scenario's) 
+- implement sense api 
