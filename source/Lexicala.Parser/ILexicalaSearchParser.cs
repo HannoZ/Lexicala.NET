@@ -8,6 +8,6 @@ namespace Lexicala.NET.Parser
         /// <summary>
         /// Executes a search request and subsequent calls to load the entry information of the search result.
         /// </summary>
-        Task<SearchResultModel> SearchAsync(string searchTerm, string language);
+        Task<SearchResultModel> SearchAsync(string searchTerm, string sourceLanguage);
     }
 }

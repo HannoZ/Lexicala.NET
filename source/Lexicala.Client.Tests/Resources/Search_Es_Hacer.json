@@ -1,0 +1,79 @@
+{
+  "n_results": 3,
+  "page_number": 1,
+  "results_per_page": 10,
+  "n_pages": 1,
+  "available_n_pages": 1,
+  "results": [
+    {
+      "id": "ES_DE00026872",
+      "language": "es",
+      "headword": {
+        "text": "hacer",
+        "pos": "verb"
+      },
+      "senses": [
+        {
+          "id": "ES_SE00038615",
+          "definition": "llevar a cabo una actividad que conlleva un resultado"
+        },
+        {
+          "id": "ES_SE00038616",
+          "definition": "ejecutar una acción o una tarea"
+        },
+        {
+          "id": "ES_SE00038617",
+          "definition": "causar un cierto efecto o sensación en una cosa o persona"
+        },
+        {
+          "id": "ES_SE00038618",
+          "definition": "transformar una cosa o persona en otra cosa o persona"
+        },
+        {
+          "id": "ES_SE00038619",
+          "definition": "crear algo a partir de la nada con diferentes elementos"
+        },
+        {
+          "id": "ES_SE00038620",
+          "definition": "crear algo a partir de la nada usando la imaginación y creatividad"
+        }
+      ]
+    },
+    {
+      "id": "ES_DE00026873",
+      "language": "es",
+      "headword": {
+        "text": "hacer",
+        "pos": "verb"
+      },
+      "senses": [
+        {
+          "id": "ES_SE00038621",
+          "definition": "estar el tiempo de una manera determinada"
+        },
+        {
+          "id": "ES_SE00038622",
+          "definition": "haber pasado un determinado período de tiempo"
+        }
+      ]
+    },
+    {
+      "id": "ES_DE00026874",
+      "language": "es",
+      "headword": {
+        "text": "hacer",
+        "pos": "verb"
+      },
+      "senses": [
+        {
+          "id": "ES_SE00038623",
+          "definition": "proceder o actuar de determinada manera"
+        },
+        {
+          "id": "ES_SE00038624",
+          "definition": "desempeñar una persona un cargo o empleo"
+        }
+      ]
+    }
+  ]
+}

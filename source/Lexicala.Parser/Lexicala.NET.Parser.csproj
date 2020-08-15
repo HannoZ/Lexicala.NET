@@ -3,6 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Hanno Zwikstra</Authors>
+    <Product>Lexicala.NET</Product>
+    <Description>A helper project that parses search requests on the Lexicala api into an easier-to-use structure</Description>
+    <PackageProjectUrl>https://github.com/HannoZ/Lexicala.NET</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/HannoZ/Lexicala.NET</RepositoryUrl>
+    <RepositoryType>Public</RepositoryType>
+    <PackageTags>Lexicala, Lexicala.NET, C#</PackageTags>
+    <PackageReleaseNotes>A .NET client for the Lexicala api. 
+Initial version, see readme file on project page for further details.</PackageReleaseNotes>
+    <Copyright></Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,5 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Lexicala.Client\Lexicala.NET.Client.csproj" />
   </ItemGroup>
+
+ 
 
 </Project>

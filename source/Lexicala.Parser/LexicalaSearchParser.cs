@@ -17,9 +17,9 @@ namespace Lexicala.NET.Parser
             _lexicalaClient = lexicalaClient;
         }
 
-        public async Task<SearchResultModel> SearchAsync(string searchText, string language)
+        public async Task<SearchResultModel> SearchAsync(string searchText, string sourceLanguage)
         {
-            var searchResult = await _lexicalaClient.BasicSearchAsync(searchText.ToLowerInvariant(), language: language);
+            var searchResult = await _lexicalaClient.BasicSearchAsync(searchText.ToLowerInvariant(), sourceLanguage: sourceLanguage);
             
             var entries = new List<Entry>();
             foreach (var result in searchResult.Results)
