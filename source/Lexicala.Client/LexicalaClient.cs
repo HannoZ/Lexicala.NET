@@ -8,23 +8,48 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Lexicala.NET.Client.Response.Languages;
+using Lexicala.NET.Client.Response.Me;
+using Lexicala.NET.Client.Response.Test;
 
 namespace Lexicala.NET.Client
 {
     public class LexicalaClient : ILexicalaClient
     {
         private readonly HttpClient _httpClient;
+
+        private const string Test = "/test";
+        private const string Me = "/users/me";
         private const string Search = "/search";
         private const string Entries = "/entries";
+        private const string Languages = "/languages";
 
         public LexicalaClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
-        public async Task<SearchResponse> BasicSearchAsync(string searchText, string language, string etag = null)
+        public async Task<TestResponse> TestAsync()
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{Search}?language={language}&text={searchText}");
+            var response = await _httpClient.GetStringAsync(Test);
+            return JsonConvert.DeserializeObject<TestResponse>(response);
+        }
+
+        public async Task<MeResponse> MeAsync()
+        {
+            var response = await _httpClient.GetStringAsync(Me);
+            return JsonConvert.DeserializeObject<MeResponse>(response);
+        }
+
+        public async Task<LanguagesResponse> LanguagesAsync()
+        {
+            var response = await _httpClient.GetStringAsync(Languages);
+            return JsonConvert.DeserializeObject<LanguagesResponse>(response);
+        }
+
+        public async Task<SearchResponse> BasicSearchAsync(string searchText, string sourceLanguage, string etag = null)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{Search}?language={sourceLanguage}&text={searchText}");
             if (etag != null)
             {
                 request.Headers.Add("If-None-Match", etag);

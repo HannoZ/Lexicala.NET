@@ -7,6 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Entry_EN_DE00009032.json" />
+    <None Remove="Resources\languages.json" />
+    <None Remove="Resources\me.json" />
+    <None Remove="Resources\Search_Es_Hacer.json" />
+    <None Remove="Resources\Test_Api_is_up.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Entry_EN_DE00009032.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\languages.json" />
+    <EmbeddedResource Include="Resources\me.json" />
+    <EmbeddedResource Include="Resources\Search_Es_Hacer.json" />
+    <EmbeddedResource Include="Resources\Test_Api_is_up.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
     <PackageReference Include="Moq" Version="4.14.5" />
     <PackageReference Include="Moq.AutoMock" Version="2.0.1" />

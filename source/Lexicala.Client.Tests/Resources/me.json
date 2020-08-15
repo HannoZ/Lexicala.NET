@@ -1,0 +1,26 @@
+{
+  "username": "foo",
+  "email": "foo@bar.com",
+  "permissions": {
+    "activation": {
+      "activated": true,
+      "agreed_terms_of_use": true
+    },
+    "pro": false,
+    "enterprise": false,
+    "requests_per_day": 300,
+    "creation_date": "2019-06-05T10:59:47.339Z"
+  },
+  "usage": {
+    "today": {
+      "count": 20,
+      "ends_at": "2020-08-16T00:00:00.000Z"
+    },
+    "lifetime": 1000,
+    "history": {
+      "6_2020": 100,
+      "7_2020": 200,
+      "8_2020": 300
+    }
+  }
+}
