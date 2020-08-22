@@ -10,6 +10,7 @@
     <None Remove="Resources\Entry_EN_DE00009032.json" />
     <None Remove="Resources\languages.json" />
     <None Remove="Resources\me.json" />
+    <None Remove="Resources\Search_empty.json" />
     <None Remove="Resources\Search_Es_Hacer.json" />
     <None Remove="Resources\Test_Api_is_up.json" />
   </ItemGroup>
@@ -20,6 +21,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\languages.json" />
     <EmbeddedResource Include="Resources\me.json" />
+    <EmbeddedResource Include="Resources\Search_empty.json" />
     <EmbeddedResource Include="Resources\Search_Es_Hacer.json" />
     <EmbeddedResource Include="Resources\Test_Api_is_up.json" />
   </ItemGroup>

@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Lexicala.NET.Client.Request;
 
 namespace Lexicala.NET.Client.Tests
 {
@@ -94,6 +95,22 @@ namespace Lexicala.NET.Client.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))] // ASSERT
+        public async Task LexicalaClient_BasicSearch_InvalidLanguageCode_ThrowsException()
+        {
+            // ACT
+            await _client.BasicSearchAsync("searchText", "ess");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))] // ASSERT
+        public async Task LexicalaClient_BasicSearch_EmptySearchText_ThrowsException()
+        {
+            // ACT
+            await _client.BasicSearchAsync("", "es");
+        }
+
+        [TestMethod]
         public async Task LexicalaClient_BasicSearch_Es_Hacer()
         {
             string response = await LoadResponseFromFile("Search_Es_Hacer.json");
@@ -106,8 +123,54 @@ namespace Lexicala.NET.Client.Tests
             // ACT
             var result = await _client.BasicSearchAsync("searchText", "es");
 
+            // ASSERT
             result.Results.Length.ShouldBe(3);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))] // ASSERT
+        public async Task LexicalaClient_AdvancedSearch_InvalidLanguageCode_ThrowsException()
+        {
+            // ACT
+            await _client.AdvancedSearchAsync(new AdvancedSearchRequest());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))] // ASSERT
+        public async Task LexicalaClient_AdvancedSearch_EmptySearchText_ThrowsException()
+        {
+            // ACT
+            await _client.AdvancedSearchAsync(new AdvancedSearchRequest{Language = "xx"});
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_AllDefaults()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text"
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global"
+                   )
+                , ItExpr.IsAny<CancellationToken>());
+        }
+
+        // TODO add tests for all AdvancedSearchRequest params
 
         [TestMethod]
         public async Task LexicalaClient_GetEntry_En_Place()
@@ -122,6 +185,7 @@ namespace Lexicala.NET.Client.Tests
             // ACT
             var result = await _client.GetEntryAsync("EN_DE00009032");
 
+            // ASSERT
             result.Id.ShouldBe("EN_DE00009032");
             result.Senses.Length.ShouldBe(12);
         }

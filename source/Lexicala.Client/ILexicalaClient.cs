@@ -14,7 +14,7 @@ namespace Lexicala.NET.Client
         Task<MeResponse> MeAsync();
         Task<LanguagesResponse> LanguagesAsync();
         Task<SearchResponse> BasicSearchAsync(string searchText, string sourceLanguage, string etag = null);
-        Task<SearchResponse> AdvancedSearchAsync(AdvancedSearchRequest request);
+        Task<SearchResponse> AdvancedSearchAsync(AdvancedSearchRequest searchRequest);
         Task<Entry> GetEntryAsync(string entryId, string etag = null);
     }
 }
