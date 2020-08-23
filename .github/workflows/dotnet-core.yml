@@ -20,6 +20,6 @@ jobs:
     - name: Install dependencies
       run: dotnet restore ./source/Lexicala.NET.sln
     - name: Build
-      run: dotnet build --source ./source/Lexicala.NET.sln --configuration Release --no-restore
+      run: dotnet build ./source/Lexicala.NET.sln --configuration Release --no-restore
     - name: Test
       run: dotnet test ./source/Lexicala.NET.sln --no-restore --verbosity normal
