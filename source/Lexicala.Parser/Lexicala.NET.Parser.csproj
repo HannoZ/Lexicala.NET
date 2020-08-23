@@ -12,15 +12,18 @@
     <RepositoryType>Public</RepositoryType>
     <PackageTags>Lexicala, Lexicala.NET, C#</PackageTags>
     <PackageReleaseNotes>A .NET client for the Lexicala api. 
-Initial version, see readme file on project page for further details.</PackageReleaseNotes>
+LexicalaSearchParser will now throw exception if source language is not supported by Lexicala
+See readme file on project page for further details.</PackageReleaseNotes>
     <Copyright></Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.6" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.6" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.6" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.7" />
   </ItemGroup>
 
   <ItemGroup>

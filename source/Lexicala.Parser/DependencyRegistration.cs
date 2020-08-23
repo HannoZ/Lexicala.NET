@@ -23,6 +23,8 @@ namespace Lexicala.NET.Parser
                     System.Text.Encoding.ASCII.GetBytes($"{config.Username}:{config.Password}")));
             });
 
+            services.AddMemoryCache();
+
             services.AddTransient<ILexicalaSearchParser, LexicalaSearchParser>();
 
             return services;

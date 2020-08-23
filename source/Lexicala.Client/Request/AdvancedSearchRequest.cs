@@ -46,7 +46,7 @@
         /// </summary>
         public string Pos { get; set; }
         /// <summary>
-        /// Specify subcategorization ( = masculine, feminine, ...).
+        /// The subcategorization (e.g. countable, transitive, …) to search for.
         /// </summary>
         public string Subcategorization { get; set; }
 

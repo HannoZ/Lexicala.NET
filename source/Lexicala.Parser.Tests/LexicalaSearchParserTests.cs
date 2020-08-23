@@ -9,6 +9,9 @@ using Newtonsoft.Json;
 using Shouldly;
 using System.Linq;
 using System.Threading.Tasks;
+using Lexicala.NET.Client.Response;
+using Lexicala.NET.Client.Response.Languages;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Lexicala.NET.Parser.Tests
 {
@@ -475,9 +478,28 @@ namespace Lexicala.NET.Parser.Tests
 }";
 
             var apiResult = JsonConvert.DeserializeObject<SearchResponse>(json1, SearchResponseJsonConverter.Settings);
+            apiResult.Metadata = new ResponseMetadata();
             var entryResult1 = JsonConvert.DeserializeObject<Entry>(entry1, EntryResponseJsonConverter.Settings);
+            entryResult1.Metadata = new ResponseMetadata();
             var entryResult2 = JsonConvert.DeserializeObject<Entry>(entry2, EntryResponseJsonConverter.Settings);
+            entryResult2.Metadata = new ResponseMetadata();
 
+            var languagesResponse = new LanguagesResponse()
+            {
+                Resources = new Resources()
+                {
+                    Global = new Resource()
+                    {
+                        SourceLanguages = new[]
+                        {
+                            "en", "es"
+                        }
+                    }
+                }
+            };
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.LanguagesAsync())
+                .ReturnsAsync(languagesResponse);
             _mocker.GetMock<ILexicalaClient>()
                 .Setup(m => m.BasicSearchAsync("test", "es", null))
                 .ReturnsAsync(apiResult);
@@ -487,6 +509,10 @@ namespace Lexicala.NET.Parser.Tests
             _mocker.GetMock<ILexicalaClient>()
                 .Setup(m => m.GetEntryAsync("ES_DE00008087", null))
                 .ReturnsAsync(entryResult2);
+
+            _mocker.GetMock<IMemoryCache>()
+                .Setup(m => m.CreateEntry(It.IsAny<object>()))
+                .Returns(_mocker.GetMock<ICacheEntry>().Object);
 
             // ACT
             var result = await _lexicalaSearchParser.SearchAsync("test", "es");
