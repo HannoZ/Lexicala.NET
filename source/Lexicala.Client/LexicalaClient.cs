@@ -114,7 +114,7 @@ namespace Lexicala.NET.Client
             }
 
             // pagination - only append if values are other than default values
-            if (searchRequest.Page != 1)
+            if (searchRequest.Page > 1)
             {
                 queryStringBuilder.Append("&page=" + searchRequest.Page);
             }

@@ -7,10 +7,12 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Lexicala.NET.Client.Request;
+using Lexicala.NET.Client.Response;
 
 namespace Lexicala.NET.Client.Tests
 {
@@ -166,11 +168,543 @@ namespace Lexicala.NET.Client.Tests
             _handlerMock.Protected().Verify("SendAsync", Times.Once(),
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global"
-                   )
-                , ItExpr.IsAny<CancellationToken>());
+                   ), ItExpr.IsAny<CancellationToken>());
         }
 
-        // TODO add tests for all AdvancedSearchRequest params
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Source()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Source = Sources.Password
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=password"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Analyzed()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Analyzed = true
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global&analyzed=true"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Monosemous()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Monosemous = true
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global&monosemous=true"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Polysemous()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Polysemous = true
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global&polysemous=true"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Morph()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Morph = true
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global&morph=true"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Pos()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Pos = "noun"
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global&pos=noun"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Number()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Number = "plural"
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global&number=plural"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Gender()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Gender = "masculine"
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global&gender=masculine"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Subcategorization()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Subcategorization = "feminine"
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global&subcategorization=feminine"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Page_OtherThanDefault()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Page = 2
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global&page=2"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+        
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Page_Default_NotInQuerystring()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Page = 1
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Page_Invalid_NotInQuerystring()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Page = 0
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_PageLength_OtherThanDefault()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                PageLength = 1
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global&page-length=1"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_PageLength_Default_NotInQuerystring()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                PageLength = 10
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_PageLength_Invalid_Low_NotInQuerystring()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                PageLength = 0
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_PageLength_Invalid_High_NotInQuerystring()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                PageLength = 31
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Sample()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Sample = 1
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global&sample=1"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_Sample_NotGreaterThanZero_NotInQueryString()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "xx",
+                SearchText = "text",
+                Sample = 0
+            };
+
+            // ACT 
+            await _client.AdvancedSearchAsync(searchRequest);
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.RequestUri.ToString() == "http://www.tempuri.org/search?language=xx&text=text&source=global"
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_Search_ETag()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+            
+            // ACT 
+            await _client.BasicSearchAsync("text", "xx", "W/\"abc-OfxtVSoa\"");
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.Headers.Contains("If-None-Match")
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_Search_Metadata()
+        {
+            string response = await LoadResponseFromFile("Search_empty.json");
+
+            var responseMessage = SetupOkResponseMessage(response);
+            responseMessage.Headers.ETag = new EntityTagHeaderValue("\"abc-OfxtVSoa\"");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderDailyLimitRemaining, "100");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitDailyLimit, "1000");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitLimit, "10");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitRemaining, "5");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(responseMessage);
+
+            // ACT
+            var result = await _client.BasicSearchAsync("text", "xx");
+
+            // ASSERT
+            result.Metadata.ETag.ShouldBe("\"abc-OfxtVSoa\"");
+            result.Metadata.RateLimits.DailyLimitRemaining.ShouldBe(100);
+            result.Metadata.RateLimits.DailyLimit.ShouldBe(1000);
+            result.Metadata.RateLimits.Limit.ShouldBe(10);
+            result.Metadata.RateLimits.Remaining.ShouldBe(5);
+        }
 
         [TestMethod]
         public async Task LexicalaClient_GetEntry_En_Place()
@@ -188,6 +722,54 @@ namespace Lexicala.NET.Client.Tests
             // ASSERT
             result.Id.ShouldBe("EN_DE00009032");
             result.Senses.Length.ShouldBe(12);
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_GetEntry_ETag()
+        {
+            string response = await LoadResponseFromFile("Entry_EN_DE00009032.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            // ACT
+            await _client.GetEntryAsync("EN_DE00009032", "W/\"abc-OfxtVSoa\"");
+
+            // ASSERT
+            _handlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.Headers.Contains("If-None-Match")
+                ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_GetEntry_Metadata()
+        {
+            string response = await LoadResponseFromFile("Entry_EN_DE00009032.json");
+
+            var responseMessage = SetupOkResponseMessage(response);
+            responseMessage.Headers.ETag = new EntityTagHeaderValue("\"abc-OfxtVSoa\"");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderDailyLimitRemaining, "100");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitDailyLimit, "1000");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitLimit, "10");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitRemaining, "5");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(responseMessage);
+
+            // ACT
+            var result = await _client.GetEntryAsync("EN_DE00009032");
+
+            // ASSERT
+            result.Metadata.ETag.ShouldBe("\"abc-OfxtVSoa\"");
+            result.Metadata.RateLimits.DailyLimitRemaining.ShouldBe(100);
+            result.Metadata.RateLimits.DailyLimit.ShouldBe(1000);
+            result.Metadata.RateLimits.Limit.ShouldBe(10);
+            result.Metadata.RateLimits.Remaining.ShouldBe(5);
         }
 
         private static HttpResponseMessage SetupOkResponseMessage(string content)
