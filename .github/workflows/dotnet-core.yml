@@ -2,7 +2,7 @@ name: .NET Core
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master ]    
   pull_request:
     branches: [ master ]
 
@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore ./source/Lexicala.NET.sln
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build ./source/Lexicala.NET.sln --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test ./source/Lexicala.NET.sln --no-restore --verbosity normal
