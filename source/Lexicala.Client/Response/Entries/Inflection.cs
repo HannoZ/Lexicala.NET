@@ -9,5 +9,8 @@ namespace Lexicala.NET.Client.Response.Entries
 
         [JsonProperty("number")]
         public string Number { get; set; }
+
+        [JsonProperty("tense")]
+        public string Tense { get; set; }
     }
 }

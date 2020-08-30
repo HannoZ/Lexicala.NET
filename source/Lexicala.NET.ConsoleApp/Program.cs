@@ -38,14 +38,19 @@ namespace Lexicala.NET.ConsoleApp
             string input = string.Empty;
             while (input != ConsoleKey.Q.ToString())
             {
-                Console.WriteLine("Enter search query: searchterm sourcelang targetlang (eg: estar es en). Q to exit");
+                Console.WriteLine("Enter an entry ID directly, or enter search query: searchterm sourcelang targetlang (eg: estar es en). Q to exit");
                 input = Console.ReadLine();
                 if (input == null)
                 {
                     continue;
                 }
 
+                
                 var tokens = input.Split(' ');
+                if (tokens.Length == 1)
+                {
+                    var entry = await parser.GetEntryAsync(tokens[0], "ar", "en", "es", "nl", "zh" );
+                }
                 if (tokens.Length != 3)
                 {
                     continue;

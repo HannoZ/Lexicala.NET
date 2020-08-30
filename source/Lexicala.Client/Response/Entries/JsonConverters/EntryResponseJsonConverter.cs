@@ -15,7 +15,8 @@ namespace Lexicala.NET.Client.Response.Entries.JsonConverters
             {
                 CommonLanguageObjectConverter.Singleton,
                 HeadwordObjectConverter.Singleton,
-                JapaneseObjectConverter.Singleton,
+                PronunciationObjectConverter.Singleton,
+                PosConverter.Singleton,
                 new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
             }
         };

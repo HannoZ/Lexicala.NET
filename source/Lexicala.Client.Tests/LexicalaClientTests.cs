@@ -725,6 +725,108 @@ namespace Lexicala.NET.Client.Tests
         }
 
         [TestMethod]
+        public async Task LexicalaClient_CanDeserializeEntry_EN_DE00009032()
+        {
+            string response = await LoadResponseFromFile("Entry_EN_DE00009032.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            // ACT
+            var result = await _client.GetEntryAsync("EN_DE00009032");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_CanDeserializeEntry_ES_DE00008087()
+        {
+            string response = await LoadResponseFromFile("Entry_ES_DE00008087.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            // ACT
+            var result = await _client.GetEntryAsync("ES_DE00008087");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_CanDeserializeEntry_ES_DE00008089()
+        {
+            string response = await LoadResponseFromFile("Entry_ES_DE00008088.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            // ACT
+            var result = await _client.GetEntryAsync("ES_DE00008088");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_CanDeserializeEntry_NL_DE00006941()
+        {
+            string response = await LoadResponseFromFile("Entry_NL_DE00006941.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            // ACT
+            var result = await _client.GetEntryAsync("NL_DE00006941");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_CanDeserializeEntry_PW00012363()
+        {
+            string response = await LoadResponseFromFile("Entry_PW00012363.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            // ACT
+            var result = await _client.GetEntryAsync("PW00012363");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_CanDeserializeEntry_RDE00032314_1()
+        {
+            string response = await LoadResponseFromFile("Entry_RDE00032314_1.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            // ACT
+            var result = await _client.GetEntryAsync("RDE00032314_1");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+        }
+
+        [TestMethod]
         public async Task LexicalaClient_GetEntry_ETag()
         {
             string response = await LoadResponseFromFile("Entry_EN_DE00009032.json");

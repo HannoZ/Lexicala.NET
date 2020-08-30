@@ -1,0 +1,85 @@
+﻿{
+  "id": "ES_DE00008087",
+  "source": "global",
+  "language": "es",
+  "version": 1,
+  "headword": {
+    "text": "blandir",
+    "pronunciation": {
+      "value": "blan'dir"
+    },
+    "pos": "verb",
+    "subcategorization": "transitive"
+  },
+  "senses": [
+    {
+      "id": "ES_SE00010913",
+      "definition": "empuñar un arma amenazantemente",
+      "translations": {
+        "br": {
+          "text": "brandir"
+        },
+        "dk": [
+          {
+            "text": "true med"
+          },
+          {
+            "text": "svinge med"
+          }
+        ],
+        "en": {
+          "text": "to brandish"
+        },
+        "ja": {
+          "text": "武器（ぶき）を振（ふ）りかざす",
+          "alternative_scripts": {
+            "romaji": "buki o furi kazasu"
+          }
+        },
+        "nl": {
+          "text": "zwaaien"
+        },
+        "no": {
+          "text": "vifte truende"
+        },
+        "sv": {
+          "text": "svinga"
+        }
+      },
+      "examples": [
+        {
+          "text": "Blandió la navaja.",
+          "translations": {
+            "br": {
+              "text": "Brandiu a navalha."
+            },
+            "dk": {
+              "text": "Han truede med kniven."
+            },
+            "en": {
+              "text": "He brandished the knife."
+            },
+            "ja": {
+              "text": "彼（かれ）は小刀（こがたな）を振（ふ）りかざした。",
+              "alternative_scripts": {
+                "romaji": "Kare wa kogatana o furi kazashita."
+              }
+            },
+            "nl": {
+              "text": "Hij zwaaide met het zakmes."
+            },
+            "no": {
+              "text": "Han viftet med lommekniven."
+            },
+            "sv": {
+              "text": "Han svingde kniven."
+            }
+          }
+        },
+        {
+          "text": "blandir la espada"
+        }
+      ]
+    }
+  ]
+}

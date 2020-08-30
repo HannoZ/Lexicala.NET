@@ -1,0 +1,564 @@
+{
+  "id": "NL_DE00006941",
+  "source": "global",
+  "language": "nl",
+  "version": 1,
+  "headword": {
+    "text": "gaan",
+    "pronunciation": {
+      "value": "xan"
+    },
+    "pos": "verb",
+    "inflections": [
+      {
+        "text": "ging",
+        "number": "singular",
+        "tense": "past"
+      },
+      {
+        "text": "is gegaan",
+        "tense": "pastParticiple"
+      }
+    ]
+  },
+  "senses": [
+    {
+      "id": "NL_SE00008555",
+      "definition": "bewegen en daardoor van plaats veranderen",
+      "synonyms": [
+        "zich voortbewegen",
+        "zich verplaatsen"
+      ],
+      "translations": {
+        "de": {
+          "text": "gehen"
+        },
+        "en": [
+          {
+            "text": "move along"
+          },
+          {
+            "text": "draw apart/near"
+          }
+        ],
+        "es": [
+          {
+            "text": "ir(se)"
+          },
+          {
+            "text": "marchar"
+          }
+        ],
+        "fr": {
+          "text": "aller"
+        }
+      },
+      "examples": [
+        {
+          "text": "naar huis gaan",
+          "translations": {
+            "de": {
+              "text": "nach Hause gehen"
+            },
+            "en": {
+              "text": "to go home"
+            },
+            "es": {
+              "text": "ir(se) a casa"
+            },
+            "fr": {
+              "text": "rentrer chez soi"
+            }
+          }
+        },
+        {
+          "text": "met de fiets gaan",
+          "translations": {
+            "de": {
+              "text": "mit dem Fahrrad fahren"
+            },
+            "en": {
+              "text": "to go by bike"
+            },
+            "es": {
+              "text": "ir(se) en bicicleta"
+            },
+            "fr": {
+              "text": "aller à vélo"
+            }
+          }
+        },
+        {
+          "text": "teruggaan",
+          "translations": {
+            "de": {
+              "text": "zurückgehen"
+            },
+            "en": {
+              "text": "to go back"
+            },
+            "es": {
+              "text": "volver"
+            },
+            "fr": {
+              "text": "retourner"
+            }
+          }
+        }
+      ],
+      "compositional_phrases": [
+        {
+          "text": "ervandoor gaan",
+          "definition": "weggaan, vluchten",
+          "translations": {
+            "de": [
+              {
+                "text": "abhauen"
+              },
+              {
+                "text": "sich aus dem Staub machen"
+              }
+            ],
+            "en": {
+              "text": "leave"
+            },
+            "es": [
+              {
+                "text": "irse"
+              },
+              {
+                "text": "marcharse"
+              }
+            ],
+            "fr": {
+              "text": "filer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NL_SE00008556",
+      "definition": "beginnen met een handeling",
+      "semantic_subcategory": "beginnen",
+      "translations": {
+        "de": [
+          {
+            "text": "gehen"
+          },
+          {
+            "text": "im Begriff stehen"
+          },
+          {
+            "text": "werden ..."
+          }
+        ],
+        "en": {
+          "text": "to go to"
+        },
+        "es": {
+          "text": "ir a"
+        },
+        "fr": [
+          {
+            "text": "aller"
+          },
+          {
+            "text": "se mettre à"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "text": "gaan slapen",
+          "translations": {
+            "de": {
+              "text": "schlafen gehen"
+            },
+            "en": {
+              "text": "to go to sleep"
+            },
+            "es": {
+              "text": "ir a dormir"
+            },
+            "fr": [
+              {
+                "text": "aller dormir"
+              },
+              {
+                "text": "aller se coucher"
+              }
+            ]
+          }
+        },
+        {
+          "text": "aan het werk gaan",
+          "translations": {
+            "de": {
+              "text": "an die Arbeit gehen"
+            },
+            "en": {
+              "text": "to go to work"
+            },
+            "es": {
+              "text": "ir a trabajar"
+            },
+            "fr": {
+              "text": "se mettre au travail"
+            }
+          }
+        },
+        {
+          "text": "uit varen gaan",
+          "translations": {
+            "de": {
+              "text": "eine Bootsfahrt machen"
+            },
+            "en": {
+              "text": "to go sailing"
+            },
+            "es": {
+              "text": "salir a navegar"
+            },
+            "fr": {
+              "text": "aller faire de la plaisance"
+            }
+          }
+        },
+        {
+          "text": "in de politiek gaan",
+          "translations": {
+            "de": {
+              "text": "in die Politik gehen"
+            },
+            "en": {
+              "text": "to go into politics"
+            },
+            "es": {
+              "text": "entrar en la política"
+            },
+            "fr": {
+              "text": "entrer en politique"
+            }
+          }
+        },
+        {
+          "text": "met pensioen gaan",
+          "translations": {
+            "de": {
+              "text": "in Rente gehen"
+            },
+            "en": {
+              "text": "to be pensioned off; to retire"
+            },
+            "es": {
+              "text": "jubilarse"
+            },
+            "fr": {
+              "text": "partir à la retraite"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NL_SE00008557",
+      "definition": "kunnen, mogelijk zijn of passen",
+      "semantic_subcategory": "kunnen",
+      "translations": {
+        "de": [
+          {
+            "text": "passen"
+          },
+          {
+            "text": "gehören"
+          },
+          {
+            "text": "gehen"
+          }
+        ],
+        "en": [
+          {
+            "text": "fit"
+          },
+          {
+            "text": "be possible"
+          }
+        ],
+        "es": [
+          {
+            "text": "entrar"
+          },
+          {
+            "text": "ir"
+          }
+        ],
+        "fr": [
+          {
+            "text": "être possible"
+          },
+          {
+            "text": "pouvoir"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "text": "Er gaan twaalf dozen in een kist.",
+          "translations": {
+            "de": {
+              "text": "Es passen zwölf Kartons in eine Kiste."
+            },
+            "en": {
+              "text": "One crate holds twelve carton boxes."
+            },
+            "es": {
+              "text": "Entran doce cajas en un cajón."
+            },
+            "fr": {
+              "text": "Une caisse peut contenir douze cartons."
+            }
+          }
+        },
+        {
+          "text": "Dat gaat niet.",
+          "translations": {
+            "de": {
+              "text": "Das geht nicht."
+            },
+            "en": {
+              "text": "That's not possible."
+            },
+            "es": {
+              "text": "Eso no va."
+            },
+            "fr": {
+              "text": "Ce n'est pas possible."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NL_SE00008558",
+      "definition": "zich ontwikkelen, verlopen",
+      "semantic_subcategory": "verlopen",
+      "translations": {
+        "de": [
+          {
+            "text": "gehen"
+          },
+          {
+            "text": "abgehen"
+          },
+          {
+            "text": "ablaufen"
+          }
+        ],
+        "en": [
+          {
+            "text": "be"
+          },
+          {
+            "text": "develop"
+          },
+          {
+            "text": "come along"
+          }
+        ],
+        "es": {
+          "text": "pasar"
+        },
+        "fr": {
+          "text": "aller"
+        }
+      },
+      "examples": [
+        {
+          "text": "Het gaat goed met de zieke.",
+          "translations": {
+            "de": {
+              "text": "Es geht dem Kranken gut."
+            },
+            "en": {
+              "text": "The patient is improving."
+            },
+            "es": {
+              "text": "Le va bien al enfermo."
+            },
+            "fr": {
+              "text": "Le malade va bien."
+            }
+          }
+        },
+        {
+          "text": "Hoe gaat het?",
+          "translations": {
+            "de": {
+              "text": "Wie geht es?"
+            },
+            "en": {
+              "text": "How is it going?"
+            },
+            "es": {
+              "text": "¿Cómo está?"
+            },
+            "fr": {
+              "text": "Comment ça va?"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NL_SE00008559",
+      "definition": "klinken",
+      "semantic_subcategory": "klinken",
+      "translations": {
+        "de": [
+          {
+            "text": "läuten"
+          },
+          {
+            "text": "schellen"
+          },
+          {
+            "text": "gehen"
+          }
+        ],
+        "en": [
+          {
+            "text": "sound"
+          },
+          {
+            "text": "ring"
+          }
+        ],
+        "es": {
+          "text": "sonar"
+        },
+        "fr": {
+          "text": "sonner"
+        }
+      },
+      "examples": [
+        {
+          "text": "De telefoon gaat.",
+          "translations": {
+            "de": {
+              "text": "Das Telefon läutet."
+            },
+            "en": {
+              "text": "The telephone rings."
+            },
+            "es": {
+              "text": "Suena el teléfono."
+            },
+            "fr": {
+              "text": "Le téléphone sonne."
+            }
+          }
+        },
+        {
+          "text": "De bel gaat.",
+          "translations": {
+            "de": {
+              "text": "Es schellt."
+            },
+            "en": {
+              "text": "The bell rings."
+            },
+            "es": {
+              "text": "Suena el timbre."
+            },
+            "fr": {
+              "text": "La sonnerie se fait entendre."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NL_SE00008560",
+      "compositional_phrases": [
+        {
+          "text": "er flink tegenaan gaan",
+          "definition": "hard werken",
+          "translations": {
+            "de": {
+              "text": "sich ordentlich anstrengen"
+            },
+            "en": {
+              "text": "to put (one's) back to it"
+            },
+            "es": {
+              "text": "darle duro"
+            },
+            "fr": {
+              "text": "en mettre un bon coup"
+            }
+          }
+        },
+        {
+          "text": "ervoor gaan",
+          "definition": "je ergens helemaal voor inzetten",
+          "translations": {
+            "de": {
+              "text": "sich für etwas einsetzen"
+            },
+            "en": {
+              "text": "to go for (something)"
+            },
+            "es": [
+              {
+                "text": "estar a favor"
+              },
+              {
+                "text": "esforzarse mucho por"
+              }
+            ],
+            "fr": {
+              "text": "se donner à fond"
+            }
+          }
+        },
+        {
+          "text": "eraan gaan",
+          "definition": "kapotgaan of omkomen",
+          "translations": {
+            "de": {
+              "text": "draufgehen"
+            },
+            "en": [
+              {
+                "text": "to be done for"
+              },
+              {
+                "text": "to be a goner"
+              }
+            ],
+            "es": [
+              {
+                "text": "irse al cuerno"
+              },
+              {
+                "text": "estirar la pata"
+              }
+            ],
+            "fr": [
+              {
+                "text": "se casser"
+              },
+              {
+                "text": "périr"
+              },
+              {
+                "text": "mourir"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -7,4 +7,5 @@ namespace Lexicala.NET.Client.Response.Entries
         [JsonProperty("value")]
         public string Value { get; set; }
     }
+    
 }

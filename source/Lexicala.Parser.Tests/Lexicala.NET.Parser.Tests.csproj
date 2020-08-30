@@ -7,6 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\ES_DE00008087.json" />
+    <None Remove="Resources\ES_DE00008088.json" />
+    <None Remove="Resources\NL_DE00006941.json" />
+    <None Remove="Resources\PW00012363.json" />
+    <None Remove="Resources\RDE00032314_1.json" />
+    <None Remove="Resources\Search_es_blando_analyzed.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ES_DE00008087.json" />
+    <EmbeddedResource Include="Resources\ES_DE00008088.json" />
+    <EmbeddedResource Include="Resources\NL_DE00006941.json" />
+    <EmbeddedResource Include="Resources\PW00012363.json" />
+    <EmbeddedResource Include="Resources\RDE00032314_1.json" />
+    <EmbeddedResource Include="Resources\Search_es_blando_analyzed.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
     <PackageReference Include="Moq.AutoMock" Version="2.0.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />

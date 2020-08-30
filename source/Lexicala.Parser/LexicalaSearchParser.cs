@@ -22,7 +22,7 @@ namespace Lexicala.NET.Parser
             _memoryCache = memoryCache;
         }
 
-        public async Task<SearchResultModel> SearchAsync(string searchText, string sourceLanguage)
+        public async Task<SearchResultModel> SearchAsync(string searchText, string sourceLanguage, params string[] targetLanguages)
         {
             var languages = await LoadLanguages();
             if (!languages.Global.SourceLanguages.Contains(sourceLanguage))
@@ -62,72 +62,7 @@ namespace Lexicala.NET.Parser
 
             foreach (var entry in entries)
             {
-                var headwordElement = entry.Headword.HeadwordElementArray ?? new[] {entry.Headword.Headword};
-
-                var resultModel = new SearchResultEntry
-                {
-                    ETag = entry.Metadata.ETag,
-                    Id = entry.Id,
-                    Pos = headwordElement[0].Pos,
-                    SubCategory = headwordElement[0].Subcategorization,
-                    Pronunciation = string.Join("/", headwordElement.Select(hw=>hw.Pronunciation?.Value)),
-                    Text = string.Join("/", headwordElement.Select(hw=> hw.Text) ),
-                    Gender = headwordElement[0].Gender,
-                    Stems = headwordElement.SelectMany(hw=>hw.AdditionalInflections).ToList()
-                };
-
-                foreach (var infl in headwordElement.Select(hw => hw.Inflections))
-                {
-                    if (infl != null)
-                    {
-                        foreach (var inflection in infl)
-                        {
-                            resultModel.Inflections.Add(new Dto.Inflection{ Number = inflection.Number, Text = inflection.Text});
-                        }
-                    }
-                }
-                foreach (var sourceSense in entry.Senses)
-                {
-                    var targetSense = new Sense
-                    {
-                        Id = sourceSense.Id,
-                        Definition = sourceSense.Definition,
-                        Synonyms = sourceSense.Synonyms
-                    };
-
-                    if (sourceSense.Translations != null)
-                    {
-                        var translations = ParseTranslation(sourceSense.Translations.Br, "br");
-                        translations.AddRange(ParseTranslation(sourceSense.Translations.Dk, "dk"));
-                        translations.AddRange(ParseTranslation(sourceSense.Translations.En, "en"));
-                        translations.AddRange(ParseTranslation(sourceSense.Translations.Fr, "fr"));
-                        translations.AddRange(ParseTranslation(sourceSense.Translations.Nl, "nl"));
-                        translations.AddRange(ParseTranslation(sourceSense.Translations.No, "no"));
-                        translations.AddRange(ParseTranslation(sourceSense.Translations.Sv, "sv"));
-
-                        targetSense.Translations = translations;
-                    }
-
-                    foreach (var sourceExample in sourceSense.Examples)
-                    {
-                        var example = new Dto.Example
-                        {
-                            Sentence = sourceExample.Text
-                        };
-
-                        AddExampleTranslationIfExists(sourceExample.Translations?.Br, "br", example);
-                        AddExampleTranslationIfExists(sourceExample.Translations?.Dk, "dk", example);
-                        AddExampleTranslationIfExists(sourceExample.Translations?.En, "en", example);
-                        AddExampleTranslationIfExists(sourceExample.Translations?.No, "no", example);
-                        AddExampleTranslationIfExists(sourceExample.Translations?.Nl, "nl", example);
-                        AddExampleTranslationIfExists(sourceExample.Translations?.Sv, "sv", example);
-
-                        targetSense.Examples.Add(example);
-                    }
-
-                    resultModel.Senses.Add(targetSense);
-                }
-
+                var resultModel = ParseEntry(entry);
                 returnModel.Results.Add(resultModel);
             }
 
@@ -135,24 +70,140 @@ namespace Lexicala.NET.Parser
             return returnModel;
         }
 
-        private static void AddExampleTranslationIfExists(CommonLanguage translation, string languageCode, Dto.Example example)
+        public async Task<SearchResultEntry> GetEntryAsync(string entryId, params string[] targetLanguages)
         {
-            var text = translation?.Text;
-            if (text != null)
-            {
-                example.Translations.Add(new Translation
-                {
-                    Language = languageCode,
-                    Text = text
-                });
-            }
+            var entry = await _lexicalaClient.GetEntryAsync(entryId);
+            return ParseEntry(entry, targetLanguages);
         }
 
-        private static List<Translation> ParseTranslation(CommonLanguageObject clo, string languageCode)
+        private static SearchResultEntry ParseEntry(Entry entry, params string [] targetLanguages)
+        {
+            var headwordElement = entry.Headword.HeadwordElementArray ?? new[] {entry.Headword.Headword};
+            var pronunciations = new List<string>();
+            var partOfSpeeches = new List<string>();
+            foreach (var headword in headwordElement)
+            {
+                var pronElem = headword.Pronunciation.PronunciationArray ?? new[] {headword.Pronunciation.Pronunciation};
+                foreach (var pronunciation in pronElem)
+                {
+                    if (pronunciation != null)
+                    {
+                        pronunciations.Add(pronunciation.Value);
+                    }
+                }
+
+                var posElem = headword.Pos.PartOfSpeechArray ?? new[] {headword.Pos.PartOfSpeech};
+                partOfSpeeches.AddRange(posElem.Where(pos => pos != null));
+            }
+
+            var resultModel = new SearchResultEntry
+            {
+                ETag = entry.Metadata.ETag,
+                Id = entry.Id,
+                Pos =string.Join(",", partOfSpeeches),
+                SubCategory = headwordElement[0].Subcategorization,
+                Pronunciation = string.Join(",", pronunciations),
+                Text = string.Join("/", headwordElement.Select(hw => hw.Text)),
+                Gender = headwordElement[0].Gender,
+                Stems = headwordElement.SelectMany(hw => hw.AdditionalInflections).ToList()
+            };
+
+            foreach (var infl in headwordElement.Select(hw => hw.Inflections))
+            {
+                if (infl != null)
+                {
+                    foreach (var inflection in infl)
+                    {
+                        resultModel.Inflections.Add(new Dto.Inflection {Number = inflection.Number, Text = inflection.Text});
+                    }
+                }
+            }
+
+            foreach (var sourceSense in entry.Senses)
+            {
+                var targetSense = new Sense
+                {
+                    Id = sourceSense.Id,
+                    Definition = sourceSense.Definition,
+                    Synonyms = sourceSense.Synonyms
+                };
+
+                if (sourceSense.Translations != null)
+                {
+                    var translations =new List<Translation>();
+                    if (targetLanguages?.Length > 0)
+                    {
+                        foreach (var languageCode in targetLanguages)
+                        {
+                            if (sourceSense.Translations.ContainsKey(languageCode))
+                            {
+                                translations.AddRange(ParseTranslation(languageCode, sourceSense.Translations[languageCode]));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var sourceSenseTranslation in sourceSense.Translations)
+                        {
+                            translations.AddRange(ParseTranslation(sourceSenseTranslation.Key, sourceSenseTranslation.Value));
+                        }
+                    }
+
+                    targetSense.Translations = translations;
+                }
+
+                foreach (var sourceExample in sourceSense.Examples)
+                {
+                    var translations = new List<Translation>();
+
+                    var example = new Dto.Example
+                    {
+                        Sentence = sourceExample.Text
+                    };
+
+                    if (sourceExample.Translations != null)
+                    {
+                        if (targetLanguages?.Length > 0)
+                        {
+                            foreach (var languageCode in targetLanguages)
+                            {
+                                if (sourceExample.Translations.ContainsKey(languageCode))
+                                {
+                                    translations.AddRange(ParseTranslation(languageCode, sourceExample.Translations[languageCode]));
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (var sourceExampleTranslation in sourceExample.Translations)
+                            {
+                                translations.AddRange(ParseTranslation(sourceExampleTranslation.Key,
+                                    sourceExampleTranslation.Value));
+                            }
+                        }
+                    }
+
+                    example.Translations = translations;
+
+                    targetSense.Examples.Add(example);
+                }
+
+                foreach (var compositionalPhrase in sourceSense.CompositionalPhrases)
+                {
+                        
+                }
+
+                resultModel.Senses.Add(targetSense);
+            }
+
+            return resultModel;
+        }
+
+        private static List<Translation> ParseTranslation(string languageCode, LanguageObject clo)
         {
             // json response is a bit flawed: it returns an object for 1 result, or an array for multiple results. this is difficult to deserialize so that's why this line looks a bit strange
-            var translations = (clo.CommonLanguage != null
-                                   ? new List<Translation> {new Translation {Language = languageCode, Text = clo.CommonLanguage.Text}}
+            var translations = (clo.Language != null
+                                   ? new List<Translation> {new Translation {Language = languageCode, Text = clo.Language.Text}}
                                    : clo.CommonLanguageObjectArray?.Select(nl => new Translation {Text = nl.Text, Language = languageCode}).ToList())
                                ?? new List<Translation>();
             return translations;

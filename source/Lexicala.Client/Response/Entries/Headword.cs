@@ -8,10 +8,10 @@ namespace Lexicala.NET.Client.Response.Entries
         public string Text { get; set; }
 
         [JsonProperty("pronunciation")]
-        public Pronunciation Pronunciation { get; set; }
+        public PronunciationObject Pronunciation { get; set; }
 
         [JsonProperty("pos", NullValueHandling = NullValueHandling.Ignore)]
-        public string Pos { get; set; }
+        public Pos Pos { get; set; }
 
         [JsonProperty("homograph_number")]
         public int HomographNumber { get; set; }

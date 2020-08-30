@@ -1,0 +1,651 @@
+﻿{
+  "id": "PW00012363",
+  "source": "password",
+  "language": "en",
+  "headword": {
+    "text": "house",
+    "pronunciation": {
+      "value": "haus"
+    },
+    "pos": "noun"
+  },
+  "senses": [
+    {
+      "id": "PS00016165",
+      "definition": "a building in which people, a single family, live",
+      "translations": {
+        "af": {
+          "text": "huis"
+        },
+        "ar": {
+          "text": "بَيْت"
+        },
+        "az": {
+          "text": "ev"
+        },
+        "bg": {
+          "text": "къща"
+        },
+        "br": {
+          "text": "casa"
+        },
+        "ca": {
+          "text": "casa"
+        },
+        "cs": {
+          "text": "dům"
+        },
+        "de": {
+          "text": "das Haus"
+        },
+        "dk": {
+          "text": "hus"
+        },
+        "el": {
+          "text": "σπίτι, κατοικία"
+        },
+        "es": {
+          "text": "casa"
+        },
+        "et": {
+          "text": "maja"
+        },
+        "fa": {
+          "text": "خانه"
+        },
+        "fi": {
+          "text": "talo"
+        },
+        "fr": {
+          "text": "maison"
+        },
+        "fy": {
+          "text": "(wen)hûs"
+        },
+        "he": {
+          "text": "בַּיִת"
+        },
+        "hi": {
+          "text": "गृह, घर"
+        },
+        "hr": {
+          "text": "kuca"
+        },
+        "hu": {
+          "text": "(lakó)ház"
+        },
+        "id": {
+          "text": "rumah"
+        },
+        "is": {
+          "text": "hús, bygging"
+        },
+        "it": {
+          "text": "casa"
+        },
+        "ja": {
+          "text": "家"
+        },
+        "ko": {
+          "text": "집, 주택"
+        },
+        "lt": {
+          "text": "namas"
+        },
+        "lv": {
+          "text": "māja; ēka; nams"
+        },
+        "ml": {
+          "text": "rumah"
+        },
+        "nl": {
+          "text": "(woon)huis"
+        },
+        "no": {
+          "text": "(bolig)hus, villa"
+        },
+        "pl": {
+          "text": "dom"
+        },
+        "prs": {
+          "text": "خانه"
+        },
+        "ps": {
+          "text": "کور"
+        },
+        "pt": {
+          "text": "casa"
+        },
+        "ro": {
+          "text": "casă"
+        },
+        "ru": {
+          "text": "дом"
+        },
+        "sk": {
+          "text": "dom"
+        },
+        "sl": {
+          "text": "hiša"
+        },
+        "sr": {
+          "text": "kuća"
+        },
+        "sv": {
+          "text": "hus, bostad"
+        },
+        "th": {
+          "text": "บ้าน"
+        },
+        "tr": {
+          "text": "ev, konut, mesken"
+        },
+        "tw": {
+          "text": "房子"
+        },
+        "uk": {
+          "text": "дім, хата"
+        },
+        "ur": {
+          "text": "مکان"
+        },
+        "vi": {
+          "text": "nhà ở; căn nhà"
+        },
+        "zh": {
+          "text": "房子"
+        }
+      },
+      "examples": [
+        {
+          "text": "Houses have been built on the outskirts of the town for the workers in the new industrial estate."
+        }
+      ]
+    },
+    {
+      "id": "PS00016166",
+      "definition": "a place or building used for a particular purpose",
+      "translations": {
+        "af": {
+          "text": "huis"
+        },
+        "ar": {
+          "text": "بَيْت، مَسكِن، مَحَل، مَقَر"
+        },
+        "az": {
+          "text": "bina"
+        },
+        "bg": {
+          "text": "сграда"
+        },
+        "br": {
+          "text": "casa"
+        },
+        "ca": {
+          "text": "casa"
+        },
+        "cs": {
+          "text": "kurník; hostinec"
+        },
+        "de": {
+          "text": "das Haus"
+        },
+        "dk": {
+          "text": "hus; -hus"
+        },
+        "el": {
+          "text": "κτήριο"
+        },
+        "es": {
+          "text": "casa"
+        },
+        "et": {
+          "text": "maja"
+        },
+        "fa": {
+          "text": "...خانۀ"
+        },
+        "fi": {
+          "text": "rakennus"
+        },
+        "fr": {
+          "text": "maison"
+        },
+        "fy": {
+          "text": "-hûs; -hok"
+        },
+        "he": {
+          "text": "בֵּיִת -"
+        },
+        "hi": {
+          "text": "मकान"
+        },
+        "hr": {
+          "text": "kuca (kazalište, parlament...)"
+        },
+        "hu": {
+          "text": "épület"
+        },
+        "id": {
+          "text": "bangunan"
+        },
+        "is": {
+          "text": "hús, bygging"
+        },
+        "it": {
+          "text": "casa"
+        },
+        "ja": {
+          "text": "建物"
+        },
+        "ko": {
+          "text": "(특정한 목적을 위한) 건물"
+        },
+        "lt": {
+          "text": "pastatas"
+        },
+        "lv": {
+          "text": "māja; saimniecība"
+        },
+        "ml": {
+          "text": "rumah"
+        },
+        "nl": {
+          "text": "-huis"
+        },
+        "no": {
+          "text": "-hus, bygning, –gård"
+        },
+        "pl": {
+          "text": "budynek"
+        },
+        "prs": {
+          "text": "...خانۀ"
+        },
+        "ps": {
+          "text": "کور"
+        },
+        "pt": {
+          "text": "casa"
+        },
+        "ro": {
+          "text": "coteţ; pub, cârciumă"
+        },
+        "ru": {
+          "text": "помещение;здание"
+        },
+        "sk": {
+          "text": "kurín; hostinec"
+        },
+        "sl": {
+          "text": "hiša"
+        },
+        "sr": {
+          "text": "kuća"
+        },
+        "sv": {
+          "text": "-hus"
+        },
+        "th": {
+          "text": "สถานที่"
+        },
+        "tr": {
+          "text": "bir şey binası, ambar, depo"
+        },
+        "tw": {
+          "text": "用於特定目的的處所或建築物"
+        },
+        "uk": {
+          "text": "будинок; будівля"
+        },
+        "ur": {
+          "text": "کسی مخصوص کام کی عمارت"
+        },
+        "vi": {
+          "text": "nhà; chuồng"
+        },
+        "zh": {
+          "text": "用作某种目的的建筑物"
+        }
+      },
+      "examples": [
+        {
+          "text": "a hen house"
+        },
+        {
+          "text": "a public house."
+        }
+      ]
+    },
+    {
+      "id": "PS00016167",
+      "definition": "a theatre, or the audience in a theatre/theater",
+      "translations": {
+        "af": {
+          "text": "skouburg, gehoor"
+        },
+        "ar": {
+          "text": "مَسْرَح"
+        },
+        "az": {
+          "text": "tamaşaçılar; teatr binası"
+        },
+        "bg": {
+          "text": "театър"
+        },
+        "br": {
+          "text": "casa"
+        },
+        "ca": {
+          "text": "casa"
+        },
+        "cs": {
+          "text": "sál"
+        },
+        "de": {
+          "text": "das Haus"
+        },
+        "dk": {
+          "text": "teaterbygning; fuldt hus"
+        },
+        "el": {
+          "text": "θέατρο"
+        },
+        "es": {
+          "text": "sala"
+        },
+        "et": {
+          "text": "maja"
+        },
+        "fa": {
+          "text": "تاتر؛ تماشاچیان تاتر"
+        },
+        "fi": {
+          "text": "teatterin yleisö"
+        },
+        "fr": {
+          "text": "salle"
+        },
+        "fy": {
+          "text": "teäter(seal); de minsken yn in teäter(seal)"
+        },
+        "he": {
+          "text": "קָהָל תֵּיאָטרוֹן"
+        },
+        "hi": {
+          "text": "थियेटर"
+        },
+        "hr": {
+          "text": "publika, gledalište"
+        },
+        "hu": {
+          "text": "színház"
+        },
+        "id": {
+          "text": "gedung"
+        },
+        "is": {
+          "text": "leikhús, fullt hús"
+        },
+        "it": {
+          "text": "sala"
+        },
+        "ja": {
+          "text": "劇場"
+        },
+        "ko": {
+          "text": "(극장 등의) 관중, 청중"
+        },
+        "lt": {
+          "text": "teatras, teatro salė, žiūrovai"
+        },
+        "lv": {
+          "text": "teātris; publika"
+        },
+        "ml": {
+          "text": "panggung"
+        },
+        "nl": {
+          "text": "volle bak"
+        },
+        "no": {
+          "text": "(teater)sal, (fullt/tomt) hus"
+        },
+        "pl": {
+          "text": "widownia, publiczność"
+        },
+        "prs": {
+          "text": "تاتر؛ تماشاچیان تاتر"
+        },
+        "ps": {
+          "text": "تیاتر، د تیاتر کتونکی"
+        },
+        "pt": {
+          "text": "casa"
+        },
+        "ro": {
+          "text": "sală"
+        },
+        "ru": {
+          "text": "театр; зрители"
+        },
+        "sk": {
+          "text": "(vypredané) hľadisko, obecenstvo"
+        },
+        "sl": {
+          "text": "dvorana"
+        },
+        "sr": {
+          "text": "gledaoci"
+        },
+        "sv": {
+          "text": "hus"
+        },
+        "th": {
+          "text": "โรงภาพยนตร์"
+        },
+        "tr": {
+          "text": "tiyatro binası; (tiyatroda) seyirci, (konserde) izleyici"
+        },
+        "tw": {
+          "text": "劇場，觀眾"
+        },
+        "uk": {
+          "text": "театр; глядачі"
+        },
+        "ur": {
+          "text": "تھئیٹر یا تھئیٹر میں موجود لوگ"
+        },
+        "vi": {
+          "text": "nhà hát"
+        },
+        "zh": {
+          "text": "剧场，观众"
+        }
+      },
+      "examples": [
+        {
+          "text": "There was a full house for the first night of the play."
+        }
+      ]
+    },
+    {
+      "id": "PS00016168",
+      "definition": "a family, important or noble, including its ancestors and descendants",
+      "translations": {
+        "af": {
+          "text": "stam"
+        },
+        "ar": {
+          "text": "عائِلَه، أُسْرَه"
+        },
+        "az": {
+          "text": "sülalə"
+        },
+        "bg": {
+          "text": "род"
+        },
+        "br": {
+          "text": "casa"
+        },
+        "ca": {
+          "text": "casa"
+        },
+        "cs": {
+          "text": "dům"
+        },
+        "de": {
+          "text": "das Geschlecht"
+        },
+        "dk": {
+          "text": "hus"
+        },
+        "el": {
+          "text": "γενιά"
+        },
+        "es": {
+          "text": "casa"
+        },
+        "et": {
+          "text": "suguvõsa"
+        },
+        "fa": {
+          "text": "خاندان"
+        },
+        "fi": {
+          "text": "suku"
+        },
+        "fr": {
+          "text": "maison"
+        },
+        "fy": {
+          "text": "hûs"
+        },
+        "he": {
+          "text": "מִשפָּחָה"
+        },
+        "hi": {
+          "text": "परिवार"
+        },
+        "hr": {
+          "text": "dinastija, porodica"
+        },
+        "hu": {
+          "text": "dinasztia"
+        },
+        "id": {
+          "text": "keluarga"
+        },
+        "is": {
+          "text": "ætt, kynkvísl"
+        },
+        "it": {
+          "text": "casa"
+        },
+        "ja": {
+          "text": "一族"
+        },
+        "ko": {
+          "text": "가문"
+        },
+        "lt": {
+          "text": "giminė, dinastija"
+        },
+        "lv": {
+          "text": "dzimta; dinastija"
+        },
+        "ml": {
+          "text": "keluarga"
+        },
+        "nl": {
+          "text": "huis"
+        },
+        "no": {
+          "text": "slekt, hus"
+        },
+        "pl": {
+          "text": "rodzina"
+        },
+        "prs": {
+          "text": "خاندان"
+        },
+        "ps": {
+          "text": "کورنی"
+        },
+        "pt": {
+          "text": "casa"
+        },
+        "ro": {
+          "text": "familie"
+        },
+        "ru": {
+          "text": "династия"
+        },
+        "sk": {
+          "text": "rod, dynastia"
+        },
+        "sl": {
+          "text": "družina"
+        },
+        "sr": {
+          "text": "porodica plave krvi"
+        },
+        "sv": {
+          "text": "familj, släkt"
+        },
+        "th": {
+          "text": "ครอบครัว"
+        },
+        "tr": {
+          "text": "aile; hanedan"
+        },
+        "tw": {
+          "text": "家族"
+        },
+        "uk": {
+          "text": "рід; династія"
+        },
+        "ur": {
+          "text": "کوئی اہم خاندان"
+        },
+        "vi": {
+          "text": "dòng họ"
+        },
+        "zh": {
+          "text": "家族"
+        }
+      },
+      "examples": [
+        {
+          "text": "the house of Tudor."
+        }
+      ]
+    }
+  ],
+  "related_entries": [
+    "PW00012364",
+    "PW00012365",
+    "PW00012366",
+    "PW00012367",
+    "PW00012368",
+    "PW00012369",
+    "PW00012370",
+    "PW00012371",
+    "PW00012372",
+    "PW00012373",
+    "PW00012374",
+    "PW00012375",
+    "PW00012376",
+    "PW00012377",
+    "PW00012378",
+    "PW00012379",
+    "PW00012380",
+    "PW00012381",
+    "PW00012382",
+    "PW00012383",
+    "PW00012384",
+    "PW00012385",
+    "PW00012386",
+    "PW00012387"
+  ]
+}

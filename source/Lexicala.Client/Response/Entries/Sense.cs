@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Lexicala.NET.Client.Response.Entries
 {
@@ -10,11 +11,17 @@ namespace Lexicala.NET.Client.Response.Entries
         [JsonProperty("definition")]
         public string Definition { get; set; }
 
+        [JsonProperty("range_of_application", NullValueHandling = NullValueHandling.Ignore)]
+        public string RangeOfApplication { get; set; }
+
+        [JsonProperty("antonyms", NullValueHandling = NullValueHandling.Ignore)]
+        public string[] Antonyms { get; set; }
+
         [JsonProperty("synonyms", NullValueHandling = NullValueHandling.Ignore)]
         public string[] Synonyms { get; set; } = { };
 
         [JsonProperty("translations")]
-        public SenseTranslations Translations { get; set; }
+        public Dictionary<string, LanguageObject> Translations { get; set; }
 
         [JsonProperty("examples")] 
         public Example[] Examples { get; set; } = { };

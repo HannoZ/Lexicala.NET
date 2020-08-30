@@ -1,0 +1,117 @@
+﻿{
+  "id": "RDE00032314_1",
+  "source": "random",
+  "language": "en",
+  "headword": {
+    "text": "house",
+    "pronunciation": [
+      {
+        "value": " haʊs; haʊz"
+      },
+      {
+        "value": "ˈhaʊ zɪz"
+      }
+    ],
+    "pos": [
+      "noun",
+      "verb",
+      "adjective"
+    ]
+  },
+  "senses": [
+    {
+      "id": "RSE00070757",
+      "definition": "a building in which people live; residence."
+    },
+    {
+      "id": "RSE00070758",
+      "definition": "a household."
+    },
+    {
+      "id": "RSE00070759",
+      "definition": " a family, including ancestors and descendants:"
+    },
+    {
+      "id": "RSE00070760",
+      "definition": "a building, enclosure, or other construction for any of various purposes (usu. used in combination):"
+    },
+    {
+      "id": "RSE00070761",
+      "definition": "a theater, concert hall, or auditorium."
+    },
+    {
+      "id": "RSE00070762",
+      "definition": "the audience of a theater or the like."
+    },
+    {
+      "id": "RSE00070763"
+    },
+    {
+      "id": "RSE00070764",
+      "definition": " a commercial establishment; business firm:"
+    },
+    {
+      "id": "RSE00070765",
+      "definition": "a gambling casino or its management."
+    },
+    {
+      "id": "RSE00070766",
+      "definition": "a residential hall in a college or school; dormitory."
+    },
+    {
+      "id": "RSE00070767",
+      "definition": "the members or residents of any such residential hall."
+    },
+    {
+      "id": "RSE00070768",
+      "definition": " a brothel; whorehouse."
+    },
+    {
+      "id": "RSE00070769",
+      "definition": "the area enclosed by a circle 12 or 14 ft. (3.7 or 4.2 m) in diameter at each end of a curling rink, having the tee in the center."
+    },
+    {
+      "id": "RSE00070770",
+      "definition": " any enclosed shelter above the weather deck of a vessel:"
+    },
+    {
+      "id": "RSE00070771",
+      "definition": " one of the 12 divisions of the celestial sphere, numbered counterclockwise from the point of the E horizon."
+    },
+    {
+      "id": "RSE00070772"
+    },
+    {
+      "id": "RSE00070773",
+      "definition": "to put or receive into a house, dwelling, or shelter; lodge or harbor:"
+    },
+    {
+      "id": "RSE00070774",
+      "definition": "to provide with a place, as to work or study:"
+    },
+    {
+      "id": "RSE00070775",
+      "definition": "to be a receptacle or repository for; hold; contain:"
+    },
+    {
+      "id": "RSE00070776",
+      "definition": "to take shelter; dwell."
+    },
+    {
+      "id": "RSE00070777",
+      "definition": "of or noting a house."
+    },
+    {
+      "id": "RSE00070778",
+      "definition": "suitable for or customarily used or kept in a house:"
+    },
+    {
+      "id": "RSE00070779",
+      "definition": "(of a product) made by or for a specific retailer and often sold under the store's own label."
+    },
+    {
+      "id": "RSE00070780",
+      "definition": "served by a restaurant as its customary brand:"
+    }
+  ]
+}

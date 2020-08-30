@@ -1,0 +1,308 @@
+﻿{
+  "id": "ES_DE00008088",
+  "source": "global",
+  "language": "es",
+  "version": 1,
+  "headword": [
+    {
+      "text": "blando",
+      "pronunciation": {
+        "value": "'blando"
+      },
+      "pos": "adjective",
+      "additional_inflections": [
+        "blanda",
+        "blandas",
+        "blandete",
+        "blandísima",
+        "blandísimo",
+        "blandísimos",
+        "blandita",
+        "blanditas",
+        "blandito",
+        "blanditos",
+        "blandos",
+        "blandote"
+      ]
+    },
+    {
+      "text": "blanda",
+      "pronunciation": {
+        "value": "'blanda"
+      },
+      "pos": "adjective"
+    }
+  ],
+  "senses": [
+    {
+      "id": "ES_SE00010914",
+      "definition": "que se deforma o corta con facilidad",
+      "range_of_application": "cosa material",
+      "antonyms": [
+        "duro, rígido"
+      ],
+      "translations": {
+        "br": {
+          "text": "mole"
+        },
+        "dk": [
+          {
+            "text": "blød"
+          },
+          {
+            "text": "bøjelig"
+          }
+        ],
+        "en": {
+          "text": "soft"
+        },
+        "ja": {
+          "text": "軟（やわ）らかい",
+          "alternative_scripts": {
+            "romaji": "yawarakai"
+          }
+        },
+        "nl": {
+          "text": "zacht"
+        },
+        "no": [
+          {
+            "text": "myk/-t"
+          },
+          {
+            "text": "mør/-t"
+          }
+        ],
+        "sv": [
+          {
+            "text": "mjuk"
+          },
+          {
+            "text": "mör"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "text": "La arcilla está blanda aún.",
+          "translations": {
+            "br": {
+              "text": "A argila ainda está mole."
+            },
+            "dk": {
+              "text": "Leret er stadigvæk blødt."
+            },
+            "en": {
+              "text": "The clay is still soft."
+            },
+            "ja": {
+              "text": "粘土（ねんど）はまだ軟（やわ）らかい。",
+              "alternative_scripts": {
+                "romaji": "Nendo wa mada yawaarakai."
+              }
+            },
+            "nl": {
+              "text": "De klei is nog zacht."
+            },
+            "no": {
+              "text": "Leiren er fremdeles myk."
+            },
+            "sv": {
+              "text": "Leran är fortfarande mjuk."
+            }
+          }
+        },
+        {
+          "text": "El barro es una material blando."
+        },
+        {
+          "text": "Es una carne blanda.",
+          "translations": {
+            "br": {
+              "text": "É uma carne mole."
+            },
+            "dk": {
+              "text": "Det er mørt kød."
+            },
+            "en": {
+              "text": "It's tender meat."
+            },
+            "ja": {
+              "text": "これは軟（やわ）らかい肉（にく）だ。",
+              "alternative_scripts": {
+                "romaji": "Kore wa yawarakai niku da."
+              }
+            },
+            "nl": {
+              "text": "Het is mals vlees."
+            },
+            "no": {
+              "text": "Det er et mørt kjøtt."
+            },
+            "sv": {
+              "text": "Det är ett mört kött."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES_SE00010915",
+      "definition": "que es flexible",
+      "range_of_application": "persona",
+      "antonyms": [
+        "duro"
+      ],
+      "translations": {
+        "br": {
+          "text": "mole"
+        },
+        "dk": [
+          {
+            "text": "blød"
+          },
+          {
+            "text": "rar"
+          },
+          {
+            "text": "eftergivende"
+          }
+        ],
+        "en": {
+          "text": "soft"
+        },
+        "ja": {
+          "text": "甘（あま）い",
+          "alternative_scripts": {
+            "romaji": "amai"
+          }
+        },
+        "nl": {
+          "text": "toegeeflijk"
+        },
+        "sv": [
+          {
+            "text": "mjuk"
+          },
+          {
+            "text": "eftergiven"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "text": "La docente es blanda con sus alumnos.",
+          "translations": {
+            "br": {
+              "text": "A docente é mole com seus alunos."
+            },
+            "dk": {
+              "text": "Underviseren er eftergivende overfor sine studerende."
+            },
+            "en": {
+              "text": "The teacher is soft on her pupils."
+            },
+            "ja": {
+              "text": "その女（おんな）の先生（せんせい）は生徒（せいと）に甘（あま）い。",
+              "alternative_scripts": {
+                "romaji": "Sono onna no sensee wa seeto ni amai."
+              }
+            },
+            "nl": {
+              "text": "De lerares is toegeeflijk met haar leerlingen."
+            },
+            "no": {
+              "text": "Lærerinnen er mild mot elevene sine."
+            },
+            "sv": {
+              "text": "Läraren är mjuk med sina elever."
+            }
+          }
+        },
+        {
+          "text": "Su madre es más blanda con él que su padre."
+        }
+      ]
+    },
+    {
+      "id": "ES_SE00010916",
+      "definition": "que es cobarde",
+      "range_of_application": "persona",
+      "translations": {
+        "br": {
+          "text": "frouxo"
+        },
+        "dk": [
+          {
+            "text": "kujon"
+          },
+          {
+            "text": "svag"
+          }
+        ],
+        "en": [
+          {
+            "text": "weak"
+          },
+          {
+            "text": "feeble"
+          }
+        ],
+        "ja": {
+          "text": "気（き）の弱（よわ）い、弱腰（よわごし）の、臆病（おくびょう）な",
+          "alternative_scripts": {
+            "romaji": "ki no yowai, yowagoshino, okubyoona"
+          }
+        },
+        "nl": {
+          "text": "laf"
+        },
+        "no": {
+          "text": "feig/-t"
+        },
+        "sv": [
+          {
+            "text": "mesig"
+          },
+          {
+            "text": "feg"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "text": "un rival muy blando",
+          "translations": {
+            "br": {
+              "text": "um adversário muito frouxo"
+            },
+            "dk": {
+              "text": "en svag modstander."
+            },
+            "en": {
+              "text": "a very weak opponent"
+            },
+            "ja": {
+              "text": "とても気（き）の弱（よわ）いライバル　",
+              "alternative_scripts": {
+                "romaji": "totemo ki no yowai raibaru"
+              }
+            },
+            "nl": {
+              "text": "een zeer laffe rivaal"
+            },
+            "no": {
+              "text": "en feig motstander"
+            },
+            "sv": {
+              "text": "en mesig rival"
+            }
+          }
+        },
+        {
+          "text": "unos jugadores muy blandos"
+        }
+      ]
+    }
+  ]
+}
