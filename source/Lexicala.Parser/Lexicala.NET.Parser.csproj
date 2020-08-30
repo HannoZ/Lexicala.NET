@@ -16,7 +16,7 @@ LexicalaSearchParser will now throw exception if source language is not supporte
 See readme file on project page for further details.</PackageReleaseNotes>
     <Copyright></Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
