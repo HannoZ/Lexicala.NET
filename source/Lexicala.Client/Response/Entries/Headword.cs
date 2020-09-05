@@ -8,7 +8,7 @@ namespace Lexicala.NET.Client.Response.Entries
         public string Text { get; set; }
 
         [JsonProperty("pronunciation")]
-        public PronunciationObject Pronunciation { get; set; }
+        public PronunciationObject PronunciationObject { get; set; }
 
         [JsonProperty("pos", NullValueHandling = NullValueHandling.Ignore)]
         public Pos Pos { get; set; }
@@ -27,5 +27,8 @@ namespace Lexicala.NET.Client.Response.Entries
 
         [JsonProperty("additional_inflections")]
         public string[] AdditionalInflections { get; set; } = { };
+
+        public Pronunciation[] Pronunciations => PronunciationObject.PronunciationArray ?? new[] {PronunciationObject.Pronunciation};
+        public string[] PartOfSpeeches => Pos.PartOfSpeechArray ?? new[] {Pos.PartOfSpeech};
     }
 }

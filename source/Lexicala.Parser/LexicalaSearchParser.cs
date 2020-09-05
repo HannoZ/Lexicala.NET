@@ -30,8 +30,8 @@ namespace Lexicala.NET.Parser
                 throw new ArgumentException($"Invalid value. '{sourceLanguage}' does not appear in the Global source languages list", nameof(sourceLanguage));
             }
 
-            var searchResult = await _lexicalaClient.BasicSearchAsync(searchText.ToLowerInvariant(), sourceLanguage: sourceLanguage);
-            
+            var searchResult = await _lexicalaClient.BasicSearchAsync(searchText.ToLowerInvariant(), sourceLanguage);
+
             var entries = new List<Entry>();
             foreach (var result in searchResult.Results)
             {
@@ -76,45 +76,40 @@ namespace Lexicala.NET.Parser
             return ParseEntry(entry, targetLanguages);
         }
 
-        private static SearchResultEntry ParseEntry(Entry entry, params string [] targetLanguages)
+        private static SearchResultEntry ParseEntry(Entry entry, params string[] targetLanguages)
         {
-            var headwordElement = entry.Headword.HeadwordElementArray ?? new[] {entry.Headword.Headword};
             var pronunciations = new List<string>();
-            var partOfSpeeches = new List<string>();
-            foreach (var headword in headwordElement)
-            {
-                var pronElem = headword.Pronunciation.PronunciationArray ?? new[] {headword.Pronunciation.Pronunciation};
-                foreach (var pronunciation in pronElem)
-                {
-                    if (pronunciation != null)
-                    {
-                        pronunciations.Add(pronunciation.Value);
-                    }
-                }
+            foreach (var headword in entry.Headwords)
+            foreach (var pronunciation in headword.Pronunciations)
+                if (pronunciation != null)
+                    pronunciations.Add(pronunciation.Value);
 
-                var posElem = headword.Pos.PartOfSpeechArray ?? new[] {headword.Pos.PartOfSpeech};
-                partOfSpeeches.AddRange(posElem.Where(pos => pos != null));
+            string gender = null;
+            foreach (var headword in entry.Headwords)
+            {
+                gender = headword.Gender;
+                if (gender != null) break;
             }
 
             var resultModel = new SearchResultEntry
             {
                 ETag = entry.Metadata.ETag,
                 Id = entry.Id,
-                Pos =string.Join(",", partOfSpeeches),
-                SubCategory = headwordElement[0].Subcategorization,
+                Pos = string.Join(",", entry.Headwords.Select(hw => hw.PartOfSpeeches)),
+                SubCategory = string.Join(",", entry.Headwords.Select(hw => hw.Subcategorization)),
                 Pronunciation = string.Join(",", pronunciations),
-                Text = string.Join("/", headwordElement.Select(hw => hw.Text)),
-                Gender = headwordElement[0].Gender,
-                Stems = headwordElement.SelectMany(hw => hw.AdditionalInflections).ToList()
+                Text = string.Join("/", entry.Headwords.Select(hw => hw.Text)),
+                Gender = gender,
+                Stems = entry.Headwords.SelectMany(hw => hw.AdditionalInflections).ToList()
             };
 
-            foreach (var infl in headwordElement.Select(hw => hw.Inflections))
+            foreach (var infl in entry.Headwords.Select(hw => hw.Inflections))
             {
                 if (infl != null)
                 {
                     foreach (var inflection in infl)
                     {
-                        resultModel.Inflections.Add(new Dto.Inflection {Number = inflection.Number, Text = inflection.Text});
+                        resultModel.Inflections.Add(new Dto.Inflection { Number = inflection.Number, Text = inflection.Text });
                     }
                 }
             }
@@ -130,7 +125,7 @@ namespace Lexicala.NET.Parser
 
                 if (sourceSense.Translations != null)
                 {
-                    var translations =new List<Translation>();
+                    var translations = new List<Translation>();
                     if (targetLanguages?.Length > 0)
                     {
                         foreach (var languageCode in targetLanguages)
@@ -190,7 +185,7 @@ namespace Lexicala.NET.Parser
 
                 foreach (var compositionalPhrase in sourceSense.CompositionalPhrases)
                 {
-                        
+                    // TODO
                 }
 
                 resultModel.Senses.Add(targetSense);
@@ -203,8 +198,8 @@ namespace Lexicala.NET.Parser
         {
             // json response is a bit flawed: it returns an object for 1 result, or an array for multiple results. this is difficult to deserialize so that's why this line looks a bit strange
             var translations = (clo.Language != null
-                                   ? new List<Translation> {new Translation {Language = languageCode, Text = clo.Language.Text}}
-                                   : clo.CommonLanguageObjectArray?.Select(nl => new Translation {Text = nl.Text, Language = languageCode}).ToList())
+                                   ? new List<Translation> { new Translation { Language = languageCode, Text = clo.Language.Text } }
+                                   : clo.CommonLanguageObjectArray?.Select(nl => new Translation { Text = nl.Text, Language = languageCode }).ToList())
                                ?? new List<Translation>();
             return translations;
         }
