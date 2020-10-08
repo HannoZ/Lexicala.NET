@@ -1,6 +1,8 @@
 # Change log 
 ## Lexicala.NET
 1.0 The Client and Parser project have been merged into a single project and Nuget package. 
+- `Lexicala.NET.Client` namespaces are changed to `Lexicala.NET`
+- `Lexicala.NET.Parser` namespaces are changed to `Lexicala.NET.Parsing`
 
 **DEPRECATED PACKAGES**
 ## Lexicala.NET.Client
