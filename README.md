@@ -1,4 +1,4 @@
-![Build & Test](https://github.com/HannoZ/Lexicala.NET/workflows/Build%20&%20Test/badge.svg)
+![Build Test Package](https://github.com/HannoZ/Lexicala.NET/workflows/Build%20Test%20Package/badge.svg)
 
 # Lexicala.NET
 A .NET Client for the Lexicala dictionary api. Tested only with .NET Core 3.x 
