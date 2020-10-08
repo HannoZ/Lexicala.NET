@@ -1,4 +1,4 @@
-﻿using Lexicala.NET.Parser;
+﻿using Lexicala.NET.Parsing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;

@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Authors>Hanno Zwikstra</Authors>
+    <Company />
+    <Product>Lexicala.NET</Product>
+    <Description>A .NET client for the Lexicala api.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/HannoZ/Lexicala.NET</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/HannoZ/Lexicala.NET</RepositoryUrl>
+    <RepositoryType>Public</RepositoryType>
+    <PackageTags>Lexicala, Lexicala.NET, C#, translation, dictionary</PackageTags>
+    <PackageReleaseNotes>A .NET client for the Lexicala api. 
+See readme file on project page for further details.</PackageReleaseNotes>
+    <Copyright></Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0</Version>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+</Project>
