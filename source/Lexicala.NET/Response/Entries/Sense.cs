@@ -15,13 +15,13 @@ namespace Lexicala.NET.Response.Entries
         public string RangeOfApplication { get; set; }
 
         [JsonProperty("antonyms", NullValueHandling = NullValueHandling.Ignore)]
-        public string[] Antonyms { get; set; }
+        public string[] Antonyms { get; set; } = { };
 
         [JsonProperty("synonyms", NullValueHandling = NullValueHandling.Ignore)]
         public string[] Synonyms { get; set; } = { };
 
         [JsonProperty("translations")]
-        public Dictionary<string, LanguageObject> Translations { get; set; }
+        public Dictionary<string, LanguageObject> Translations { get; set; } = new Dictionary<string, LanguageObject>();
 
         [JsonProperty("examples")] 
         public Example[] Examples { get; set; } = { };
