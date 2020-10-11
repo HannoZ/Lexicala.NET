@@ -15,6 +15,7 @@ namespace Lexicala.NET.Response.Entries
         public string RangeOfApplication { get; set; }
 
         [JsonProperty("antonyms", NullValueHandling = NullValueHandling.Ignore)]
+
         public string[] Antonyms { get; set; } = { };
 
         [JsonProperty("synonyms", NullValueHandling = NullValueHandling.Ignore)]

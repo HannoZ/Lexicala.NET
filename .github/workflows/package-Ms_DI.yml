@@ -1,25 +1,29 @@
-name: Build & Test
+name: Build and Push to Nuget - MicrosoftDependencyInjection
 
 on:
   push:
-    branches: [ master ]    
-  pull_request:
     branches: [ master ]
+    paths-ignore: '**.md'
 
 jobs:
   build:
 
     runs-on: windows-latest
-
+    
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.301
+        dotnet-version: 3.1.x
     - name: Install dependencies
       run: dotnet restore ./source/Lexicala.NET.sln
     - name: Build
       run: dotnet build ./source/Lexicala.NET.sln --configuration Release --no-restore
     - name: Test
       run: dotnet test ./source/Lexicala.NET.sln --no-restore --verbosity normal
+    - name: Publish to Nuget
+      uses: brandedoutcast/publish-nuget@v2.5.5
+      with: 
+          PROJECT_FILE_PATH: .source/Lexicala.NET.MicrosoftDependencyInjection/Lexicala.NET.MicrosoftDependencyInjection.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}

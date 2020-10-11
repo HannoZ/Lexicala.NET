@@ -1,10 +1,10 @@
-![Build & Test](https://github.com/HannoZ/Lexicala.NET/workflows/Build%20&%20Test/badge.svg)
+![Build Test Package](https://github.com/HannoZ/Lexicala.NET/workflows/Build%20Test%20Package/badge.svg)
 
 # Lexicala.NET
 A .NET Client for the Lexicala dictionary api. Tested only with .NET Core 3.x 
 
 ## About the repository
-The repository contains two main projects: Lexicala.NET.Client and Lexicala.NET.Parser. The Client project contains a .NET implementation for (part of) the Lexicala Api. The Parser project is an implementation that uses the ILexicalaClient to execute a search request and parse the results into a model that is easier to use than the raw data from the api (at least for me it is ;-) ). For full documentation on the api visit the [Lexicala documentation page](https://api.lexicala.com/documentation).
+The repository contains the .NET implementation for (part of) the Lexicala Api. It also contains parser logic that implements and uses the ILexicalaClient to execute a search request and parse the results into a model that is easier to use than the raw data from the api (at least for me it is ;-) ). For full documentation on the api visit the [Lexicala documentation page](https://api.lexicala.com/documentation).
 
 All api methods, except for `/senses` are implemented, but not all methods are thoroughly tested. I have started to build this library for a hobby project where I only need translation from Spanish to some other languages, but I have tested some searches on English words because they can have a much more extensive response.
 
@@ -22,9 +22,9 @@ Entries is the most interesting part of the api because it contains the detailed
 
 
 ## Basic usage
-The Lexicala.NET.Client and Lexicala.NET.Parser projects are available on Nuget.
+The Lexicala.Client is available on Nuget.
 
-The Lexicala.NET.Parser project contains extension methods to register the ILexicalaClient in a .NET Core startup class:
+The Lexicala.NET.Parsing namespace contains extension methods to register the ILexicalaClient in a .NET Core startup class:
 `services.RegisterLexicala(Configuration)`
 This overload depends on a Lexicala section in your appsettings.json file:
 ```json
