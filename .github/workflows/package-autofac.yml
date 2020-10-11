@@ -25,5 +25,5 @@ jobs:
     - name: Publish to Nuget
       uses: brandedoutcast/publish-nuget@v2.5.5
       with: 
-          PROJECT_FILE_PATH: .source/Lexicala.NET.Autofac/Lexicala.NET.Autofac.csproj
+          PROJECT_FILE_PATH: ./source/Lexicala.NET.Autofac/Lexicala.NET.Autofac.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
