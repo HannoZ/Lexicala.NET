@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,7 +6,6 @@ using Lexicala.NET.Parsing.Dto;
 using Lexicala.NET.Response.Entries;
 using Lexicala.NET.Response.Languages;
 using Microsoft.Extensions.Caching.Memory;
-using Sense = Lexicala.NET.Parsing.Dto.Sense;
 
 namespace Lexicala.NET.Parsing
 {
@@ -121,7 +120,7 @@ namespace Lexicala.NET.Parsing
 
             foreach (var sourceSense in entry.Senses)
             {
-                var targetSense = new Sense
+                var targetSense = new Dto.Sense
                 {
                     Id = sourceSense.Id,
                     Definition = sourceSense.Definition,

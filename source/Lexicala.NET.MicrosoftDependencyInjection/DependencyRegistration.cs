@@ -1,9 +1,9 @@
-﻿using System;
-using System.Net.Http.Headers;
+﻿using Lexicala.NET.Configuration;
+using Lexicala.NET.Parsing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lexicala.NET.Parsing
+namespace Lexicala.NET.MicrosoftDependencyInjection
 {
     public static class DependencyRegistration
     {
@@ -17,14 +17,12 @@ namespace Lexicala.NET.Parsing
         {
             services.AddHttpClient<ILexicalaClient, LexicalaClient>(client =>
             {
-                client.BaseAddress = new Uri("https://dictapi.lexicala.com");
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(
-                    System.Text.Encoding.ASCII.GetBytes($"{config.Username}:{config.Password}")));
+                client.BaseAddress = LexicalaConfig.BaseAddress;
+                client.DefaultRequestHeaders.Authorization = config.CreateAuthenticationHeader();
             });
 
             services.AddMemoryCache();
-
-            services.AddTransient<ILexicalaSearchParser, LexicalaSearchParser>();
+            services.AddSingleton<ILexicalaSearchParser, LexicalaSearchParser>();
 
             return services;
         }
