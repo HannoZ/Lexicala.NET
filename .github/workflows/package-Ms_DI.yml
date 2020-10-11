@@ -25,5 +25,5 @@ jobs:
     - name: Publish to Nuget
       uses: brandedoutcast/publish-nuget@v2.5.5
       with: 
-          PROJECT_FILE_PATH: .source/Lexicala.NET.MicrosoftDependencyInjection/Lexicala.NET.MicrosoftDependencyInjection.csproj
+          PROJECT_FILE_PATH: ./source/Lexicala.NET.MicrosoftDependencyInjection/Lexicala.NET.MicrosoftDependencyInjection.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
