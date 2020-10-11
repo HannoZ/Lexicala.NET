@@ -13,6 +13,7 @@
     <PackageTags>Lexicala, Lexicala.NET, C#, IoC, .NET Core</PackageTags>
     <PackageReleaseNotes></PackageReleaseNotes>
     <Description>IoC container registration that uses the Microsoft.DependencyInjection.IServiceCollection for .NET Core applications.</Description>
+    <Version>1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
