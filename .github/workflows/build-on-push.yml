@@ -3,6 +3,8 @@ name: Build & Test
 on:
   push:
     paths-ignore: '**.md'
+    # don't run on master because we already have another action for that 
+    branches-ignore: master
 
 jobs:
   build:
