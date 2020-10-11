@@ -22,9 +22,8 @@ Entries is the most interesting part of the api because it contains the detailed
 
 
 ## Basic usage
-The Lexicala.Client is available on Nuget.
-
-The Lexicala.NET.Parsing namespace contains extension methods to register the ILexicalaClient in a .NET Core startup class:
+Lexicala.NET is available on Nuget.
+For .NET Core-based applications you can use the [Lexicala.NET.MicrosoftDependencyInjection](https://www.nuget.org/packages/Lexicala.NET.MicrosoftDependencyInjection/) Nuget package. This package contains extension methods to register the ILexicalaClient and other dependencies in a .NET Core startup class:
 `services.RegisterLexicala(Configuration)`
 This overload depends on a Lexicala section in your appsettings.json file:
 ```json
@@ -35,6 +34,7 @@ This overload depends on a Lexicala section in your appsettings.json file:
   }
 }
 ```
+A similar package exists for [Autofac](https://www.nuget.org/packages/Lexicala.NET.Autofac/);
 Now you can either inject and use the ILexicalaClient directly, or use the ILexicalaSearchParser. 
 
 ## TODO
