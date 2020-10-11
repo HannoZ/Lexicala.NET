@@ -1,10 +1,9 @@
-﻿using System;
-using System.Net.Http.Headers;
-using Lexicala.NET.Configuration;
+﻿using Lexicala.NET.Configuration;
+using Lexicala.NET.Parsing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lexicala.NET.Parsing
+namespace Lexicala.NET.MicrosoftDependencyInjection
 {
     public static class DependencyRegistration
     {
@@ -23,7 +22,7 @@ namespace Lexicala.NET.Parsing
             });
 
             services.AddMemoryCache();
-            services.AddTransient<ILexicalaSearchParser, LexicalaSearchParser>();
+            services.AddSingleton<ILexicalaSearchParser, LexicalaSearchParser>();
 
             return services;
         }

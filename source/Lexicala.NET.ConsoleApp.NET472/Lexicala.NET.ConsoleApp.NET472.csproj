@@ -51,12 +51,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Lexicala.NET.Autofac\Lexicala.NET.Autofac.csproj">
+      <Project>{3D77127A-6CA6-407E-AD49-8A0812A3373D}</Project>
+      <Name>Lexicala.NET.Autofac</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lexicala.NET\Lexicala.NET.csproj">
       <Project>{4EAB2C7F-3CBA-43CB-97B6-DE2B7B89DFD0}</Project>
       <Name>Lexicala.NET</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Autofac">
+      <Version>6.0.0</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>

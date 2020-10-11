@@ -3,22 +3,29 @@ using System;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
+using Lexicala.NET.Autofac;
+using Lexicala.NET.Response.Languages;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Lexicala.NET.ConsoleApp.NET472
 {
+    /// <summary>
+    /// This is an example of how the LexicalaClient can be used, in combination with Autofac as IoC provider. 
+    /// </summary>
     class Program
     {
         public static async Task Main(string[] args)
         {
             var config = new LexicalaConfig(ConfigurationManager.AppSettings["username"],  ConfigurationManager.AppSettings["password"]);
-            var httpClient = config.CreateHttpClient();
-            var lexicalaClient = new LexicalaClient(httpClient);
-
+            var container = DependencyRegistration.RegisterLexixala(config);
+            var lexicalaClient = container.Resolve<ILexicalaClient>();
+            var memCache = container.Resolve<IMemoryCache>();
 
             string input = string.Empty;
             while (input != ConsoleKey.Q.ToString())
             {
-                Console.WriteLine("Enter search query: searchterm sourcelang (eg: estar es en). Q to exit");
+                Console.WriteLine("Enter search query: searchterm sourcelang targetlang (eg: estar es en). Q to exit");
                 input = Console.ReadLine();
                 if (input == null)
                 {
@@ -41,17 +48,47 @@ namespace Lexicala.NET.ConsoleApp.NET472
                     continue;
                 }
 
+                if (!memCache.TryGetValue("languages", out Resource languages))
+                {
+                    var response = await lexicalaClient.LanguagesAsync();
+                    languages = response.Resources.Global;
+                    memCache.Set("languages", languages);
+                }
+
+                if (!languages.SourceLanguages.Contains(srcLang))
+                {
+                    Console.WriteLine("Source language not available");
+                    continue;
+                }
+
+                if (!languages.TargetLanguages.Contains(tgtLang))
+                {
+                    Console.WriteLine("Target language not available");
+                    continue;
+                }
+
                 try
                 {
                     var searchResponse = await lexicalaClient.BasicSearchAsync(searchTerm, srcLang);
+                    bool hasTranslation = false;
                     foreach (var result in searchResponse.Results)
                     {
                         var entry = await lexicalaClient.GetEntryAsync(result.Id);
                         foreach (var sense in entry.Senses)
                         {
+                            Console.WriteLine(sense.Definition);
                             if (sense.Translations.ContainsKey(tgtLang))
                             {
-                                Console.WriteLine(sense.Translations[tgtLang].Language?.Text);
+                                hasTranslation = true;
+                                var senseTranslation = sense.Translations[tgtLang];
+                                if (senseTranslation.Language != null)
+                                {
+                                    Console.WriteLine(senseTranslation.Language?.Text);
+                                }
+                                else
+                                {
+                                    Console.WriteLine(string.Join(", ", senseTranslation.CommonLanguageObjectArray.Select(l => l.Text)));
+                                }
                             }
                         }
                     }
@@ -60,6 +97,12 @@ namespace Lexicala.NET.ConsoleApp.NET472
                     {
                         Console.WriteLine("No results");
                     }
+                    else if (!hasTranslation)
+                    {
+                        Console.WriteLine("No translations available for target language " + tgtLang);
+                    }
+
+                    Console.WriteLine("Api calls remaining: " + searchResponse.Metadata.RateLimits.DailyLimitRemaining);
                 }
                 catch (Exception e)
                 {

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Hanno Zwikstra</Authors>
+    <Company>Hanno Zwikstra</Company>
+    <Product>Lexicala.NET</Product>
+    <Copyright>MIT</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/HannoZ/Lexicala.NET</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/HannoZ/Lexicala.NET</RepositoryUrl>
+    <RepositoryType>Public</RepositoryType>
+    <PackageTags>Lexicala, Lexicala.NET, C#, IoC, .NET Core</PackageTags>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <Description>IoC container registration that uses the Microsoft.DependencyInjection.IServiceCollection for .NET Core applications.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lexicala.NET\Lexicala.NET.csproj" />
+  </ItemGroup>
+
+</Project>

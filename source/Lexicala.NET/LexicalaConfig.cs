@@ -30,8 +30,10 @@ namespace Lexicala.NET.Configuration
 
         public HttpClient CreateHttpClient()
         {
-            var client = new HttpClient();
-            client.BaseAddress = BaseAddress;
+            var client = new HttpClient
+            {
+                BaseAddress = BaseAddress
+            };
             client.DefaultRequestHeaders.Authorization = CreateAuthenticationHeader();
 
             return client;
@@ -39,12 +41,13 @@ namespace Lexicala.NET.Configuration
 
         public HttpClient CreateHttpClient(HttpClientHandler handler)
         {
-            var client = new HttpClient(handler);
-            client.BaseAddress = BaseAddress;
+            var client = new HttpClient(handler)
+            {
+                BaseAddress = BaseAddress
+            };
             client.DefaultRequestHeaders.Authorization = CreateAuthenticationHeader();
 
             return client;
-
         }
     }
 }

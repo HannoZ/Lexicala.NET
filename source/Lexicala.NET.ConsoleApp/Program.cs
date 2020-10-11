@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using Lexicala.NET.MicrosoftDependencyInjection;
 
 namespace Lexicala.NET.ConsoleApp
 {
