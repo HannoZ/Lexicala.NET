@@ -13,6 +13,7 @@
     <PackageTags>Lexicala, Lexicala.NET, C#, IoC, Autofac</PackageTags>
     <PackageReleaseNotes></PackageReleaseNotes>
     <Description>Autofac IoC container registration for Lexicala.NET.</Description>
+    <Version>1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
