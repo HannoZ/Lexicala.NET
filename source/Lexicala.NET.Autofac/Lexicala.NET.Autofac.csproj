@@ -11,17 +11,14 @@
     <RepositoryUrl>https://github.com/HannoZ/Lexicala.NET</RepositoryUrl>
     <RepositoryType>Public</RepositoryType>
     <PackageTags>Lexicala, Lexicala.NET, C#, IoC, Autofac</PackageTags>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>Now has proper dependency on Lexicala.NET package.</PackageReleaseNotes>
     <Description>Autofac IoC container registration for Lexicala.NET.</Description>
-    <Version>1.0</Version>
+    <Version>1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Lexicala.NET\Lexicala.NET.csproj" />
+    <PackageReference Include="Lexicala.NET" Version="1.1.0" />
   </ItemGroup>
 
 </Project>
