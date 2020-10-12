@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lexicala.NET.MicrosoftDependencyInjection\Lexicala.NET.MicrosoftDependencyInjection.csproj" />
-    <ProjectReference Include="..\Lexicala.NET\Lexicala.NET.csproj" />
   </ItemGroup>
 
   <ItemGroup>
