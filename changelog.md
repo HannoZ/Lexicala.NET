@@ -1,6 +1,10 @@
 # Change log 
 ## Lexicala.NET
-1.0 The Client and Parser project have been merged into a single project and Nuget package. 
+1.1.1. - Fixed a bug in the LexicalaSearchParser that caused the Pos property of a SearchResultEntry to display System.String[] instead of the actual value
+
+1.1 - The DependencyRegistration helper has been moved to a new project/package: Lexicala.NET.MicrosoftDependencyInjection. Also an integration package for Autofac is now available. The `LexicalaConfig` class has been extended with helper methods to setup the LexicalaClient. The Microsoft and Autofac integration packages make use of those helper methods. 
+
+1.0 - The Client and Parser project have been merged into a single project and Nuget package. 
 - `Lexicala.NET.Client` namespaces are changed to `Lexicala.NET`
 - `Lexicala.NET.Parser` namespaces are changed to `Lexicala.NET.Parsing`
 
