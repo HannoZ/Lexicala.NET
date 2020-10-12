@@ -95,11 +95,13 @@ namespace Lexicala.NET.Parsing
                 if (gender != null) break;
             }
 
+            var pos = entry.Headwords.SelectMany(hw => hw.PartOfSpeeches).Distinct().ToList();
+
             var resultModel = new SearchResultEntry
             {
                 ETag = entry.Metadata.ETag,
                 Id = entry.Id,
-                Pos = string.Join(",", entry.Headwords.Select(hw => hw.PartOfSpeeches)),
+                Pos = string.Join(",", pos),
                 SubCategory = string.Join(",", entry.Headwords.Select(hw => hw.Subcategorization)),
                 Pronunciation = string.Join(",", pronunciations),
                 Text = string.Join("/", entry.Headwords.Select(hw => hw.Text)),

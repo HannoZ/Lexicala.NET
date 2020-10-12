@@ -81,6 +81,7 @@ namespace Lexicala.NET.Parser.Tests
             // ASSERT
             result.Summary("nl").ShouldBe("blandir: zwaaien | blando/blanda: zacht, toegeeflijk, laf");
             result.Results.SelectMany(r => r.Stems).ShouldNotBeEmpty();
+            result.Results.ShouldAllBe(r=> !r.Pos.StartsWith("System.String"));
         }
 
 
