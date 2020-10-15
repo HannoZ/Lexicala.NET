@@ -1,4 +1,6 @@
-![Build Test Package](https://github.com/HannoZ/Lexicala.NET/workflows/Build%20Test%20Package/badge.svg)
+![Main package](https://github.com/HannoZ/Lexicala.NET/workflows/Build%20Test%20Package/badge.svg)
+![MicrosoftDependencyInjection](https://github.com/HannoZ/Lexicala.NET/workflows/Build%20and%20Push%20to%20Nuget%20-%20MicrosoftDependencyInjection/badge.svg)
+![Autofac](https://github.com/HannoZ/Lexicala.NET/workflows/Build%20and%20Push%20to%20Nuget%20-%20Autofac/badge.svg)
 
 # Lexicala.NET
 A .NET Client for the Lexicala dictionary api. Tested only with .NET Core 3.x 
