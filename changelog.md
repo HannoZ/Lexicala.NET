@@ -1,5 +1,7 @@
 # Change log 
 ## Lexicala.NET
+1.2 - Updated .NET Core Nuget packages to version 3.1.9
+
 1.1.1. - Fixed a bug in the LexicalaSearchParser that caused the Pos property of a SearchResultEntry to display System.String[] instead of the actual value
 
 1.1 - The DependencyRegistration helper has been moved to a new project/package: Lexicala.NET.MicrosoftDependencyInjection. Also an integration package for Autofac is now available. The `LexicalaConfig` class has been extended with helper methods to setup the LexicalaClient. The Microsoft and Autofac integration packages make use of those helper methods. 
