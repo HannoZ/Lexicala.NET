@@ -3,7 +3,7 @@
 ![Autofac](https://github.com/HannoZ/Lexicala.NET/workflows/Build%20and%20Push%20to%20Nuget%20-%20Autofac/badge.svg)
 
 # Lexicala.NET
-A .NET Client for the Lexicala dictionary api. Tested only with .NET Core 3.x 
+A .NET Client for the Lexicala dictionary api. Target framework is .NET Standard so it should work with .NET 4.7.2 and higher and .NET Core. Version 1.3 has dependencies on  .NET 5 packages, earlier versions use .NET Core 3.1 packages. 
 
 ## About the repository
 The repository contains the .NET implementation for (part of) the Lexicala Api. It also contains parser logic that implements and uses the ILexicalaClient to execute a search request and parse the results into a model that is easier to use than the raw data from the api (at least for me it is ;-) ). For full documentation on the api visit the [Lexicala documentation page](https://api.lexicala.com/documentation).
