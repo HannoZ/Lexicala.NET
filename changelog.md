@@ -25,7 +25,7 @@
 1.1 - Inital version
 
 
-
+***
 
 **DEPRECATED PACKAGES**
 ## Lexicala.NET.Client
