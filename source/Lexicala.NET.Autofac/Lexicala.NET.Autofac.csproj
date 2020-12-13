@@ -13,11 +13,11 @@
     <PackageTags>Lexicala, Lexicala.NET, C#, IoC, Autofac</PackageTags>
     <PackageReleaseNotes>Update dependency on Lexical.NET</PackageReleaseNotes>
     <Description>Autofac IoC container registration for Lexicala.NET.</Description>
-    <Version>1.1</Version>
+    <Version>1.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.0.0" />
+    <PackageReference Include="Autofac" Version="6.1.0" />
   </ItemGroup>
 
   <ItemGroup>
