@@ -2,14 +2,12 @@
 
 namespace Lexicala.NET.Parsing.Dto
 {
-    public class Sense
+    public class CompositionalPhrase
     {
-        public string Id { get; set; }
+        public string Text { get; set; }
         public string Definition { get; set; }
         public ICollection<Translation> Translations { get; set; } = new List<Translation>();
         public ICollection<Example> Examples { get; set; } = new List<Example>();
-        public string[] Synonyms { get; set; } = { };
-        public ICollection<CompositionalPhrase> CompositionalPhrases { get; set; } = new List<CompositionalPhrase>();
 
     }
 }

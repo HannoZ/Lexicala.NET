@@ -191,7 +191,73 @@ namespace Lexicala.NET.Parsing
 
                 foreach (var compositionalPhrase in sourceSense.CompositionalPhrases)
                 {
-                    // TODO
+                    var comp = new Dto.CompositionalPhrase
+                    {
+                        Text = compositionalPhrase.Text,
+                        Definition = compositionalPhrase.Definition
+                    };
+
+                    if (compositionalPhrase.Translations != null)
+                    {
+                        var translations = new List<Translation>();
+                        if (targetLanguages?.Length > 0)
+                        {
+                            foreach (var languageCode in targetLanguages)
+                            {
+                                if (compositionalPhrase.Translations.ContainsKey(languageCode))
+                                {
+                                    translations.AddRange(ParseTranslation(languageCode, compositionalPhrase.Translations[languageCode]));
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (var sourceSenseTranslation in compositionalPhrase.Translations)
+                            {
+                                translations.AddRange(ParseTranslation(sourceSenseTranslation.Key, sourceSenseTranslation.Value));
+                            }
+                        }
+
+                        comp.Translations = translations;
+                    }
+
+                    foreach (var sourceExample in compositionalPhrase.Examples)
+                    {
+                        var translations = new List<Translation>();
+
+                        var example = new Dto.Example
+                        {
+                            Sentence = sourceExample.Text
+                        };
+
+                        if (sourceExample.Translations != null)
+                        {
+                            if (targetLanguages?.Length > 0)
+                            {
+                                foreach (var languageCode in targetLanguages)
+                                {
+                                    if (sourceExample.Translations.ContainsKey(languageCode))
+                                    {
+                                        translations.AddRange(ParseTranslation(languageCode, sourceExample.Translations[languageCode]));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach (var sourceExampleTranslation in sourceExample.Translations)
+                                {
+                                    translations.AddRange(ParseTranslation(sourceExampleTranslation.Key,
+                                        sourceExampleTranslation.Value));
+                                }
+                            }
+                        }
+
+                        example.Translations = translations;
+
+                        comp.Examples.Add(example);
+                    }
+
+                    targetSense.CompositionalPhrases.Add(comp);
                 }
 
                 resultModel.Senses.Add(targetSense);

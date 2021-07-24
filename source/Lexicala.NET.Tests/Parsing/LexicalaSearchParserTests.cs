@@ -29,6 +29,28 @@ namespace Lexicala.NET.Parser.Tests
         {
             _mocker = new AutoMocker(MockBehavior.Loose);
             _lexicalaSearchParser = _mocker.CreateInstance<LexicalaSearchParser>();
+
+            var languagesResponse = new LanguagesResponse()
+            {
+                Resources = new Resources()
+                {
+                    Global = new Resource()
+                    {
+                        SourceLanguages = new[]
+                        {
+                            "en", "es"
+                        }
+                    }
+                }
+            };
+
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.LanguagesAsync())
+                .ReturnsAsync(languagesResponse);
+
+            _mocker.GetMock<IMemoryCache>()
+                .Setup(m => m.CreateEntry(It.IsAny<object>()))
+                .Returns(_mocker.GetMock<ICacheEntry>().Object);
         }
 
         [TestMethod]
@@ -45,22 +67,6 @@ namespace Lexicala.NET.Parser.Tests
             var entryResult2 = JsonConvert.DeserializeObject<Entry>(entry2, EntryResponseJsonConverter.Settings);
             entryResult2.Metadata = new ResponseMetadata();
 
-            var languagesResponse = new LanguagesResponse()
-            {
-                Resources = new Resources()
-                {
-                    Global = new Resource()
-                    {
-                        SourceLanguages = new[]
-                        {
-                            "en", "es"
-                        }
-                    }
-                }
-            };
-            _mocker.GetMock<ILexicalaClient>()
-                .Setup(m => m.LanguagesAsync())
-                .ReturnsAsync(languagesResponse);
             _mocker.GetMock<ILexicalaClient>()
                 .Setup(m => m.BasicSearchAsync("test", "es", null))
                 .ReturnsAsync(apiResult);
@@ -71,9 +77,6 @@ namespace Lexicala.NET.Parser.Tests
                 .Setup(m => m.GetEntryAsync("ES_DE00008087", null))
                 .ReturnsAsync(entryResult1);
 
-            _mocker.GetMock<IMemoryCache>()
-                .Setup(m => m.CreateEntry(It.IsAny<object>()))
-                .Returns(_mocker.GetMock<ICacheEntry>().Object);
 
             // ACT
             var result = await _lexicalaSearchParser.SearchAsync("test", "es");
@@ -84,6 +87,36 @@ namespace Lexicala.NET.Parser.Tests
             result.Results.ShouldAllBe(r=> !r.Pos.StartsWith("System.String"));
         }
 
+        [TestMethod]
+        public async Task LexicalSearchParser_Parse_ES_DE00019850()
+        {
+            string searchResult = await LoadResponseFromFile("Search_es_sin embargo.json");
+            string entry1 = await LoadResponseFromFile("ES_DE00019850.json");
+
+            var apiResult = JsonConvert.DeserializeObject<SearchResponse>(searchResult, SearchResponseJsonConverter.Settings);
+            apiResult.Metadata = new ResponseMetadata();
+            var entryResult1 = JsonConvert.DeserializeObject<Entry>(entry1, EntryResponseJsonConverter.Settings);
+            entryResult1.Metadata = new ResponseMetadata();
+            
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.BasicSearchAsync("test", "es", null))
+                .ReturnsAsync(apiResult);
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.GetEntryAsync("ES_DE00019850", null))
+                .ReturnsAsync(entryResult1);
+            
+            var result = await _lexicalaSearchParser.SearchAsync("test", "es");
+
+            var comps = result.Results.SelectMany(r => r.Senses).SelectMany(s => s.CompositionalPhrases).ToList();
+            comps.ShouldNotBeEmpty();
+            foreach (var comp in comps)
+            {
+                comp.Definition.ShouldNotBeNull();
+                comp.Examples.ShouldNotBeEmpty();
+                comp.Text.ShouldNotBeNull();
+                comp.Translations.ShouldNotBeEmpty();
+            }
+        }
 
         private static Task<string> LoadResponseFromFile(string fileName)
         {

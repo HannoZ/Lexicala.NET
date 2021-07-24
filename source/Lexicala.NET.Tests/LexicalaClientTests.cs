@@ -874,6 +874,23 @@ namespace Lexicala.NET.Client.Tests
             result.Metadata.RateLimits.Remaining.ShouldBe(5);
         }
 
+        [TestMethod]
+        public async Task LexicalaClient_CanDeserializeEntry_ES_DE00019850()
+        {
+            string response = await LoadResponseFromFile("ES_DE00019850.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            // ACT
+            var result = await _client.GetEntryAsync("ES_DE00019850");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+        }
+
         private static HttpResponseMessage SetupOkResponseMessage(string content)
         {
             return new HttpResponseMessage(HttpStatusCode.OK)

@@ -1,0 +1,235 @@
+﻿{
+  "id": "ES_DE00019850",
+  "source": "global",
+  "language": "es",
+  "version": 1,
+  "headword": {
+    "text": "embargo",
+    "pronunciation": {
+      "value": "em'baɾγo"
+    },
+    "pos": "noun",
+    "gender": "masculine"
+  },
+  "senses": [
+    {
+      "id": "ES_SE00028255",
+      "definition": "retención de bienes por orden judicial",
+      "semantic_category": "law",
+      "translations": {
+        "br": {
+          "text": "embargo",
+          "gender": "masculine"
+        },
+        "dk": [
+          {
+            "text": "beslaglæggelse",
+            "gender": "common"
+          },
+          {
+            "text": "konfiskation",
+            "gender": "common"
+          },
+          {
+            "text": "udpantning",
+            "gender": "common"
+          }
+        ],
+        "en": {
+          "text": "seizure"
+        },
+        "ja": {
+          "text": "差押（さしおさ）え　、押収（おうしゅう）、没収（ぼっしゅう）",
+          "alternative_scripts": {
+            "romaji": "sashi osae, ooshuu, bos-shuu"
+          }
+        },
+        "nl": {
+          "text": "beslaglegging",
+          "gender": "de"
+        },
+        "no": {
+          "text": "beslagleggelse",
+          "gender": "masculine"
+        },
+        "sv": {
+          "text": "utmätning",
+          "gender": "common"
+        }
+      },
+      "examples": [
+        {
+          "text": "evitar un embargo",
+          "translations": {
+            "br": {
+              "text": "evitar um embargo"
+            },
+            "dk": {
+              "text": "at undgå en udpantning"
+            },
+            "en": {
+              "text": "to avoid having one's goods seized"
+            },
+            "ja": {
+              "text": "押収（おうしゅう）を免（まぬが）れる",
+              "alternative_scripts": {
+                "romaji": "ooshuu o manugareru"
+              }
+            },
+            "nl": {
+              "text": "een beslaglegging vermijden"
+            },
+            "no": {
+              "text": "unngå en beslagleggelse"
+            },
+            "sv": {
+              "text": "undvika en utmätning"
+            }
+          }
+        },
+        {
+          "text": "El juez ordenó el embargo de bienes del imputado."
+        }
+      ]
+    },
+    {
+      "id": "ES_SE00028256",
+      "definition": "prohibición de comerciar con alguna mercancía",
+      "semantic_category": "commerce",
+      "translations": {
+        "br": {
+          "text": "embargo",
+          "gender": "masculine"
+        },
+        "dk": [
+          {
+            "text": "handelsboykot",
+            "gender": "common"
+          },
+          {
+            "text": "handelsembargo",
+            "gender": "common"
+          }
+        ],
+        "en": {
+          "text": "embargo"
+        },
+        "ja": {
+          "text": "輸出入禁止（ゆしゅつにゅうきんし）",
+          "alternative_scripts": {
+            "romaji": "yushutsunyu kinshi"
+          }
+        },
+        "nl": {
+          "text": "beslag",
+          "gender": "het"
+        },
+        "no": {
+          "text": "forbud, blokade",
+          "gender": "masculine"
+        },
+        "sv": {
+          "text": "embargo",
+          "gender": "neuter"
+        }
+      },
+      "examples": [
+        {
+          "text": "Cayó un embargo sobre las importaciones.",
+          "translations": {
+            "br": {
+              "text": "Houve um embargo às importações."
+            },
+            "dk": {
+              "text": "Importvarerne blev ramt af en boykot."
+            },
+            "en": {
+              "text": "There was an embargo on imports."
+            },
+            "ja": {
+              "text": "輸入品（ゆにゅうひん）が禁止品目（きんしひんもく）に抵触（ていしょく）した。",
+              "alternative_scripts": {
+                "romaji": "Yunyuuhin ga kinshi hinmoku ni teeshoku shita."
+              }
+            },
+            "nl": {
+              "text": "Er viel een beslag op de invoer."
+            },
+            "no": {
+              "text": "Det ble innført en importblokade."
+            },
+            "sv": {
+              "text": "Det lades ett embargo på import."
+            }
+          }
+        },
+        {
+          "text": "Con ese país rige un embargo económico de todo tipo de productos."
+        }
+      ],
+      "compositional_phrases": [
+        {
+          "text": "sin embargo",
+          "definition": "se usa para indicar oposición a lo dicho anteriormente sin impedir lo que se enuncia",
+          "translations": {
+            "br": {
+              "text": "entretanto"
+            },
+            "dk": {
+              "text": "alligevel",
+              "pos": "adverb",
+              "gender": "-"
+            },
+            "en": {
+              "text": "however"
+            },
+            "ja": {
+              "text": "しかしながら、それでも",
+              "alternative_scripts": {
+                "romaji": "shikashi nagara, soredemo"
+              }
+            },
+            "nl": {
+              "text": "toch"
+            },
+            "sv": {
+              "text": "ändå",
+              "gender": "-"
+            }
+          },
+          "examples": [
+            {
+              "text": "No tengo sed. Sin embargo, probaré tu cóctel.",
+              "translations": {
+                "br": {
+                  "text": "Não tenho sede. Entretanto, vou provar seu coquetel."
+                },
+                "dk": {
+                  "text": "Jeg er ikke tørstig, men jeg vil alligevel godt prøve din cocktail."
+                },
+                "ja": {
+                  "text": "喉（のど）は渇（かわ）いていないが、それでも君（きみ）のカクテルを頂（いただ）こう。",
+                  "alternative_scripts": {
+                    "romaji": "Nodo wa kawaite inaiga, soredemo kimi no kakuteru o itadakoo."
+                  }
+                },
+                "nl": {
+                  "text": "Ik heb geen dorst. Toch zal ik je cocktail proberen."
+                },
+                "no": {
+                  "text": "Jeg er ikke tørst, men jeg vil allikevel smake på cocktailen din."
+                },
+                "sv": {
+                  "text": "Jag är inte törstig. Men jag kan smaka på din cocktail ändå."
+                }
+              }
+            },
+            {
+              "text": "No era tarde; sin embargo, estaba oscuro porque hacía mal tiempo."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "n_results": 7,
+  "page_number": 1,
+  "results_per_page": 10,
+  "n_pages": 1,
+  "available_n_pages": 1,
+  "results": [
+    {
+      "id": "ES_DE00019850",
+      "language": "es",
+      "headword": {
+        "text": "embargo",
+        "pos": "noun"
+      },
+      "senses": [
+        {
+          "id": "ES_SE00028255",
+          "definition": "retención de bienes por orden judicial"
+        },
+        {
+          "id": "ES_SE00028256",
+          "definition": "prohibición de comerciar con alguna mercancía"
+        }
+      ]
+    }
+  ]
+}
