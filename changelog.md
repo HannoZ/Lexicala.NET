@@ -1,5 +1,7 @@
 # Change log 
 ## Lexicala.NET
+1.3 - Updated to .NET 5 packages
+
 1.2 - Updated .NET Core Nuget packages to version 3.1.9
 
 1.1.1. - Fixed a bug in the LexicalaSearchParser that caused the Pos property of a SearchResultEntry to display System.String[] instead of the actual value
@@ -9,6 +11,21 @@
 1.0 - The Client and Parser project have been merged into a single project and Nuget package. 
 - `Lexicala.NET.Client` namespaces are changed to `Lexicala.NET`
 - `Lexicala.NET.Parser` namespaces are changed to `Lexicala.NET.Parsing`
+
+## Lexicala.NET.MicrosoftDependencyInjection
+1.3 - Updated to .NET 5 packages
+
+1.2 - Updated .NET Core Nuget packages to version 3.1.9
+
+1.1 - Inital version
+
+## Lexicala.NET.Autofac
+1.2. - Updated Autofac from 6.0 to 6.1
+
+1.1 - Inital version
+
+
+***
 
 **DEPRECATED PACKAGES**
 ## Lexicala.NET.Client
