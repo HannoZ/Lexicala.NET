@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Lexicala.NET.Parsing.Dto;
+using Lexicala.NET.Request;
 using Lexicala.NET.Response.Entries;
 using Lexicala.NET.Response.Languages;
+using Lexicala.NET.Response.Search;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Lexicala.NET.Parsing
@@ -30,6 +32,24 @@ namespace Lexicala.NET.Parsing
 
             var searchResult = await _lexicalaClient.BasicSearchAsync(searchText.ToLowerInvariant(), sourceLanguage);
 
+            return await ProcessSearchResult(searchText, searchResult);
+        }
+        
+
+        public async Task<SearchResultModel> SearchAsync(AdvancedSearchRequest searchRequest, params string[] targetLanguages)
+        {
+            var languages = await LoadLanguages();
+            if (!languages.Global.SourceLanguages.Contains(searchRequest.Language))
+            {
+                throw new ArgumentException($"Invalid value. '{searchRequest.Language}' does not appear in the Global source languages list");
+            }
+
+            var searchResult = await _lexicalaClient.AdvancedSearchAsync(searchRequest);
+            return await ProcessSearchResult(searchRequest.SearchText, searchResult);
+        }
+
+        private async Task<SearchResultModel> ProcessSearchResult(string searchText, SearchResponse searchResult)
+        {
             var entries = new List<Entry>();
             foreach (var result in searchResult.Results)
             {
@@ -270,7 +290,7 @@ namespace Lexicala.NET.Parsing
         {
             // json response is a bit flawed: it returns an object for 1 result, or an array for multiple results. this is difficult to deserialize so that's why this line looks a bit strange
             var translations = (clo.Language != null
-                                   ? new List<Translation> { new Translation { Language = languageCode, Text = clo.Language.Text } }
+                                   ? new List<Translation> { new() { Language = languageCode, Text = clo.Language.Text } }
                                    : clo.CommonLanguageObjectArray?.Select(nl => new Translation { Text = nl.Text, Language = languageCode }).ToList())
                                ?? new List<Translation>();
             return translations;

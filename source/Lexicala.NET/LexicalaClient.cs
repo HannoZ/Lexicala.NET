@@ -53,12 +53,12 @@ namespace Lexicala.NET
         {
             if (sourceLanguage.Length != 2)
             {
-                throw new ArgumentException($"Invalid language code provided ({sourceLanguage}), a valid language code is two characters");
+                throw new ArgumentException($"Invalid language code provided ({sourceLanguage}), a valid language code is two characters", nameof(sourceLanguage));
             }
 
             if (string.IsNullOrEmpty(searchText))
             {
-                throw new ArgumentException("SearchText cannot be empty");
+                throw new ArgumentException("SearchText cannot be empty", nameof(searchText));
             }
 
             return ExecuteSearch($"{Search}?language={sourceLanguage}&text={searchText}", etag);
