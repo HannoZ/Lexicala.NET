@@ -1,5 +1,9 @@
 # Change log 
 ## Lexicala.NET
+1.5 - As an updated to version 1.4, an overload was added to `ILexicalaSearchParser` to allow advanced search parameters. For example searching for 'sin embargo' requires parameter '`analysed=true`' in order to return results
+
+1.4 - Implemented 'composite phrases' parsing, this has now been added to the parsed search result. 
+
 1.3 - Updated to .NET 5 packages
 
 1.2 - Updated .NET Core Nuget packages to version 3.1.9
@@ -20,7 +24,9 @@
 1.1 - Inital version
 
 ## Lexicala.NET.Autofac
-1.2. - Updated Autofac from 6.0 to 6.1
+1.3 - Updated Autofac to 6.2
+
+1.2 - Updated Autofac from 6.0 to 6.1
 
 1.1 - Inital version
 
