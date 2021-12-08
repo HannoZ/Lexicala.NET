@@ -13,9 +13,11 @@ using Lexicala.NET.Response.Me;
 using Lexicala.NET.Response.Search;
 using Lexicala.NET.Response.Test;
 using Newtonsoft.Json;
+using Sense = Lexicala.NET.Response.Entries.Sense;
 
 namespace Lexicala.NET
 {
+    /// <inheritdoc cref="ILexicalaClient" />
     public class LexicalaClient : ILexicalaClient
     {
         private readonly HttpClient _httpClient;
@@ -23,32 +25,44 @@ namespace Lexicala.NET
         private const string Test = "/test";
         private const string Me = "/users/me";
         private const string Search = "/search";
+        private const string SearchEntries = "/search-entries";
         private const string Entries = "/entries";
         private const string Languages = "/languages";
+        private const string Senses = "/senses";
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="LexicalaClient"/> class.
+        /// </summary>
+        /// <remarks>
+        /// This class should not be instantiated directly, but registered as implementation of the <see cref="ILexicalaClient"/> interface in the dependency injection framework.
+        /// </remarks>
         public LexicalaClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
+        /// <inheritdoc />
         public async Task<TestResponse> TestAsync()
         {
             var response = await _httpClient.GetStringAsync(Test);
             return JsonConvert.DeserializeObject<TestResponse>(response);
         }
 
+        /// <inheritdoc />
         public async Task<MeResponse> MeAsync()
         {
             var response = await _httpClient.GetStringAsync(Me);
             return JsonConvert.DeserializeObject<MeResponse>(response);
         }
 
+        /// <inheritdoc />
         public async Task<LanguagesResponse> LanguagesAsync()
         {
             var response = await _httpClient.GetStringAsync(Languages);
             return JsonConvert.DeserializeObject<LanguagesResponse>(response);
         }
 
+        /// <inheritdoc />
         public Task<SearchResponse> BasicSearchAsync(string searchText, string sourceLanguage, string etag = null)
         {
             if (sourceLanguage.Length != 2)
@@ -64,6 +78,7 @@ namespace Lexicala.NET
             return ExecuteSearch($"{Search}?language={sourceLanguage}&text={searchText}", etag);
         }
 
+        /// <inheritdoc />
         public Task<SearchResponse> AdvancedSearchAsync(AdvancedSearchRequest searchRequest)
         {
             if (searchRequest.Language?.Length != 2)
@@ -118,7 +133,7 @@ namespace Lexicala.NET
             {
                 queryStringBuilder.Append("&page=" + searchRequest.Page);
             }
-            if (searchRequest.PageLength != 10 && searchRequest.PageLength > 0 && searchRequest.PageLength <= 30)
+            if (searchRequest.PageLength != 10 && searchRequest.PageLength is > 0 and <= 30)
             {
                 queryStringBuilder.Append("&page-length=" + searchRequest.PageLength);
             }
@@ -133,11 +148,7 @@ namespace Lexicala.NET
         private async Task<SearchResponse> ExecuteSearch(string querystring, string etag)
         {
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, querystring);
-
-            if (etag != null)
-            {
-                httpRequest.Headers.Add("If-None-Match", etag);
-            }
+            AddETagIfPresent(etag, httpRequest);
 
             using var response = await _httpClient.SendAsync(httpRequest);
 
@@ -153,14 +164,11 @@ namespace Lexicala.NET
         }
 
 
+        /// <inheritdoc />
         public async Task<Entry> GetEntryAsync(string entryId, string etag = null)
         {
             using var request = new HttpRequestMessage(HttpMethod.Get, $"{Entries}/{entryId}");
-
-            if (etag != null)
-            {
-                request.Headers.Add("If-None-Match", etag);
-            }
+            AddETagIfPresent(etag, request);
 
             using var response = await _httpClient.SendAsync(request);
 
@@ -173,6 +181,34 @@ namespace Lexicala.NET
             responseObject.Metadata = GetResponseMetadata(response.Headers);
 
             return responseObject;
+        }
+
+        /// <inheritdoc />
+        public async Task<Sense> GetSenseAsync(string senseId, string etag = null)
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Get, $"{Senses}/{senseId}");
+            AddETagIfPresent(etag, request);
+
+            using var response = await _httpClient.SendAsync(request);
+
+            // until we have a better error-handling mechanism we just let the code throw built-in exception if request was not successful
+            response.EnsureSuccessStatusCode();
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            var responseObject = JsonConvert.DeserializeObject<Sense>(result, EntryResponseJsonConverter.Settings);
+            responseObject.Metadata = GetResponseMetadata(response.Headers);
+
+            return responseObject;
+
+        }
+
+        private static void AddETagIfPresent(string etag, HttpRequestMessage request)
+        {
+            if (etag != null)
+            {
+                request.Headers.Add("If-None-Match", etag);
+            }
         }
 
         private static ResponseMetadata GetResponseMetadata(HttpResponseHeaders headers)

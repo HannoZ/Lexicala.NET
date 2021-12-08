@@ -11,17 +11,23 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Lexicala.NET.Parsing
 {
+    /// <inheritdoc />
     public class LexicalaSearchParser : ILexicalaSearchParser
     {
         private readonly ILexicalaClient _lexicalaClient;
         private readonly IMemoryCache _memoryCache;
-
+        
+        /// <summary>
+        /// Creates a new instance of the <see cref="LexicalaSearchParser"/> class.
+        /// </summary>
+        /// <remarks>Intended to be used by the current dependency injection framework.</remarks>
         public LexicalaSearchParser(ILexicalaClient lexicalaClient, IMemoryCache memoryCache)
         {
             _lexicalaClient = lexicalaClient;
             _memoryCache = memoryCache;
         }
 
+        /// <inheritdoc />
         public async Task<SearchResultModel> SearchAsync(string searchText, string sourceLanguage, params string[] targetLanguages)
         {
             var languages = await LoadLanguages();
@@ -34,8 +40,9 @@ namespace Lexicala.NET.Parsing
 
             return await ProcessSearchResult(searchText, searchResult);
         }
-        
 
+
+        /// <inheritdoc />
         public async Task<SearchResultModel> SearchAsync(AdvancedSearchRequest searchRequest, params string[] targetLanguages)
         {
             var languages = await LoadLanguages();
@@ -47,6 +54,14 @@ namespace Lexicala.NET.Parsing
             var searchResult = await _lexicalaClient.AdvancedSearchAsync(searchRequest);
             return await ProcessSearchResult(searchRequest.SearchText, searchResult);
         }
+
+        /// <inheritdoc />
+        public async Task<SearchResultEntry> GetEntryAsync(string entryId, params string[] targetLanguages)
+        {
+            var entry = await _lexicalaClient.GetEntryAsync(entryId);
+            return ParseEntry(entry, targetLanguages);
+        }
+
 
         private async Task<SearchResultModel> ProcessSearchResult(string searchText, SearchResponse searchResult)
         {
@@ -88,11 +103,6 @@ namespace Lexicala.NET.Parsing
             return returnModel;
         }
 
-        public async Task<SearchResultEntry> GetEntryAsync(string entryId, params string[] targetLanguages)
-        {
-            var entry = await _lexicalaClient.GetEntryAsync(entryId);
-            return ParseEntry(entry, targetLanguages);
-        }
 
         private static SearchResultEntry ParseEntry(Entry entry, params string[] targetLanguages)
         {
@@ -291,7 +301,7 @@ namespace Lexicala.NET.Parsing
             // json response is a bit flawed: it returns an object for 1 result, or an array for multiple results. this is difficult to deserialize so that's why this line looks a bit strange
             var translations = (clo.Language != null
                                    ? new List<Translation> { new() { Language = languageCode, Text = clo.Language.Text } }
-                                   : clo.CommonLanguageObjectArray?.Select(nl => new Translation { Text = nl.Text, Language = languageCode }).ToList())
+                                   : clo.Languages?.Select(nl => new Translation { Text = nl.Text, Language = languageCode }).ToList())
                                ?? new List<Translation>();
             return translations;
         }

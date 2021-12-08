@@ -87,7 +87,7 @@ namespace Lexicala.NET.ConsoleApp.NET472
                                 }
                                 else
                                 {
-                                    Console.WriteLine(string.Join(", ", senseTranslation.CommonLanguageObjectArray.Select(l => l.Text)));
+                                    Console.WriteLine(string.Join(", ", senseTranslation.Languages.Select(l => l.Text)));
                                 }
                             }
                         }

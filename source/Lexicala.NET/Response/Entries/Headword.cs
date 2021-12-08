@@ -28,7 +28,25 @@ namespace Lexicala.NET.Response.Entries
         [JsonProperty("additional_inflections")]
         public string[] AdditionalInflections { get; set; } = { };
 
-        public Pronunciation[] Pronunciations => PronunciationObject.PronunciationArray ?? new[] {PronunciationObject.Pronunciation};
-        public string[] PartOfSpeeches => Pos.PartOfSpeechArray ?? new[] {Pos.PartOfSpeech};
+        public Pronunciation[] Pronunciations
+        {
+            get
+            {
+                if (PronunciationObject.PronunciationArray != null)
+                {
+                    return PronunciationObject.PronunciationArray;
+                }
+                else if (PronunciationObject.Pronunciation != null)
+                {
+                    return new[] { PronunciationObject.Pronunciation };
+                }
+                else
+                {
+                    return new Pronunciation[0];
+                }
+            }
+        }
+
+        public string[] PartOfSpeeches => Pos.PartOfSpeechArray ?? new[] { Pos.PartOfSpeech };
     }
 }

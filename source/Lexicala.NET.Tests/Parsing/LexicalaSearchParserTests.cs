@@ -59,7 +59,7 @@ namespace Lexicala.NET.Parser.Tests
             string searchResult = await LoadResponseFromFile("Search_es_blando_analyzed.json");
             string entry1 = await LoadResponseFromFile("ES_DE00008087.json");
             string entry2 = await LoadResponseFromFile("ES_DE00008088.json");
-            
+
             var apiResult = JsonConvert.DeserializeObject<SearchResponse>(searchResult, SearchResponseJsonConverter.Settings);
             apiResult.Metadata = new ResponseMetadata();
             var entryResult1 = JsonConvert.DeserializeObject<Entry>(entry1, EntryResponseJsonConverter.Settings);
@@ -84,7 +84,7 @@ namespace Lexicala.NET.Parser.Tests
             // ASSERT
             result.Summary("nl").ShouldBe("blandir: zwaaien | blando/blanda: zacht, toegeeflijk, laf");
             result.Results.SelectMany(r => r.Stems).ShouldNotBeEmpty();
-            result.Results.ShouldAllBe(r=> !r.Pos.StartsWith("System.String"));
+            result.Results.ShouldAllBe(r => !r.Pos.StartsWith("System.String"));
         }
 
         [TestMethod]
@@ -97,14 +97,18 @@ namespace Lexicala.NET.Parser.Tests
             apiResult.Metadata = new ResponseMetadata();
             var entryResult1 = JsonConvert.DeserializeObject<Entry>(entry1, EntryResponseJsonConverter.Settings);
             entryResult1.Metadata = new ResponseMetadata();
-            
+
             _mocker.GetMock<ILexicalaClient>()
                 .Setup(m => m.BasicSearchAsync("test", "es", null))
                 .ReturnsAsync(apiResult);
             _mocker.GetMock<ILexicalaClient>()
-                .Setup(m => m.GetEntryAsync("ES_DE00019850", null))
-                .ReturnsAsync(entryResult1);
-            
+                .Setup(m => m.GetEntryAsync(It.IsAny<string>(), null))
+                .ReturnsAsync(new Entry());
+            _mocker.GetMock<ILexicalaClient>()
+    .Setup(m => m.GetEntryAsync("ES_DE00019850", null))
+    .ReturnsAsync(entryResult1);
+
+
             var result = await _lexicalaSearchParser.SearchAsync("test", "es");
 
             var comps = result.Results.SelectMany(r => r.Senses).SelectMany(s => s.CompositionalPhrases).ToList();
