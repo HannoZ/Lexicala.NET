@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 namespace Lexicala.NET.Response.Me
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Permissions
     {
         [JsonProperty("activation")]
@@ -20,4 +21,5 @@ namespace Lexicala.NET.Response.Me
         [JsonProperty("creation_date")]
         public DateTimeOffset CreationDate { get; set; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

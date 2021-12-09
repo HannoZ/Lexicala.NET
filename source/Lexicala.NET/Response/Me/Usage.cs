@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 namespace Lexicala.NET.Response.Me
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Usage
     {
         [JsonProperty("today")]
@@ -14,4 +15,5 @@ namespace Lexicala.NET.Response.Me
         [JsonProperty("history")]
         public Dictionary<string, long> History { get; set; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

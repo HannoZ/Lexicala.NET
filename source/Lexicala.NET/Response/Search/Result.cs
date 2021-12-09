@@ -2,6 +2,7 @@
 
 namespace Lexicala.NET.Response.Search
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Result
     {
         [JsonProperty("id")]
@@ -17,4 +18,5 @@ namespace Lexicala.NET.Response.Search
         public Sense[] Senses { get; set; } = { };
     }
 
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
