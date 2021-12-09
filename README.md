@@ -3,7 +3,8 @@
 ![Autofac](https://github.com/HannoZ/Lexicala.NET/workflows/Build%20and%20Push%20to%20Nuget%20-%20Autofac/badge.svg)
 
 # Lexicala.NET
-A .NET Client for the Lexicala dictionary api. Target framework is .NET Standard so it should work with .NET 4.7.2 and higher and .NET Core. Version 1.3 has dependencies on  .NET 5 packages, earlier versions use .NET Core 3.1 packages. 
+A .NET Client for the Lexicala dictionary api. Target framework is .NET Standard so it should work with .NET 4.7.2 and higher and .NET Core. 
+Version 1.6 has dependencies on .NET 6 packages, earlier versions use .NET Core 3.1 packages. 
 
 ## About the repository
 The repository contains the .NET implementation for (part of) the Lexicala Api. It also contains parser logic that implements and uses the ILexicalaClient to execute a search request and parse the results into a model that is easier to use than the raw data from the api (at least for me it is ;-) ). For full documentation on the api visit the [Lexicala documentation page](https://api.lexicala.com/documentation).
@@ -38,6 +39,40 @@ This overload depends on a Lexicala section in your appsettings.json file:
 ```
 A similar package exists for [Autofac](https://www.nuget.org/packages/Lexicala.NET.Autofac/);
 Now you can either inject and use the ILexicalaClient directly, or use the ILexicalaSearchParser. 
+
+## Code examples
+````c#
+// get available languages in the Global dictionary
+var response = await lexicalaClient.LanguagesAsync();
+languages = response.Resources.Global;
+
+// execute a basic search using the Lexicala client for the word árbol in spanish
+var searchTerm = "árbol";
+var srcLang = "en";
+var searchResponse = await lexicalaClient.BasicSearchAsync(searchTerm, srcLang);
+foreach (var result in searchResponse.Results)
+{
+    // get the entry details
+    var entry = await lexicalaClient.GetEntryAsync(result.Id);
+    foreach (var sense in entry.Senses)
+    {
+        // the sense contains all the information
+    }
+}
+
+// use the LexicalaSearchParser to search for árbol in spanish
+string searchTerm = "árbol";
+string srcLang = "es";
+
+var resultModel = await lexicalaSearchParser.SearchAsync(searchTerm, srcLang);
+var summary_en = resultModel.Summary("en"); // "tree, shaft, post, mast"
+
+foreach(var result in resultModel.Results)
+{
+    // do something with result
+    string definition = result.Senses.First().Definition; // "planta de tronco leñoso y elevado"
+}
+````
 
 ## TODO
 - improve exception handling
