@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Lexicala.NET.Parsing.Dto
 {
-    public class SummaryHelper
+    internal class SummaryHelper
     {
         public static string CreateSummary(string searchText, ICollection<SearchResultEntry> results, string languageCode)
         {

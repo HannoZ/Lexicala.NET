@@ -2,6 +2,7 @@
 
 namespace Lexicala.NET.Response.Entries
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Headword
     {
         [JsonProperty("text")]
@@ -49,4 +50,5 @@ namespace Lexicala.NET.Response.Entries
 
         public string[] PartOfSpeeches => Pos.PartOfSpeechArray ?? new[] { Pos.PartOfSpeech };
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

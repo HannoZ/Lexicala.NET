@@ -90,7 +90,8 @@ namespace Lexicala.NET.Parsing
             var returnModel = new SearchResultModel
             {
                 SearchText = searchText.ToLowerInvariant(),
-                ETag = searchResult.Metadata.ETag
+                TotalResults = searchResult.NResults,
+                Metadata = searchResult.Metadata
             };
 
             foreach (var entry in entries)
@@ -135,9 +136,11 @@ namespace Lexicala.NET.Parsing
                 SubCategory = string.Join(",", entry.Headwords.Select(hw => hw.Subcategorization)),
                 Pronunciation = string.Join(",", pronunciations),
                 Text = string.Join("/", entry.Headwords.Select(hw => hw.Text)),
-                Gender = gender,
-                Stems = entry.Headwords.SelectMany(hw => hw.AdditionalInflections).ToList()
+                Gender = gender
             };
+
+            resultModel.Stems.AddRange(entry.Headwords.SelectMany(hw => hw.AdditionalInflections));
+
 
             foreach (var infl in entry.Headwords.Select(hw => hw.Inflections))
             {
@@ -152,38 +155,114 @@ namespace Lexicala.NET.Parsing
 
             foreach (var sourceSense in entry.Senses)
             {
-                var targetSense = new Dto.Sense
+                var targetSense = ParseSense(sourceSense, targetLanguages);
+                resultModel.Senses.Add(targetSense);
+            }
+
+            return resultModel;
+        }
+
+        private static Dto.Sense ParseSense(Response.Entries.Sense sourceSense, string[] targetLanguages)
+        {
+            var targetSense = new Dto.Sense
+            {
+                Id = sourceSense.Id,
+                Definition = sourceSense.Definition
+            };
+
+            targetSense.Synonyms.AddRange(sourceSense.Synonyms);
+
+            if (sourceSense.Translations != null)
+            {
+                var translations = new List<Translation>();
+                if (targetLanguages?.Length > 0)
                 {
-                    Id = sourceSense.Id,
-                    Definition = sourceSense.Definition,
-                    Synonyms = sourceSense.Synonyms
+                    foreach (var languageCode in targetLanguages)
+                    {
+                        if (sourceSense.Translations.ContainsKey(languageCode))
+                        {
+                            translations.AddRange(ParseTranslation(languageCode, sourceSense.Translations[languageCode]));
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var sourceSenseTranslation in sourceSense.Translations)
+                    {
+                        translations.AddRange(ParseTranslation(sourceSenseTranslation.Key, sourceSenseTranslation.Value));
+                    }
+                }
+
+                targetSense.Translations.AddRange(translations);
+            }
+
+            foreach (var sourceExample in sourceSense.Examples)
+            {
+                var translations = new List<Translation>();
+
+                var example = new Dto.Example
+                {
+                    Sentence = sourceExample.Text
                 };
 
-                if (sourceSense.Translations != null)
+                if (sourceExample.Translations != null)
+                {
+                    if (targetLanguages?.Length > 0)
+                    {
+                        foreach (var languageCode in targetLanguages)
+                        {
+                            if (sourceExample.Translations.ContainsKey(languageCode))
+                            {
+                                translations.AddRange(ParseTranslation(languageCode, sourceExample.Translations[languageCode]));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var sourceExampleTranslation in sourceExample.Translations)
+                        {
+                            translations.AddRange(ParseTranslation(sourceExampleTranslation.Key, sourceExampleTranslation.Value));
+                        }
+                    }
+                }
+
+                example.Translations.AddRange(translations);
+                targetSense.Examples.Add(example);
+            }
+
+            foreach (var compositionalPhrase in sourceSense.CompositionalPhrases)
+            {
+                var comp = new Dto.CompositionalPhrase
+                {
+                    Text = compositionalPhrase.Text,
+                    Definition = compositionalPhrase.Definition
+                };
+
+                if (compositionalPhrase.Translations != null)
                 {
                     var translations = new List<Translation>();
                     if (targetLanguages?.Length > 0)
                     {
                         foreach (var languageCode in targetLanguages)
                         {
-                            if (sourceSense.Translations.ContainsKey(languageCode))
+                            if (compositionalPhrase.Translations.ContainsKey(languageCode))
                             {
-                                translations.AddRange(ParseTranslation(languageCode, sourceSense.Translations[languageCode]));
+                                translations.AddRange(ParseTranslation(languageCode, compositionalPhrase.Translations[languageCode]));
                             }
                         }
                     }
                     else
                     {
-                        foreach (var sourceSenseTranslation in sourceSense.Translations)
+                        foreach (var sourceSenseTranslation in compositionalPhrase.Translations)
                         {
                             translations.AddRange(ParseTranslation(sourceSenseTranslation.Key, sourceSenseTranslation.Value));
                         }
                     }
 
-                    targetSense.Translations = translations;
+                    comp.Translations.AddRange(translations);
                 }
 
-                foreach (var sourceExample in sourceSense.Examples)
+                foreach (var sourceExample in compositionalPhrase.Examples)
                 {
                     var translations = new List<Translation>();
 
@@ -214,86 +293,20 @@ namespace Lexicala.NET.Parsing
                         }
                     }
 
-                    example.Translations = translations;
-
-                    targetSense.Examples.Add(example);
+                    example.Translations.AddRange(translations);
+                    comp.Examples.Add(example);
                 }
 
-                foreach (var compositionalPhrase in sourceSense.CompositionalPhrases)
+                foreach (var sense in compositionalPhrase.Senses)
                 {
-                    var comp = new Dto.CompositionalPhrase
-                    {
-                        Text = compositionalPhrase.Text,
-                        Definition = compositionalPhrase.Definition
-                    };
-
-                    if (compositionalPhrase.Translations != null)
-                    {
-                        var translations = new List<Translation>();
-                        if (targetLanguages?.Length > 0)
-                        {
-                            foreach (var languageCode in targetLanguages)
-                            {
-                                if (compositionalPhrase.Translations.ContainsKey(languageCode))
-                                {
-                                    translations.AddRange(ParseTranslation(languageCode, compositionalPhrase.Translations[languageCode]));
-                                }
-                            }
-                        }
-                        else
-                        {
-                            foreach (var sourceSenseTranslation in compositionalPhrase.Translations)
-                            {
-                                translations.AddRange(ParseTranslation(sourceSenseTranslation.Key, sourceSenseTranslation.Value));
-                            }
-                        }
-
-                        comp.Translations = translations;
-                    }
-
-                    foreach (var sourceExample in compositionalPhrase.Examples)
-                    {
-                        var translations = new List<Translation>();
-
-                        var example = new Dto.Example
-                        {
-                            Sentence = sourceExample.Text
-                        };
-
-                        if (sourceExample.Translations != null)
-                        {
-                            if (targetLanguages?.Length > 0)
-                            {
-                                foreach (var languageCode in targetLanguages)
-                                {
-                                    if (sourceExample.Translations.ContainsKey(languageCode))
-                                    {
-                                        translations.AddRange(ParseTranslation(languageCode, sourceExample.Translations[languageCode]));
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                foreach (var sourceExampleTranslation in sourceExample.Translations)
-                                {
-                                    translations.AddRange(ParseTranslation(sourceExampleTranslation.Key,
-                                        sourceExampleTranslation.Value));
-                                }
-                            }
-                        }
-
-                        example.Translations = translations;
-
-                        comp.Examples.Add(example);
-                    }
-
-                    targetSense.CompositionalPhrases.Add(comp);
+                    var subSense = ParseSense(sense, targetLanguages);
+                    comp.Senses.Add(subSense);
                 }
 
-                resultModel.Senses.Add(targetSense);
+                targetSense.CompositionalPhrases.Add(comp);               
             }
 
-            return resultModel;
+            return targetSense;
         }
 
         private static IEnumerable<Translation> ParseTranslation(string languageCode, LanguageObject clo)

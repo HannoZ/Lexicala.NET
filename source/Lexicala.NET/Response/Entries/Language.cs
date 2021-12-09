@@ -2,6 +2,7 @@
 
 namespace Lexicala.NET.Response.Entries
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Language
     {
         [JsonProperty("text")]
@@ -16,4 +17,5 @@ namespace Lexicala.NET.Response.Entries
         [JsonProperty("alternative_scripts", NullValueHandling = NullValueHandling.Ignore)]
         public AlternativeScripts AlternativeScripts { get; set; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
