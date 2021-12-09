@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 namespace Lexicala.NET.Response.Languages
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class LanguagesResponse
     {
         [JsonProperty("language_names")]
@@ -11,4 +12,5 @@ namespace Lexicala.NET.Response.Languages
         [JsonProperty("resources")]
         public Resources Resources { get; set; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

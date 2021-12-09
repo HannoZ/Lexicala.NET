@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using Lexicala.NET.MicrosoftDependencyInjection;
+using Lexicala.NET.Request;
 
 namespace Lexicala.NET.ConsoleApp
 {
@@ -68,7 +69,14 @@ namespace Lexicala.NET.ConsoleApp
 
                 try
                 {
-                    var result = await parser.SearchAsync(searchTerm, srcLang);
+                    var request = new AdvancedSearchRequest()
+                    {
+                        SearchText = searchTerm,
+                        Language = srcLang,
+                        Analyzed = true
+                    };
+
+                    var result = await parser.SearchAsync(request);
                     var summary = result.Summary(tgtLang);
                     if (string.IsNullOrEmpty(summary))
                     {

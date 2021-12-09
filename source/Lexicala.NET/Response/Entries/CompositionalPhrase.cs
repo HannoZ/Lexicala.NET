@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 namespace Lexicala.NET.Response.Entries
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class CompositionalPhrase
     {
         [JsonProperty("text")]
@@ -21,9 +22,10 @@ namespace Lexicala.NET.Response.Entries
         public Dictionary<string, LanguageObject> Translations { get; set; }
 
         [JsonProperty("examples")]
-        public Example[] Examples { get; set; }
+        public Example[] Examples { get; set; } = { };
 
         [JsonProperty("semantic_category", NullValueHandling = NullValueHandling.Ignore)]
         public string SemanticCategory { get; set; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

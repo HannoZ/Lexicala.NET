@@ -8,6 +8,9 @@ using Lexicala.NET.Response.Test;
 
 namespace Lexicala.NET
 {
+    /// <summary>
+    /// The Lexicala client contains all the methods that can be executed on the Lexicala API. 
+    /// </summary>
     public interface ILexicalaClient
     {
         /// <summary>
@@ -32,7 +35,7 @@ namespace Lexicala.NET
         /// Search for entries in the 'Global' source.
         /// </summary>
         /// <remarks>
-        /// The search result consists of a JSON object containing partial lexical information on entries that match the search criteria. To obtain further, more in-depth information for each entry, see <see cref="GetEntryAsync"/>.
+        /// The search result consists of a JSON object containing partial lexical information on entries that match the search criteria. To obtain further, more in-depth, information for each entry, see <see cref="GetEntryAsync"/>.
         /// </remarks>
         /// <param name="searchText">Specify a headword</param>
         /// <param name="sourceLanguage">Specify which source language to look in.</param>
@@ -53,7 +56,12 @@ namespace Lexicala.NET
         /// </remarks>
         /// <param name="entryId">The entry ID</param>
         /// <param name="etag">Optional.</param>
-        /// <returns></returns>
         Task<Entry> GetEntryAsync(string entryId, string etag = null);
+        /// <summary>
+        /// Retrieve a sense by it's ID. 
+        /// </summary>
+        /// <param name="senseId">The sense ID</param>
+        /// <param name="etag">Optional.</param>
+        Task<Response.Entries.Sense> GetSenseAsync(string senseId, string etag = null);
     }
 }

@@ -1,4 +1,4 @@
-{
+﻿{
   "n_results": 7,
   "page_number": 1,
   "results_per_page": 10,
@@ -6,20 +6,1029 @@
   "available_n_pages": 1,
   "results": [
     {
-      "id": "ES_DE00019850",
+      "id": "ES_DE00019849",
+      "source": "global",
       "language": "es",
+      "version": 1,
+      "headword": {
+        "text": "embargar",
+        "pronunciation": {
+          "value": "embaɾ'γaɾ"
+        },
+        "pos": "verb",
+        "subcategorization": "transitive"
+      },
+      "senses": [
+        {
+          "id": "ES_SE00028253",
+          "definition": "retener un bien una autoridad judicial",
+          "semantic_category": "law",
+          "translations": {
+            "br": {
+              "text": "embargar"
+            },
+            "dk": [
+              {
+                "text": "beslaglægge"
+              },
+              {
+                "text": "konfiskere"
+              },
+              {
+                "text": "standse"
+              }
+            ],
+            "en": {
+              "text": "to seize"
+            },
+            "ja": {
+              "text": "差押（さしおさ）える",
+              "alternative_scripts": {
+                "romaji": "sashi osaeru"
+              }
+            },
+            "nl": {
+              "text": "in beslag nemen"
+            },
+            "no": [
+              {
+                "text": "beslaglegge"
+              },
+              {
+                "text": "holde tilbake"
+              }
+            ],
+            "sv": [
+              {
+                "text": "ta i beslag"
+              },
+              {
+                "text": "lägga embargo på"
+              },
+              {
+                "text": "utmäta"
+              }
+            ]
+          },
+          "examples": [
+            {
+              "text": "embargar un sueldo",
+              "translations": {
+                "br": {
+                  "text": "embargar um salário"
+                },
+                "dk": {
+                  "text": "at beslaglægge en lønudbetaling"
+                },
+                "en": {
+                  "text": "to seize a wage"
+                },
+                "ja": {
+                  "text": "給料（きゅうりょう）を差押（さしおさ）える",
+                  "alternative_scripts": {
+                    "romaji": "kyuuryoo o sashi osaeru"
+                  }
+                },
+                "nl": {
+                  "text": "een salaris in beslag nemen"
+                },
+                "no": {
+                  "text": "holde tilbake en lønning"
+                },
+                "sv": {
+                  "text": "ta en lön i beslag"
+                }
+              }
+            },
+            {
+              "text": "embargar la casa a alguien que no paga"
+            }
+          ]
+        },
+        {
+          "id": "ES_SE00028254",
+          "definition": "causar una sensación o una gran emoción en una persona",
+          "synonyms": [
+            "cautivar",
+            "embriagar"
+          ],
+          "translations": {
+            "br": {
+              "text": "absorver"
+            },
+            "dk": [
+              {
+                "text": "overvælde"
+              },
+              {
+                "text": "fylde"
+              },
+              {
+                "text": "overmande"
+              }
+            ],
+            "en": {
+              "text": "to be overwhelmed by"
+            },
+            "ja": {
+              "text": "満（みた）たす、一杯（いっぱい）にする",
+              "alternative_scripts": {
+                "romaji": "mitasu, ip-pai ni suru"
+              }
+            },
+            "nl": {
+              "text": "in beslag genomen zijn"
+            },
+            "no": {
+              "text": "fylle"
+            },
+            "sv": [
+              {
+                "text": "(upp)fylla"
+              },
+              {
+                "text": "fånga"
+              }
+            ]
+          },
+          "examples": [
+            {
+              "text": "Me embarga la felicidad.",
+              "translations": {
+                "br": {
+                  "text": "A felicidade me absorve."
+                },
+                "dk": {
+                  "text": "Lykkefølelsen overmandede mig."
+                },
+                "en": {
+                  "text": "I am overwhelmed by happiness."
+                },
+                "ja": {
+                  "text": "私（わたし）は幸（しあわ））せで一杯（いっぱい）になった。",
+                  "alternative_scripts": {
+                    "romaji": "Watashi wa shiawase de ip-pai ni nat-ta."
+                  }
+                },
+                "nl": {
+                  "text": "Ik word in beslag genomen door gelukzaligheid."
+                },
+                "no": {
+                  "text": "Jeg fylles av glede."
+                },
+                "sv": {
+                  "text": "Lyckan uppfyller mig."
+                }
+              }
+            },
+            {
+              "text": "Le embargaba la sospecha."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES_DE00019850",
+      "source": "global",
+      "language": "es",
+      "version": 1,
       "headword": {
         "text": "embargo",
-        "pos": "noun"
+        "pronunciation": {
+          "value": "em'baɾγo"
+        },
+        "pos": "noun",
+        "gender": "masculine"
       },
       "senses": [
         {
           "id": "ES_SE00028255",
-          "definition": "retenci�n de bienes por orden judicial"
+          "definition": "retención de bienes por orden judicial",
+          "semantic_category": "law",
+          "translations": {
+            "br": {
+              "text": "embargo",
+              "gender": "masculine"
+            },
+            "dk": [
+              {
+                "text": "beslaglæggelse",
+                "gender": "common"
+              },
+              {
+                "text": "konfiskation",
+                "gender": "common"
+              },
+              {
+                "text": "udpantning",
+                "gender": "common"
+              }
+            ],
+            "en": {
+              "text": "seizure"
+            },
+            "ja": {
+              "text": "差押（さしおさ）え　、押収（おうしゅう）、没収（ぼっしゅう）",
+              "alternative_scripts": {
+                "romaji": "sashi osae, ooshuu, bos-shuu"
+              }
+            },
+            "nl": {
+              "text": "beslaglegging",
+              "gender": "de"
+            },
+            "no": {
+              "text": "beslagleggelse",
+              "gender": "masculine"
+            },
+            "sv": {
+              "text": "utmätning",
+              "gender": "common"
+            }
+          },
+          "examples": [
+            {
+              "text": "evitar un embargo",
+              "translations": {
+                "br": {
+                  "text": "evitar um embargo"
+                },
+                "dk": {
+                  "text": "at undgå en udpantning"
+                },
+                "en": {
+                  "text": "to avoid having one's goods seized"
+                },
+                "ja": {
+                  "text": "押収（おうしゅう）を免（まぬが）れる",
+                  "alternative_scripts": {
+                    "romaji": "ooshuu o manugareru"
+                  }
+                },
+                "nl": {
+                  "text": "een beslaglegging vermijden"
+                },
+                "no": {
+                  "text": "unngå en beslagleggelse"
+                },
+                "sv": {
+                  "text": "undvika en utmätning"
+                }
+              }
+            },
+            {
+              "text": "El juez ordenó el embargo de bienes del imputado."
+            }
+          ]
         },
         {
           "id": "ES_SE00028256",
-          "definition": "prohibici�n de comerciar con alguna mercanc�a"
+          "definition": "prohibición de comerciar con alguna mercancía",
+          "semantic_category": "commerce",
+          "translations": {
+            "br": {
+              "text": "embargo",
+              "gender": "masculine"
+            },
+            "dk": [
+              {
+                "text": "handelsboykot",
+                "gender": "common"
+              },
+              {
+                "text": "handelsembargo",
+                "gender": "common"
+              }
+            ],
+            "en": {
+              "text": "embargo"
+            },
+            "ja": {
+              "text": "輸出入禁止（ゆしゅつにゅうきんし）",
+              "alternative_scripts": {
+                "romaji": "yushutsunyu kinshi"
+              }
+            },
+            "nl": {
+              "text": "beslag",
+              "gender": "het"
+            },
+            "no": {
+              "text": "forbud, blokade",
+              "gender": "masculine"
+            },
+            "sv": {
+              "text": "embargo",
+              "gender": "neuter"
+            }
+          },
+          "examples": [
+            {
+              "text": "Cayó un embargo sobre las importaciones.",
+              "translations": {
+                "br": {
+                  "text": "Houve um embargo às importações."
+                },
+                "dk": {
+                  "text": "Importvarerne blev ramt af en boykot."
+                },
+                "en": {
+                  "text": "There was an embargo on imports."
+                },
+                "ja": {
+                  "text": "輸入品（ゆにゅうひん）が禁止品目（きんしひんもく）に抵触（ていしょく）した。",
+                  "alternative_scripts": {
+                    "romaji": "Yunyuuhin ga kinshi hinmoku ni teeshoku shita."
+                  }
+                },
+                "nl": {
+                  "text": "Er viel een beslag op de invoer."
+                },
+                "no": {
+                  "text": "Det ble innført en importblokade."
+                },
+                "sv": {
+                  "text": "Det lades ett embargo på import."
+                }
+              }
+            },
+            {
+              "text": "Con ese país rige un embargo económico de todo tipo de productos."
+            }
+          ],
+          "compositional_phrases": [
+            {
+              "text": "sin embargo",
+              "definition": "se usa para indicar oposición a lo dicho anteriormente sin impedir lo que se enuncia",
+              "translations": {
+                "br": {
+                  "text": "entretanto"
+                },
+                "dk": {
+                  "text": "alligevel",
+                  "pos": "adverb",
+                  "gender": "-"
+                },
+                "en": {
+                  "text": "however"
+                },
+                "ja": {
+                  "text": "しかしながら、それでも",
+                  "alternative_scripts": {
+                    "romaji": "shikashi nagara, soredemo"
+                  }
+                },
+                "nl": {
+                  "text": "toch"
+                },
+                "sv": {
+                  "text": "ändå",
+                  "gender": "-"
+                }
+              },
+              "examples": [
+                {
+                  "text": "No tengo sed. Sin embargo, probaré tu cóctel.",
+                  "translations": {
+                    "br": {
+                      "text": "Não tenho sede. Entretanto, vou provar seu coquetel."
+                    },
+                    "dk": {
+                      "text": "Jeg er ikke tørstig, men jeg vil alligevel godt prøve din cocktail."
+                    },
+                    "ja": {
+                      "text": "喉（のど）は渇（かわ）いていないが、それでも君（きみ）のカクテルを頂（いただ）こう。",
+                      "alternative_scripts": {
+                        "romaji": "Nodo wa kawaite inaiga, soredemo kimi no kakuteru o itadakoo."
+                      }
+                    },
+                    "nl": {
+                      "text": "Ik heb geen dorst. Toch zal ik je cocktail proberen."
+                    },
+                    "no": {
+                      "text": "Jeg er ikke tørst, men jeg vil allikevel smake på cocktailen din."
+                    },
+                    "sv": {
+                      "text": "Jag är inte törstig. Men jag kan smaka på din cocktail ändå."
+                    }
+                  }
+                },
+                {
+                  "text": "No era tarde; sin embargo, estaba oscuro porque hacía mal tiempo."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES_DE00047469",
+      "source": "global",
+      "language": "es",
+      "version": 1,
+      "headword": {
+        "text": "sino",
+        "pronunciation": {
+          "value": "'sino"
+        },
+        "pos": "noun",
+        "gender": "masculine",
+        "homograph_number": 2
+      },
+      "senses": [
+        {
+          "id": "ES_SE00068781",
+          "definition": "destino de una persona o cosa",
+          "register": "formal",
+          "translations": {
+            "br": {
+              "text": "sina",
+              "gender": "feminine"
+            },
+            "dk": {
+              "text": "skæbne",
+              "gender": "common"
+            },
+            "en": {
+              "text": "fate"
+            },
+            "ja": {
+              "text": "宿命（しゅくめい）、運命（うんめい）",
+              "alternative_scripts": {
+                "romaji": "shukumee, unmee"
+              }
+            },
+            "nl": {
+              "text": "(nood)lot",
+              "gender": "het"
+            },
+            "no": {
+              "text": "sjebne",
+              "gender": "masculine"
+            },
+            "sv": {
+              "text": "(framtids)öde",
+              "gender": "common"
+            }
+          },
+          "examples": [
+            {
+              "text": "Un sino trágico pesa sobre la familia.",
+              "translations": {
+                "br": {
+                  "text": "Uma sina trágica pesa sobre a família."
+                },
+                "dk": {
+                  "text": "En tragisk skæbne hviler over familien."
+                },
+                "ja": {
+                  "text": "悲劇的（ひげきてき）な宿命（しゅくめい）が家族（かぞく）の上（うえ）にのしかかる。",
+                  "alternative_scripts": {
+                    "romaji": "Higekiteki na shukumee ga kazoku no ue ni noshikakaru."
+                  }
+                },
+                "nl": {
+                  "text": "Een tragisch noodlot drukt op de familie."
+                },
+                "no": {
+                  "text": "En tragisk sjebne hang over familien."
+                },
+                "sv": {
+                  "text": "En tragiskt öde tyngde familjen."
+                }
+              }
+            },
+            {
+              "text": "Cuidar de todos ha sido su sino."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES_DE00047391",
+      "source": "global",
+      "language": "es",
+      "version": 1,
+      "headword": {
+        "text": "sin",
+        "pronunciation": {
+          "value": "'sin"
+        },
+        "pos": "preposition"
+      },
+      "senses": [
+        {
+          "id": "ES_SE00068678",
+          "definition": "señala la falta de una cosa material o inmaterial",
+          "antonyms": [
+            "con"
+          ],
+          "translations": {
+            "br": {
+              "text": "sem"
+            },
+            "dk": [
+              {
+                "text": "uden"
+              },
+              {
+                "text": "-fri"
+              },
+              {
+                "text": "-løs"
+              }
+            ],
+            "en": {
+              "text": "without"
+            },
+            "ja": {
+              "text": "～なしに、～なしで、～しないで、～せずに",
+              "alternative_scripts": {
+                "romaji": "～ nashi ni, ～ nashi de, ～ shinai de, ～ sezu ni"
+              }
+            },
+            "nl": {
+              "text": "zonder"
+            },
+            "no": {
+              "text": "uten"
+            },
+            "sv": {
+              "text": "utan"
+            }
+          },
+          "examples": [
+            {
+              "text": "Actúas sin reflexión.",
+              "translations": {
+                "br": {
+                  "text": "Você age sem reflexão."
+                },
+                "dk": {
+                  "text": "Du handler uovervejet."
+                },
+                "en": {
+                  "text": "You act without thinking."
+                },
+                "ja": {
+                  "text": "君（きみ）は熟慮（じゅくりょ）しないで行動（こうどう）する。",
+                  "alternative_scripts": {
+                    "romaji": "Kimi wa jukuryo shinai de koodoo suru."
+                  }
+                },
+                "nl": {
+                  "text": "Je handelt zonder na te denken."
+                },
+                "no": {
+                  "text": "Du handler uten å tenke."
+                },
+                "sv": {
+                  "text": "Du agerar utan att tänka efter."
+                }
+              }
+            },
+            {
+              "text": "Comió sin cubiertos."
+            }
+          ],
+          "compositional_phrases": [
+            {
+              "text": "sin + infinitivo",
+              "definition": "señala que la acción expresada por el infinitivo no se realiza",
+              "translations": {
+                "br": {
+                  "text": "sem + infinitivo"
+                },
+                "dk": {
+                  "text": "uden + infinitiv"
+                },
+                "en": {
+                  "text": "without + gerund"
+                },
+                "ja": {
+                  "text": "～しないで、～せずに",
+                  "alternative_scripts": {
+                    "romaji": "～ shinai de, ～ sezu ni"
+                  }
+                },
+                "nl": {
+                  "text": "zonder"
+                },
+                "sv": {
+                  "text": "utan att"
+                }
+              },
+              "examples": [
+                {
+                  "text": "Llegó de visita sin avisar.",
+                  "translations": {
+                    "br": {
+                      "text": "Chegou para visitar-nos sem avisar."
+                    },
+                    "dk": {
+                      "text": "Hun kom på besøg uden at give besked."
+                    },
+                    "en": {
+                      "text": "He arrived without warning us."
+                    },
+                    "ja": {
+                      "text": "彼（かれ）は予告（よこく）せずに訪（たず）ねて来（き）た。",
+                      "alternative_scripts": {
+                        "romaji": "Kare wa yokoku sezu ni tazunetekita."
+                      }
+                    },
+                    "nl": {
+                      "text": "Hij kwam zonder te waarschuwen op bezoek."
+                    },
+                    "no": {
+                      "text": "Han kom på besøk uten å si ifra."
+                    },
+                    "sv": {
+                      "text": "Hon kom och hälsade på utan att ha talat om det innan."
+                    }
+                  }
+                },
+                {
+                  "text": "Lo dijo sin querer."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES_DE00047468",
+      "source": "global",
+      "language": "es",
+      "version": 1,
+      "headword": {
+        "text": "sino",
+        "pronunciation": {
+          "value": "'sino"
+        },
+        "pos": "conjunction",
+        "homograph_number": 1
+      },
+      "senses": [
+        {
+          "id": "ES_SE00068778",
+          "definition": "introduce una frase que se opone al contenido de una negación anterior",
+          "semantic_subcategory": "por el contrario",
+          "translations": {
+            "br": {
+              "text": "mas sim"
+            },
+            "dk": [
+              {
+                "text": "men"
+              },
+              {
+                "text": "men derimod"
+              }
+            ],
+            "en": {
+              "text": "but"
+            },
+            "ja": {
+              "text": "～ではなく～、～しないで～",
+              "alternative_scripts": {
+                "romaji": "～ dewa naku ～, ～ shinai de ～"
+              }
+            },
+            "nl": {
+              "text": "maar"
+            },
+            "no": {
+              "text": "men derimot"
+            },
+            "sv": {
+              "text": "utan"
+            }
+          },
+          "examples": [
+            {
+              "text": "No vino solo, sino acompañado de toda su familia.",
+              "translations": {
+                "br": {
+                  "text": "Não veio sozinho, mas sim acompanhado de toda a sua família."
+                },
+                "dk": {
+                  "text": "Han kom ikke alene, men derimod med hele sin familie."
+                },
+                "en": {
+                  "text": "He didn't come alone, all his family was with him."
+                },
+                "ja": {
+                  "text": "彼（かれ）は独（ひと）りで来（こ）ないで家族全員（かぞくぜんいん）がついて来（き）た。",
+                  "alternative_scripts": {
+                    "romaji": "Kare wa hitori de konai de kazoku zen'in ga tsuitekita."
+                  }
+                },
+                "nl": {
+                  "text": "Hij kwam niet alleen maar hij werd begeleid door zijn hele familie."
+                },
+                "no": {
+                  "text": "Han kom ikke alene, men derimot sammen med hele familien sin."
+                },
+                "sv": {
+                  "text": "Han kom inte ensam utan tillsammans med sin familj."
+                }
+              }
+            },
+            {
+              "text": "Ante el escándalo en el ministerio no fue el ministro quien compareció ante los medios de comunicación, sino el presidente."
+            }
+          ]
+        },
+        {
+          "id": "ES_SE00068779",
+          "definition": "señala una persona o cosa que cumple con las características requeridas por una frase anterior",
+          "synonyms": [
+            "salvo"
+          ],
+          "translations": {
+            "br": {
+              "text": "a não ser"
+            },
+            "dk": [
+              {
+                "text": "kun"
+              },
+              {
+                "text": "ikke andet end"
+              }
+            ],
+            "en": {
+              "text": "but"
+            },
+            "ja": {
+              "text": "～だけ、～しか、単（たん）に～",
+              "alternative_scripts": {
+                "romaji": "～ dake, ～ shika, tan ni～"
+              }
+            },
+            "nl": {
+              "text": "behalve"
+            },
+            "no": {
+              "text": "ikke annet enn"
+            },
+            "sv": {
+              "text": "(för)utom"
+            }
+          },
+          "examples": [
+            {
+              "text": "No hace sino trabajar.",
+              "translations": {
+                "br": {
+                  "text": "Não faz nada a não ser trabalhar."
+                },
+                "dk": {
+                  "text": "Hun laver ikke andet end at arbejde."
+                },
+                "en": {
+                  "text": "He does nothing but work."
+                },
+                "ja": {
+                  "text": "彼（かれ）は働（はたら）くことしかしない。",
+                  "alternative_scripts": {
+                    "romaji": "Kare wa hataraku koto shika shinai."
+                  }
+                },
+                "nl": {
+                  "text": "Hij werkt alleen maar."
+                },
+                "no": {
+                  "text": "Hun gjør ikke annet enn å jobbe."
+                },
+                "sv": {
+                  "text": "Han gör inget förutom att arbeta."
+                }
+              }
+            },
+            {
+              "text": "No hace sino llevarme la contraria."
+            }
+          ]
+        },
+        {
+          "id": "ES_SE00068780",
+          "definition": "señala una excepción a una negación anterior",
+          "synonyms": [
+            "excepto"
+          ],
+          "translations": {
+            "br": {
+              "text": "a não ser"
+            },
+            "dk": [
+              {
+                "text": "undtagen"
+              },
+              {
+                "text": "bortset fra"
+              }
+            ],
+            "en": {
+              "text": "but"
+            },
+            "ja": {
+              "text": "～以外（いがい）は、～の他（ほか）は、～を除（のぞ）いて",
+              "alternative_scripts": {
+                "romaji": "～ igai wa, ～ no hoka wa, ～ o nozoite"
+              }
+            },
+            "nl": {
+              "text": "behalve"
+            },
+            "no": {
+              "text": "bortsett fra"
+            },
+            "sv": [
+              {
+                "text": "(för)utom"
+              },
+              {
+                "text": "med undantag för"
+              }
+            ]
+          },
+          "examples": [
+            {
+              "text": "Nadie acudió sino su hermano.",
+              "translations": {
+                "br": {
+                  "text": "Ninguém veio a não ser seu irmão."
+                },
+                "dk": {
+                  "text": "Ingen hjalp, bortset fra hans bror."
+                },
+                "en": {
+                  "text": "Nobody came but his brother."
+                },
+                "ja": {
+                  "text": "彼（かれ）の兄以外（あにいがい）は誰（だれ）も駆（か）けつけてこなかった。",
+                  "alternative_scripts": {
+                    "romaji": "Kare no ani igai wa daremo kaketsukete konakatta."
+                  }
+                },
+                "nl": {
+                  "text": "Niemand is komen opdagen, behalve zijn broer."
+                },
+                "no": {
+                  "text": "Ingen kom bortsett fra broren hans."
+                },
+                "sv": {
+                  "text": "Ingen gjorde något förutom hennes bror."
+                }
+              }
+            },
+            {
+              "text": "Nadie, sino tú, es capaz de hacer una cosa así."
+            }
+          ],
+          "compositional_phrases": [
+            {
+              "text": "sino también",
+              "definition": "en correlación con \"no solo\", indica que algo ocurre de la manera expresada",
+              "translations": {
+                "br": [
+                  {
+                    "text": "mas também"
+                  },
+                  {
+                    "text": "como também"
+                  }
+                ],
+                "dk": {
+                  "text": "men også"
+                },
+                "en": {
+                  "text": "but also"
+                },
+                "ja": {
+                  "text": "～も、～もまた",
+                  "alternative_scripts": {
+                    "romaji": "～ mo, ～ mo mata"
+                  }
+                },
+                "nl": {
+                  "text": "maar ook"
+                },
+                "sv": {
+                  "text": "utan även"
+                }
+              },
+              "examples": [
+                {
+                  "text": "No solo trabaja mucho, sino también estudia.",
+                  "translations": {
+                    "br": {
+                      "text": "Não só trabalha muito, como também estuda."
+                    },
+                    "dk": {
+                      "text": "Han arbejder ikke kun meget, men studerer også."
+                    },
+                    "en": {
+                      "text": "Not only does he work hard, he also studies."
+                    },
+                    "ja": {
+                      "text": "彼（かれ）はよく働（はたら）くだけでなく勉強（べんきょう）もする。",
+                      "alternative_scripts": {
+                        "romaji": "Kare wa yoku hataraku dake de naku benkyoo mo suru."
+                      }
+                    },
+                    "nl": {
+                      "text": "Hij werkt niet alleen veel maar hij studeert ook nog."
+                    },
+                    "no": {
+                      "text": "Ikke bare jobber han mye, men han studerer i tillegg."
+                    },
+                    "sv": {
+                      "text": "Hon arbetar inte bara mycket utan hon studerar också."
+                    }
+                  }
+                },
+                {
+                  "text": "Ese estudiante no solo es inteligente, sino que también es muy trabajador."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES_DE00047431",
+      "source": "global",
+      "language": "es",
+      "version": 3,
+      "headword": {
+        "text": "sine die",
+        "pronunciation": {
+          "value": "'sine 'ðie"
+        },
+        "pos": "Latin expression"
+      },
+      "senses": [
+        {
+          "id": "ES_SE00068728",
+          "definition": "sin plazo o fecha determinada",
+          "register": "formal",
+          "translations": {
+            "br": {
+              "text": "sine die"
+            }
+          },
+          "examples": [
+            {
+              "text": "La inauguración fue aplazada sine die.",
+              "translations": {
+                "br": {
+                  "text": "A inauguração foi postergada sine die."
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES_DE00047432",
+      "source": "global",
+      "language": "es",
+      "version": 3,
+      "headword": {
+        "text": "sine qua non",
+        "pronunciation": {
+          "value": "'sine 'kwanon"
+        },
+        "pos": "Latin expression"
+      },
+      "senses": [
+        {
+          "id": "ES_SE00068729",
+          "definition": "sin la cual no, referente a una condición que ha de cumplirse",
+          "translations": {
+            "br": {
+              "text": "sino qua non"
+            }
+          },
+          "examples": [
+            {
+              "text": "Estudiar es condición sine qua non para aprobar.",
+              "translations": {
+                "br": {
+                  "text": "Estudar é condição sine qua non para aprovar."
+                }
+              }
+            }
+          ]
         }
       ]
     }

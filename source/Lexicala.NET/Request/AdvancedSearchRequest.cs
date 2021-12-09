@@ -1,7 +1,13 @@
 ﻿namespace Lexicala.NET.Request
 {
+    /// <summary>
+    /// Contains all the properties that can be used as parameter in a search request.
+    /// </summary>
     public class AdvancedSearchRequest
     {
+        /// <summary>
+        /// Gets or sets the ETag.
+        /// </summary>
         public string ETag { get; set; }
         /// <summary>
         /// Specify which resource to look in. (See <see cref="Sources"/>).

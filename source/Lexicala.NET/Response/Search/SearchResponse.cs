@@ -2,26 +2,28 @@
 
 namespace Lexicala.NET.Response.Search
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class SearchResponse
     {
         [JsonProperty("n_results")]
-        public long NResults { get; set; }
+        public int NResults { get; set; }
 
         [JsonProperty("page_number")]
-        public long PageNumber { get; set; }
+        public int PageNumber { get; set; }
 
         [JsonProperty("results_per_page")]
-        public long ResultsPerPage { get; set; }
+        public int ResultsPerPage { get; set; }
 
         [JsonProperty("n_pages")]
-        public long NPages { get; set; }
+        public int NPages { get; set; }
 
         [JsonProperty("available_n_pages")]
-        public long AvailableNPages { get; set; }
+        public int AvailableNPages { get; set; }
 
         [JsonProperty("results")] 
         public Result[] Results { get; set; } = { };
 
         public ResponseMetadata Metadata { get; set; } = new ResponseMetadata();
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

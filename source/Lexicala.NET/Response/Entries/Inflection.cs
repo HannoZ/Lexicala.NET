@@ -2,6 +2,7 @@
 
 namespace Lexicala.NET.Response.Entries
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Inflection
     {
         [JsonProperty("text")]
@@ -13,4 +14,5 @@ namespace Lexicala.NET.Response.Entries
         [JsonProperty("tense")]
         public string Tense { get; set; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

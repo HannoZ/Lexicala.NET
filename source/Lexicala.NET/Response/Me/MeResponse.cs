@@ -2,6 +2,7 @@
 
 namespace Lexicala.NET.Response.Me
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class MeResponse
     {
         [JsonProperty("username")]
@@ -16,4 +17,5 @@ namespace Lexicala.NET.Response.Me
         [JsonProperty("usage")]
         public Usage Usage { get; set; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

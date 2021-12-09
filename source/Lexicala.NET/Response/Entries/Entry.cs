@@ -2,6 +2,7 @@
 
 namespace Lexicala.NET.Response.Entries
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Entry
     {
         [JsonProperty("id")]
@@ -25,8 +26,26 @@ namespace Lexicala.NET.Response.Entries
         [JsonProperty("related_entries")] 
         public string[] RelatedEntries { get; set; } = { };
 
-        public Headword[] Headwords => HeadwordObject.HeadwordElementArray ?? new[] { HeadwordObject.Headword };
+        public Headword[] Headwords
+        {
+            get
+            {
+                if (HeadwordObject.HeadwordElementArray != null)
+                {
+                    return HeadwordObject.HeadwordElementArray;
+                }
+                else if (HeadwordObject.Headword != null)
+                {
+                    return new[] { HeadwordObject.Headword };
+                }
+                else
+                {
+                    return new Headword[0];
+                }
+            }
+        }
 
-        public ResponseMetadata Metadata { get; set; }
+        public ResponseMetadata Metadata { get; set; } = new ResponseMetadata();
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

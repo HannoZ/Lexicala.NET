@@ -16,7 +16,7 @@ namespace Lexicala.NET.Response.Entries.JsonConverters
                     return new LanguageObject { Language = objectValue };
                 case JsonToken.StartArray:
                     var arrayValue = serializer.Deserialize<Language[]>(reader);
-                    return new LanguageObject { CommonLanguageObjectArray = arrayValue };
+                    return new LanguageObject { Languages = arrayValue };
             }
             throw new Exception("Cannot unmarshal type LanguageObject");
         }
@@ -24,9 +24,9 @@ namespace Lexicala.NET.Response.Entries.JsonConverters
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
             var value = (LanguageObject)untypedValue;
-            if (value.CommonLanguageObjectArray != null)
+            if (value.Languages != null)
             {
-                serializer.Serialize(writer, value.CommonLanguageObjectArray);
+                serializer.Serialize(writer, value.Languages);
                 return;
             }
             if (value.Language != null)

@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 namespace Lexicala.NET.Response.Entries
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Sense
     {
         [JsonProperty("id")]
@@ -35,5 +36,9 @@ namespace Lexicala.NET.Response.Entries
 
         [JsonProperty("geographical_usage", NullValueHandling = NullValueHandling.Ignore)]
         public string GeographicalUsage { get; set; }
+
+        public ResponseMetadata Metadata { get; set; }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }
