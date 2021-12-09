@@ -26,7 +26,7 @@ namespace Lexicala.NET.Parsing.Dto
         /// <summary>
         /// Gets the synonyms.
         /// </summary>
-        public string[] Synonyms { get; } = { };
+        public ICollection<string> Synonyms { get; } = new List<string>();
         /// <summary>
         /// Gets compositional phrases.
         /// </summary>
