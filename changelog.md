@@ -1,5 +1,7 @@
 # Change log 
 ## Lexicala.NET
+1.6 - Fixed some issues that could cause null reference exceptions; Added XML documentation for all public members; Updated dependencies. This version is now compatible with .NET 6. 
+
 1.5 - As an updated to version 1.4, an overload was added to `ILexicalaSearchParser` to allow advanced search parameters. For example searching for 'sin embargo' requires parameter '`analysed=true`' in order to return results
 
 1.4 - Implemented 'composite phrases' parsing, this has now been added to the parsed search result. 
