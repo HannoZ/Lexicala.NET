@@ -8,25 +8,6 @@ namespace Lexicala.NET.Autofac
 {
     public static class DependencyRegistration
     {
-        //public static IServiceCollection RegisterLexicala(this IServiceCollection services, IConfiguration configuration)
-        //{
-        //    var config = configuration.GetSection("Lexicala").Get<LexicalaConfig>();
-        //    return RegisterLexicala(services, config);
-        //}
-
-        //public static IServiceCollection RegisterLexicala(this IServiceCollection services, LexicalaConfig config)
-        //{
-        //    services.AddHttpClient<ILexicalaClient, LexicalaClient>(client =>
-        //    {
-        //        client.BaseAddress = LexicalaConfig.BaseAddress;
-        //        client.DefaultRequestHeaders.Authorization = config.CreateAuthenticationHeader();
-        //    });
-
-        //    services.AddMemoryCache();
-        //    services.AddTransient<ILexicalaSearchParser, LexicalaSearchParser>();
-
-        //    return services;
-        //}
         public static IContainer RegisterLexixala(LexicalaConfig config)
         {
             var builder = new ContainerBuilder();

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	  <TargetFrameworks>net6.0;netstandard2.0</TargetFrameworks>
     <Authors>Hanno Zwikstra</Authors>
     <Company>Hanno Zwikstra</Company>
     <Product>Lexicala.NET</Product>
@@ -13,11 +13,11 @@
     <PackageTags>Lexicala, Lexicala.NET, C#, IoC, Autofac</PackageTags>
     <PackageReleaseNotes>Update dependency on Lexical.NET</PackageReleaseNotes>
     <Description>Autofac IoC container registration for Lexicala.NET.</Description>
-    <Version>1.3</Version>
+    <Version>1.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.2.0" />
+    <PackageReference Include="Autofac" Version="6.3.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,6 +2,7 @@
 using Lexicala.NET.Parsing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
 
 namespace Lexicala.NET.MicrosoftDependencyInjection
 {
@@ -19,7 +20,8 @@ namespace Lexicala.NET.MicrosoftDependencyInjection
             {
                 client.BaseAddress = LexicalaConfig.BaseAddress;
                 client.DefaultRequestHeaders.Authorization = config.CreateAuthenticationHeader();
-            });
+            })
+                .AddTransientHttpErrorPolicy(builder => builder.RetryAsync(2));
 
             services.AddMemoryCache();
             services.AddSingleton<ILexicalaSearchParser, LexicalaSearchParser>();
