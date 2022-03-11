@@ -1,6 +1,8 @@
 # Change log 
 ## Lexicala.NET
-1.6 - Fixed some issues that could cause null reference exceptions; Added XML documentation for all public members; Updated dependencies. This version is now compatible with .NET 6. 
+1.6.1 Package updates. Now supports .NET 6.0 and .NET standard 2.0
+
+1.6.0.1 - Fixed some issues that could cause null reference exceptions; Added XML documentation for all public members; Updated dependencies. This version is now compatible with .NET 6. 
 
 1.5 - As an updated to version 1.4, an overload was added to `ILexicalaSearchParser` to allow advanced search parameters. For example searching for 'sin embargo' requires parameter '`analysed=true`' in order to return results
 
@@ -19,6 +21,8 @@
 - `Lexicala.NET.Parser` namespaces are changed to `Lexicala.NET.Parsing`
 
 ## Lexicala.NET.MicrosoftDependencyInjection
+1.4 - Package updates, implemented simple retry for transient http errors using Polly. Now supports .NET 6.0 and .NET standard 2.0
+
 1.3 - Updated to .NET 5 packages
 
 1.2 - Updated .NET Core Nuget packages to version 3.1.9
@@ -26,6 +30,8 @@
 1.1 - Inital version
 
 ## Lexicala.NET.Autofac
+1.4 - Updated Autofac to 6.3
+
 1.3 - Updated Autofac to 6.2
 
 1.2 - Updated Autofac from 6.0 to 6.1
