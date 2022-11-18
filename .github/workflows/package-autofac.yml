@@ -12,10 +12,10 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core
+    - name: Setup .NET Core 7
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 7.0.x
     - name: Install dependencies
       run: dotnet restore ./source/Lexicala.NET.sln
     - name: Build
@@ -23,7 +23,7 @@ jobs:
     - name: Test
       run: dotnet test ./source/Lexicala.NET.sln --no-restore --verbosity normal
     - name: Publish to Nuget
-      uses: brandedoutcast/publish-nuget@v2.5.5
+      uses: alirezanet/publish-nuget@v3.0.4
       with: 
           PROJECT_FILE_PATH: ./source/Lexicala.NET.Autofac/Lexicala.NET.Autofac.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
