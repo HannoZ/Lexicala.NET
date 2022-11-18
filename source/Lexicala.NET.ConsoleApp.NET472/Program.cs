@@ -7,6 +7,7 @@ using Autofac;
 using Lexicala.NET.Autofac;
 using Lexicala.NET.Response.Languages;
 using Microsoft.Extensions.Caching.Memory;
+using Lexicala.NET.Parsing;
 
 namespace Lexicala.NET.ConsoleApp.NET472
 {
@@ -21,6 +22,7 @@ namespace Lexicala.NET.ConsoleApp.NET472
             var container = DependencyRegistration.RegisterLexixala(config);
             var lexicalaClient = container.Resolve<ILexicalaClient>();
             var memCache = container.Resolve<IMemoryCache>();
+            var parser = container.Resolve<ILexicalaSearchParser>();
 
             string input = string.Empty;
             while (input != ConsoleKey.Q.ToString())
@@ -69,7 +71,7 @@ namespace Lexicala.NET.ConsoleApp.NET472
 
                 try
                 {
-                    var searchResponse = await lexicalaClient.BasicSearchAsync(searchTerm, srcLang);
+                    var searchResponse = await parser.SearchAsync(searchTerm, srcLang, new[]{tgtLang}); /*await lexicalaClient.BasicSearchAsync(searchTerm, srcLang);*/
                     bool hasTranslation = false;
                     foreach (var result in searchResponse.Results)
                     {
