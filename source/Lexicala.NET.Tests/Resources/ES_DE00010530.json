@@ -1,0 +1,448 @@
+﻿{
+  "id": "ES_DE00010530",
+  "source": "global",
+  "language": "es",
+  "version": 1,
+  "frequency": "7386605",
+  "headword": {
+    "text": "casa",
+    "pronunciation": {
+      "value": "'kasa"
+    },
+    "pos": "noun",
+    "gender": "feminine"
+  },
+  "senses": [
+    {
+      "id": "ES_SE00014414",
+      "definition": "edificio para vivir",
+      "semantic_category": "architecture",
+      "translations": {
+        "br": {
+          "text": "casa",
+          "gender": "feminine"
+        },
+        "dk": [
+          {
+            "text": "hjem",
+            "gender": "neuter"
+          },
+          {
+            "text": "bolig",
+            "gender": "common"
+          },
+          {
+            "text": "hus",
+            "gender": "neuter"
+          }
+        ],
+        "en": [
+          {
+            "text": "house"
+          },
+          {
+            "text": "home"
+          }
+        ],
+        "ja": {
+          "text": "家（いえ）、家屋（かおく）、住宅（じゅうたく）",
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "ie, kaoku, juutaku"
+            }
+          ]
+        },
+        "nl": {
+          "text": "huis",
+          "gender": "het"
+        },
+        "no": [
+          {
+            "text": "hjem, hus",
+            "gender": "neuter"
+          },
+          {
+            "text": "bolig",
+            "gender": "masculine"
+          }
+        ],
+        "sv": [
+          {
+            "text": "hus",
+            "gender": "neuter"
+          },
+          {
+            "text": "hem",
+            "gender": "neuter"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "text": "casa de familia",
+          "translations": {
+            "br": {
+              "text": "casa de família"
+            },
+            "dk": {
+              "text": "familiebolig"
+            },
+            "en": {
+              "text": "family home"
+            },
+            "ja": {
+              "text": "家族住宅（かぞくじゅうたく）",
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "kazoku juutaku"
+                }
+              ]
+            },
+            "nl": {
+              "text": "familiewoning"
+            },
+            "no": {
+              "text": "familiebolig"
+            },
+            "sv": {
+              "text": "familjehus"
+            }
+          }
+        },
+        {
+          "text": "una casa de campo"
+        }
+      ],
+      "compositional_phrases": [
+        {
+          "text": "como Pedro por su casa",
+          "definition": "con familiaridad",
+          "translations": {
+            "br": [
+              {
+                "text": "como em sua própria casa"
+              },
+              {
+                "text": "muito à vontade"
+              }
+            ],
+            "dk": {
+              "text": "at lade som om man er hjemme",
+              "gender": "-"
+            },
+            "en": {
+              "text": "like one owned the place"
+            },
+            "ja": {
+              "text": "なんの遠慮（えんりょ）もせずに、我（わ）が物顔（ものがお）で",
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "nan-nno enryo mo sezuni, wagamonogao de"
+                }
+              ]
+            },
+            "nl": {
+              "text": "alsof je thuis bent"
+            },
+            "sv": {
+              "text": "som om han/hon ägde stället",
+              "gender": "neuter"
+            }
+          },
+          "examples": [
+            {
+              "text": "Entró como Pedro por su casa.",
+              "translations": {
+                "br": {
+                  "text": "Entrou como se estivesse em sua própria casa."
+                },
+                "dk": {
+                  "text": "Han trådte ind, som om han var hjemme."
+                },
+                "en": {
+                  "text": "He walked in like he owned the place."
+                },
+                "ja": {
+                  "text": "彼（かれ）はなんの遠慮（えんりょ）もせずにに入（はい）ってきた。",
+                  "alternative_scripts": [
+                    {
+                      "type": "romaji",
+                      "text": "Kare wa nan-no enryo mo sezuni hait-te kita."
+                    }
+                  ]
+                },
+                "nl": {
+                  "text": "Hij kwam binnen alsof hij thuis was."
+                },
+                "sv": {
+                  "text": "Han gick in som om han ägde stället."
+                }
+              }
+            },
+            {
+              "text": "Estaban en la oficina como Pedro por su casa."
+            }
+          ]
+        },
+        {
+          "text": "tirar la casa por la ventana",
+          "definition": "ser pródigo en gastos",
+          "translations": {
+            "br": [
+              {
+                "text": "gastar mundos e fundos"
+              },
+              {
+                "text": "torrar todo o dinheiro"
+              }
+            ],
+            "dk": {
+              "text": "at smide penge ud af vinduet",
+              "gender": "-"
+            },
+            "en": {
+              "text": "to splash out"
+            },
+            "ja": {
+              "text": "大盤振舞（おおばんふるま）いをする、散財（さんざい）する、浪費（ろうひ）する",
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "ooban furumai o suru, sanzai suru, roohi suru"
+                }
+              ]
+            },
+            "nl": {
+              "text": "de bloemetjes buiten zetten"
+            },
+            "sv": {
+              "text": "slå på stort",
+              "gender": "neuter"
+            }
+          },
+          "examples": [
+            {
+              "text": "En su cumpleaños tiró la casa por la ventana.",
+              "translations": {
+                "br": {
+                  "text": "No seu aniversário gastou mundos e fundos."
+                },
+                "dk": {
+                  "text": "Han holdt en overdådig fest."
+                },
+                "en": {
+                  "text": "He splashed out on his birthday."
+                },
+                "ja": {
+                  "text": "彼（かれ）は自分（じぶん）の誕生祝（たんじょういわ）いに大盤振舞（おおばんふるま）いをした。",
+                  "alternative_scripts": [
+                    {
+                      "type": "romaji",
+                      "text": "Kare wa jibun no tanjoo iwai ni ooban furumai o shita."
+                    }
+                  ]
+                },
+                "nl": {
+                  "text": "Op zijn verjaardag heeft hij de bloemetjes buiten gezet."
+                },
+                "sv": {
+                  "text": "På sin födelsedag slog han på stort."
+                }
+              }
+            },
+            {
+              "text": "¡Estas Navidades vamos a tirar la casa por la ventana!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES_SE00014415",
+      "definition": "conjunto de personas que habitan juntas",
+      "synonyms": [
+        "familia"
+      ],
+      "translations": {
+        "br": {
+          "text": "familia",
+          "gender": "feminine"
+        },
+        "dk": [
+          {
+            "text": "familie",
+            "gender": "common"
+          },
+          {
+            "text": "husstand",
+            "gender": "common"
+          }
+        ],
+        "en": {
+          "text": "family"
+        },
+        "ja": {
+          "text": "家（いえ）、家族（かぞく）",
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "ie, kazoku"
+            }
+          ]
+        },
+        "nl": {
+          "text": "bewoners",
+          "gender": "de",
+          "number": "plural"
+        },
+        "no": {
+          "text": "husstand",
+          "gender": "masculine"
+        },
+        "sv": {
+          "text": "hus",
+          "gender": "neuter"
+        }
+      },
+      "examples": [
+        {
+          "text": "Toda la casa se intoxicó.",
+          "translations": {
+            "br": {
+              "text": "A família inteira ficou intoxicada."
+            },
+            "dk": {
+              "text": "Hele familien blev påvirket."
+            },
+            "en": {
+              "text": "The whole family got food poisoning."
+            },
+            "ja": {
+              "text": "家中（いえじゅう）が中毒（ちゅうどく）にかかった。",
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Iejuu ga chuudoku ni kakat-ta."
+                }
+              ]
+            },
+            "nl": {
+              "text": "Alle bewoners hebben een vergiftiging opgelopen."
+            },
+            "no": {
+              "text": "Hele husstanden/alle i huset ble forgiftet."
+            },
+            "sv": {
+              "text": "Hela huset blev förgiftat."
+            }
+          }
+        },
+        {
+          "text": "Toda la casa te da la bienvenida."
+        }
+      ]
+    },
+    {
+      "id": "ES_SE00014416",
+      "definition": "local comercial",
+      "synonyms": [
+        "empresa"
+      ],
+      "translations": {
+        "br": {
+          "text": "loja",
+          "gender": "feminine"
+        },
+        "dk": [
+          {
+            "text": "firma",
+            "gender": "neuter"
+          },
+          {
+            "text": "handelshus",
+            "gender": "neuter"
+          },
+          {
+            "text": "forretning",
+            "gender": "common"
+          }
+        ],
+        "en": [
+          {
+            "text": "company"
+          },
+          {
+            "text": "firm"
+          }
+        ],
+        "ja": {
+          "text": "店（みせ）",
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "mise"
+            }
+          ]
+        },
+        "nl": {
+          "text": "zaak",
+          "gender": "de"
+        },
+        "no": [
+          {
+            "text": "handelshus",
+            "gender": "neuter"
+          },
+          {
+            "text": "firma",
+            "gender": "neuter"
+          }
+        ],
+        "sv": {
+          "text": "butik",
+          "gender": "common"
+        }
+      },
+      "examples": [
+        {
+          "text": "casa de ropas",
+          "translations": {
+            "br": {
+              "text": "loja de roupas"
+            },
+            "dk": {
+              "text": "tøjforretning"
+            },
+            "en": {
+              "text": "a clothing firm"
+            },
+            "ja": {
+              "text": "衣料品店（いりょうひんてん）",
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "iryoohinten"
+                }
+              ]
+            },
+            "nl": {
+              "text": "kledingzaak"
+            },
+            "no": {
+              "text": "klesfirma"
+            },
+            "sv": {
+              "text": "klädbutik"
+            }
+          }
+        },
+        {
+          "text": "Una casa editorial publica libros."
+        }
+      ]
+    }
+  ]
+}

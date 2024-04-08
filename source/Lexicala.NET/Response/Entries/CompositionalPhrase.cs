@@ -16,13 +16,13 @@ namespace Lexicala.NET.Response.Entries
         public string SemanticSubcategory { get; set; }
 
         [JsonProperty("senses")]
-        public Sense[] Senses { get; set; } = { };
+        public Sense[] Senses { get; set; } = [];
 
         [JsonProperty("translations")]
-        public Dictionary<string, LanguageObject> Translations { get; set; }
+        public Dictionary<string, TranslationObject> Translations { get; set; }
 
         [JsonProperty("examples")]
-        public Example[] Examples { get; set; } = { };
+        public Example[] Examples { get; set; } = [];
 
         [JsonProperty("semantic_category", NullValueHandling = NullValueHandling.Ignore)]
         public string SemanticCategory { get; set; }

@@ -8,6 +8,7 @@ using Lexicala.NET.Response.Entries;
 using Lexicala.NET.Response.Languages;
 using Lexicala.NET.Response.Search;
 using Microsoft.Extensions.Caching.Memory;
+using Translation = Lexicala.NET.Parsing.Dto.Translation;
 
 namespace Lexicala.NET.Parsing
 {
@@ -309,12 +310,12 @@ namespace Lexicala.NET.Parsing
             return targetSense;
         }
 
-        private static IEnumerable<Translation> ParseTranslation(string languageCode, LanguageObject clo)
+        private static IEnumerable<Translation> ParseTranslation(string languageCode, TranslationObject clo)
         {
             // json response is a bit flawed: it returns an object for 1 result, or an array for multiple results. this is difficult to deserialize so that's why this line looks a bit strange
-            var translations = (clo.Language != null
-                                   ? new List<Translation> { new() { Language = languageCode, Text = clo.Language.Text } }
-                                   : clo.Languages?.Select(nl => new Translation { Text = nl.Text, Language = languageCode }).ToList())
+            var translations = (clo.Translation != null
+                                   ? new List<Translation> { new() { Language = languageCode, Text = clo.Translation.Text } }
+                                   : clo.Translations?.Select(nl => new Translation { Text = nl.Text, Language = languageCode }).ToList())
                                ?? new List<Translation>();
             return translations;
         }

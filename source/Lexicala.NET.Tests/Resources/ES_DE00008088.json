@@ -3,6 +3,7 @@
   "source": "global",
   "language": "es",
   "version": 1,
+  "frequency": "231912",
   "headword": [
     {
       "text": "blando",
@@ -58,9 +59,12 @@
         },
         "ja": {
           "text": "軟（やわ）らかい",
-          "alternative_scripts": {
-            "romaji": "yawarakai"
-          }
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "yawarakai"
+            }
+          ]
         },
         "nl": {
           "text": "zacht"
@@ -97,9 +101,12 @@
             },
             "ja": {
               "text": "粘土（ねんど）はまだ軟（やわ）らかい。",
-              "alternative_scripts": {
-                "romaji": "Nendo wa mada yawaarakai."
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Nendo wa mada yawaarakai."
+                }
+              ]
             },
             "nl": {
               "text": "De klei is nog zacht."
@@ -129,9 +136,12 @@
             },
             "ja": {
               "text": "これは軟（やわ）らかい肉（にく）だ。",
-              "alternative_scripts": {
-                "romaji": "Kore wa yawarakai niku da."
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Kore wa yawarakai niku da."
+                }
+              ]
             },
             "nl": {
               "text": "Het is mals vlees."
@@ -173,9 +183,12 @@
         },
         "ja": {
           "text": "甘（あま）い",
-          "alternative_scripts": {
-            "romaji": "amai"
-          }
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "amai"
+            }
+          ]
         },
         "nl": {
           "text": "toegeeflijk"
@@ -204,9 +217,12 @@
             },
             "ja": {
               "text": "その女（おんな）の先生（せんせい）は生徒（せいと）に甘（あま）い。",
-              "alternative_scripts": {
-                "romaji": "Sono onna no sensee wa seeto ni amai."
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Sono onna no sensee wa seeto ni amai."
+                }
+              ]
             },
             "nl": {
               "text": "De lerares is toegeeflijk met haar leerlingen."
@@ -250,9 +266,12 @@
         ],
         "ja": {
           "text": "気（き）の弱（よわ）い、弱腰（よわごし）の、臆病（おくびょう）な",
-          "alternative_scripts": {
-            "romaji": "ki no yowai, yowagoshino, okubyoona"
-          }
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "ki no yowai, yowagoshino, okubyoona"
+            }
+          ]
         },
         "nl": {
           "text": "laf"
@@ -283,10 +302,13 @@
               "text": "a very weak opponent"
             },
             "ja": {
-              "text": "とても気（き）の弱（よわ）いライバル　",
-              "alternative_scripts": {
-                "romaji": "totemo ki no yowai raibaru"
-              }
+              "text": "とても気（き）の弱（よわ）いライバル",
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "totemo ki no yowai raibaru"
+                }
+              ]
             },
             "nl": {
               "text": "een zeer laffe rivaal"

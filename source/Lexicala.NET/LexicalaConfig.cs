@@ -1,8 +1,6 @@
 using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
 
-namespace Lexicala.NET.Configuration
+namespace Lexicala.NET
 {
     /// <summary>
     /// This class is used to setup and configure communication with the Lexicala API. 
@@ -12,7 +10,11 @@ namespace Lexicala.NET.Configuration
         /// <summary>
         /// The Lexicala API base address.
         /// </summary>
-        public static readonly Uri BaseAddress = new Uri("https://dictapi.lexicala.com");
+        public static readonly Uri BaseAddress = new Uri("https://lexicala1.p.rapidapi.com");
+
+        public const string RapidApiKeyHeader = "X-RapidAPI-Key";
+        public const string RapidApiHostHeader = "X-RapidAPI-Host";
+        public const string RapidApiHostValue = "lexicala1.p.rapidapi.com";
 
         /// <summary>
         /// Creates a new instance of the <see cref="LexicalaConfig"/> class.
@@ -23,57 +25,17 @@ namespace Lexicala.NET.Configuration
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="LexicalaConfig"/> class, with specified username and password for the API.
+        /// Creates a new instance of the <see cref="LexicalaConfig"/> class, with specified API key.
         /// </summary>
-        public LexicalaConfig(string username, string password)
+        public LexicalaConfig(string apiKey)
         {
-            Username = username;
-            Password = password;
+            ApiKey = apiKey;
         }
 
         /// <summary>
-        /// A username for the Lexicala API.
+        /// The RapidAPI Api key.
         /// </summary>
-        public string Username { get; set; }
-        /// <summary>
-        /// The password that belongs to the specified <see cref="Username"/>.
-        /// </summary>
-        public string Password { get; set; }
+        public string ApiKey { get; set; }
 
-        /// <summary>
-        /// This method creates the authentication header that must be added to each request to the Lexicala API.
-        /// </summary>
-        public AuthenticationHeaderValue CreateAuthenticationHeader()
-        {
-            return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{Username}:{Password}")));
-        }
-
-        /// <summary>
-        /// This method creates a <see cref="HttpClient"/> instance that is already setup and ready for interaction with the Lexicala API.
-        /// </summary>
-        public HttpClient CreateHttpClient()
-        {
-            var client = new HttpClient
-            {
-                BaseAddress = BaseAddress
-            };
-            client.DefaultRequestHeaders.Authorization = CreateAuthenticationHeader();
-
-            return client;
-        }
-
-        /// <summary>
-        /// This method creates a <see cref="HttpClient"/> instance with a specific <see cref="HttpClientHandler"/> that is already setup and ready for interaction with the Lexicala API.
-        /// </summary>
-        public HttpClient CreateHttpClient(HttpClientHandler handler)
-        {
-            var client = new HttpClient(handler)
-            {
-                BaseAddress = BaseAddress
-            };
-            client.DefaultRequestHeaders.Authorization = CreateAuthenticationHeader();
-
-            return client;
-        }
     }
 }

@@ -3,6 +3,7 @@
   "source": "global",
   "language": "en",
   "version": 1,
+  "frequency": "19825731",
   "headword": {
     "text": "place",
     "pronunciation": {
@@ -10,7 +11,7 @@
     },
     "pos": "noun",
     "homograph_number": 1,
-    "subcategorization": "countable"
+    "subcategory": "countable"
   },
   "senses": [
     {
@@ -26,6 +27,10 @@
               "number": "plural"
             }
           ]
+        },
+        "ca": {
+          "text": "lloc",
+          "gender": "masculine"
         },
         "dk": [
           {
@@ -44,11 +49,13 @@
         "es": [
           {
             "text": "sitio",
-            "gender": "masculine"
+            "gender": "masculine",
+            "number": "singular"
           },
           {
             "text": "lugar",
-            "gender": "masculine"
+            "gender": "masculine",
+            "number": "singular"
           }
         ],
         "fr": {
@@ -57,9 +64,12 @@
         },
         "ja": {
           "text": "場所（ばしょ）",
-          "alternative_scripts": {
-            "romaji": "basho"
-          }
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "basho"
+            }
+          ]
         },
         "no": [
           {
@@ -71,6 +81,10 @@
             "gender": "neuter"
           }
         ],
+        "pl": {
+          "text": "miejsce",
+          "gender": "neuter"
+        },
         "sv": [
           {
             "text": "plats",
@@ -80,7 +94,11 @@
             "text": "ställe",
             "gender": "neuter"
           }
-        ]
+        ],
+        "vl": {
+          "text": "lloc",
+          "gender": "masculine"
+        }
       },
       "examples": [
         {
@@ -93,19 +111,25 @@
               "text": "Jeg fandt et sted at gemme gaverne."
             },
             "es": {
-              "text": "@@@@@"
+              "text": "Encontré un sitio para esconder los regalos."
             },
             "fr": {
               "text": "J'ai trouvé un endroit pour cacher les cadeaux."
             },
             "ja": {
               "text": "そのプレゼントを隠す場所を見つけた。",
-              "alternative_scripts": {
-                "romaji": "Sono purezento o kakusu basho o mitsuketa."
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Sono purezento o kakusu basho o mitsuketa."
+                }
+              ]
             },
             "no": {
               "text": "Jeg fant et sted å gjemme presangene."
+            },
+            "pl": {
+              "text": "Znalazłem miejsce do ukrycia prezentów."
             },
             "sv": {
               "text": "Jag hittade ett ställe att gömma presenterna på."
@@ -122,19 +146,25 @@
               "text": "Et godt sted at fiske"
             },
             "es": {
-              "text": "@@@@@"
+              "text": "un lugar genial para pescar"
             },
             "fr": {
               "text": "un super endroit pour pêcher"
             },
             "ja": {
               "text": "絶好の釣り場",
-              "alternative_scripts": {
-                "romaji": "zekkoo no tsuriba"
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "zekkoo no tsuriba"
+                }
+              ]
             },
             "no": {
               "text": "en glimrende fiskeplass"
+            },
+            "pl": {
+              "text": "świetne miejsce do wędkowania"
             },
             "sv": {
               "text": "ett härligt ställe att fiska på"
@@ -151,19 +181,25 @@
               "text": "Alle indtog deres pladser på scenen."
             },
             "es": {
-              "text": "@@@@@"
+              "text": "Todos ocuparon su sitio en el escenario."
             },
             "fr": {
               "text": "Tout le monde a pris sa place sur scène."
             },
             "ja": {
               "text": "全員が舞台に上がって所定の位置についた。",
-              "alternative_scripts": {
-                "romaji": "Zen=in ga butai ni agatte shotee no ichi ni tsuita."
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Zen=in ga butai ni agatte shotee no ichi ni tsuita."
+                }
+              ]
             },
             "no": {
               "text": "Alle tok plassene sine på scenen."
+            },
+            "pl": {
+              "text": "Wszyscy zajęli swoje miejsca na scenie."
             },
             "sv": {
               "text": "Alla intog sina platser på scenen."
@@ -180,19 +216,25 @@
               "text": "Læg pengene et sikkert sted."
             },
             "es": {
-              "text": "@@@@@"
+              "text": "Pon el dinero en un lugar seguro."
             },
             "fr": {
               "text": "Mets l'argent dans un endroit sûr."
             },
             "ja": {
               "text": "そのお金を安全な場所に保管して下さい。",
-              "alternative_scripts": {
-                "romaji": "Sono o-kane o anzen na basho ni hokan shite kudasai."
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Sono o-kane o anzen na basho ni hokan shite kudasai."
+                }
+              ]
             },
             "no": {
               "text": "Legg pengene på et sikkert sted."
+            },
+            "pl": {
+              "text": "Umieść pieniądze w bezpiecznym miejscu."
             },
             "sv": {
               "text": "Lägg pengarna på ett säkert ställe!"
@@ -208,6 +250,9 @@
             "br": {
               "text": "no lugar"
             },
+            "ca": {
+              "text": "en el seu degut lloc"
+            },
             "dk": {
               "text": "på plads",
               "gender": "common"
@@ -215,15 +260,18 @@
             "es": [
               {
                 "text": "en su sitio",
-                "gender": "-"
+                "gender": "-",
+                "number": "-"
               },
               {
                 "text": "en su lugar",
-                "gender": "-"
+                "gender": "-",
+                "number": "-"
               },
               {
                 "text": "en su puesto",
-                "gender": "-"
+                "gender": "-",
+                "number": "-"
               }
             ],
             "fr": {
@@ -231,16 +279,25 @@
             },
             "ja": {
               "text": "所定（しょてい）の場所（ばしょ）に",
-              "alternative_scripts": {
-                "romaji": "shotee no basho ni"
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "shotee no basho ni"
+                }
+              ]
             },
             "no": {
               "text": "på plass"
             },
+            "pl": {
+              "text": "w/na miejscu"
+            },
             "sv": {
               "text": "på sin plats",
               "gender": "-"
+            },
+            "vl": {
+              "text": "en el seu degut lloc"
             }
           },
           "examples": [
@@ -254,19 +311,25 @@
                   "text": "Soldaterne var alle på plads."
                 },
                 "es": {
-                  "text": "@@@@@"
+                  "text": "Los soldados estaban todos en su puesto."
                 },
                 "fr": {
                   "text": "Les soldats étaient tous en position."
                 },
                 "ja": {
                   "text": "兵士達は皆定位置にいた。",
-                  "alternative_scripts": {
-                    "romaji": "Heeshitachi wa mina teeichi ni ita."
-                  }
+                  "alternative_scripts": [
+                    {
+                      "type": "romaji",
+                      "text": "Heeshitachi wa mina teeichi ni ita."
+                    }
+                  ]
                 },
                 "no": {
                   "text": "Alle soldatene var på plass."
+                },
+                "pl": {
+                  "text": "Wszyscy żołnierze byli na miejscu."
                 },
                 "sv": {
                   "text": "Alla soldater var på sina platser."
@@ -291,6 +354,10 @@
             }
           ]
         },
+        "ca": {
+          "text": "lloc",
+          "gender": "masculine"
+        },
         "dk": {
           "text": "sted",
           "gender": "neuter"
@@ -298,11 +365,13 @@
         "es": [
           {
             "text": "sitio",
-            "gender": "masculine"
+            "gender": "masculine",
+            "number": "singular"
           },
           {
             "text": "lugar",
-            "gender": "masculine"
+            "gender": "masculine",
+            "number": "singular"
           }
         ],
         "fr": [
@@ -317,12 +386,19 @@
         ],
         "ja": {
           "text": "所（ところ）",
-          "alternative_scripts": {
-            "romaji": "tokoro"
-          }
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "tokoro"
+            }
+          ]
         },
         "no": {
           "text": "sted",
+          "gender": "neuter"
+        },
+        "pl": {
+          "text": "miejsce",
           "gender": "neuter"
         },
         "sv": [
@@ -334,7 +410,11 @@
             "text": "plats",
             "gender": "common"
           }
-        ]
+        ],
+        "vl": {
+          "text": "lloc",
+          "gender": "masculine"
+        }
       },
       "examples": [
         {
@@ -347,19 +427,25 @@
               "text": "Jeg leder efter et sted og bo."
             },
             "es": {
-              "text": "@@@@@"
+              "text": "Estoy buscando un lugar donde vivir."
             },
             "fr": {
               "text": "Je cherche un endroit où vivre."
             },
             "ja": {
               "text": "住む所を探しています。",
-              "alternative_scripts": {
-                "romaji": "Sumu tokoro o sagashite imasu."
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Sumu tokoro o sagashite imasu."
+                }
+              ]
             },
             "no": {
               "text": "Jeg ser etter et sted å bo."
+            },
+            "pl": {
+              "text": "Szukam miejsca do zamieszkania."
             },
             "sv": {
               "text": "Jag letar efter en plats där jag kan bo."
@@ -376,19 +462,25 @@
               "text": "Aruba er det bedste sted for en afslappende strandferie."
             },
             "es": {
-              "text": "@@@@@"
+              "text": "Aruba es el mejor sitio para pasar unas relajantes vacaciones en la playa."
             },
             "fr": {
               "text": "Aruba est le meilleur endroit pour des vacances relaxantes à la plage."
             },
             "ja": {
               "text": "アルバはビーチでくつろいで過ごす休暇には最適な場所です。",
-              "alternative_scripts": {
-                "romaji": "Aruba wa biichi de kutsuroide sugosu kyuuka ni wa saiteki na tokoro desu."
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Aruba wa biichi de kutsuroide sugosu kyuuka ni wa saiteki na tokoro desu."
+                }
+              ]
             },
             "no": {
               "text": "Aruba er det beste stedet for en avslappende strandferie."
+            },
+            "pl": {
+              "text": "Aruba to najlepsze miejsce na relaksujące wakacje na plaży."
             },
             "sv": {
               "text": "Aruba är det bästa stället för en avkopplande badsemester."
@@ -399,35 +491,64 @@
       "compositional_phrases": [
         {
           "text": "my/his/her/their/your place",
-          "definition": "the place sb lives",
+          "definition": "the place somebody lives",
           "translations": {
             "br": {
               "text": "minha casa / a casa dele / a casa dela / a casa deles / sua casa etc."
             },
+            "ca": [
+              {
+                "text": "el meu lloc"
+              },
+              {
+                "text": "el seu lloc"
+              },
+              {
+                "text": "el teu lloc"
+              }
+            ],
             "dk": {
               "text": "mit/hans/hendes/dit sted",
               "gender": "neuter"
             },
             "es": {
               "text": "mi/su/su/su/tu casa",
-              "gender": "feminine"
+              "gender": "feminine",
+              "number": "singular"
             },
             "fr": {
               "text": "chez moi/lui/elle/eux/toi/vous"
             },
             "ja": {
               "text": "～の家（いえ）",
-              "alternative_scripts": {
-                "romaji": "～ no ie"
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "～ no ie"
+                }
+              ]
             },
             "no": {
               "text": "hjemme hos meg/ham/henne/dem/deg/dere"
             },
+            "pl": {
+              "text": "moje/jego/jej/ich/twoje mieszkanie/dom"
+            },
             "sv": {
               "text": "hemma hos honom/henne/dem/dig/er",
               "gender": "-"
-            }
+            },
+            "vl": [
+              {
+                "text": "el meu lloc"
+              },
+              {
+                "text": "el seu lloc"
+              },
+              {
+                "text": "el teu lloc"
+              }
+            ]
           },
           "examples": [
             {
@@ -440,19 +561,25 @@
                   "text": "Vi kan alle tage hjem til mig."
                 },
                 "es": {
-                  "text": "@@@@@"
+                  "text": "Todos podemos volver a mi casa."
                 },
                 "fr": {
                   "text": "On peut tous aller chez moi."
                 },
                 "ja": {
                   "text": "皆僕の家に戻れます。",
-                  "alternative_scripts": {
-                    "romaji": "Minna de boku no ie ni modoremasu."
-                  }
+                  "alternative_scripts": [
+                    {
+                      "type": "romaji",
+                      "text": "Minna de boku no ie ni modoremasu."
+                    }
+                  ]
                 },
                 "no": {
                   "text": "Vi kan dra hjem til meg alle sammen."
+                },
+                "pl": {
+                  "text": "Wszyscy możemy wrócić mojego mieszkania/domu."
                 },
                 "sv": {
                   "text": "Vi kan gå hem till mig allihop."
@@ -467,6 +594,17 @@
             "br": {
               "text": "local de trabalho/negócios/culto"
             },
+            "ca": [
+              {
+                "text": "lloc de treball"
+              },
+              {
+                "text": "lloc de negoci"
+              },
+              {
+                "text": "lloc de culte"
+              }
+            ],
             "dk": {
               "text": "arbejdsplads / forretningsted / sted til tilbedelse",
               "gender": "common"
@@ -474,11 +612,13 @@
             "es": [
               {
                 "text": "lugar de trabajo/negocio/culto",
-                "gender": "masculine"
+                "gender": "masculine",
+                "number": "singular"
               },
               {
                 "text": "puesto de trabajo/negocio/culto",
-                "gender": "masculine"
+                "gender": "masculine",
+                "number": "singular"
               }
             ],
             "fr": {
@@ -486,17 +626,34 @@
             },
             "ja": {
               "text": "仕事場（しごとば） / 礼拝所（れいはいじょ）",
-              "alternative_scripts": {
-                "romaji": "shibotoba / reehaijo"
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "shibotoba / reehaijo"
+                }
+              ]
             },
             "no": {
               "text": "arbeidsplass/forretningslokale/helligdom"
             },
+            "pl": {
+              "text": "miejsce pracy/siedziba/miejsce kultu religijnego"
+            },
             "sv": {
               "text": "arbetsplats/affärsverksamhetslokal / lokal för religionsutövning",
               "gender": "u/u/u"
-            }
+            },
+            "vl": [
+              {
+                "text": "lloc de treball"
+              },
+              {
+                "text": "lloc de negoci"
+              },
+              {
+                "text": "lloc de culte"
+              }
+            ]
           },
           "examples": [
             {
@@ -509,19 +666,25 @@
                   "text": "kirker, templer og andre steder for tilbedelse"
                 },
                 "es": {
-                  "text": "@@@@@"
+                  "text": "iglesias, templos y otros lugares de culto"
                 },
                 "fr": {
                   "text": "églises, temples et autres lieux de culte"
                 },
                 "ja": {
                   "text": "教会や寺院などの礼拝所",
-                  "alternative_scripts": {
-                    "romaji": "kyookai ya jiin nado no reehaijo"
-                  }
+                  "alternative_scripts": [
+                    {
+                      "type": "romaji",
+                      "text": "kyookai ya jiin nado no reehaijo"
+                    }
+                  ]
                 },
                 "no": {
                   "text": "kirker, templer og andre helligdommer"
+                },
+                "pl": {
+                  "text": "kościoły, świątynie i inne miejsca kultu religijnego"
                 },
                 "sv": {
                   "text": "kyrkor, tempel och andra platser för religionsutövning"
@@ -546,6 +709,10 @@
             }
           ]
         },
+        "ca": {
+          "text": "tanda",
+          "gender": "feminine"
+        },
         "dk": {
           "text": "plads",
           "gender": "common"
@@ -553,11 +720,13 @@
         "es": [
           {
             "text": "puesto",
-            "gender": "masculine"
+            "gender": "masculine",
+            "number": "singular"
           },
           {
             "text": "lugar",
-            "gender": "masculine"
+            "gender": "masculine",
+            "number": "singular"
           }
         ],
         "fr": [
@@ -572,13 +741,20 @@
         ],
         "ja": {
           "text": "順位（じゅんい）",
-          "alternative_scripts": {
-            "romaji": "jun=i"
-          }
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "jun=i"
+            }
+          ]
         },
         "no": {
           "text": "plass",
           "gender": "masculine"
+        },
+        "pl": {
+          "text": "miejsce",
+          "gender": "neuter"
         },
         "sv": [
           {
@@ -593,7 +769,11 @@
             "text": "tredje plats",
             "gender": "common"
           }
-        ]
+        ],
+        "vl": {
+          "text": "tanda",
+          "gender": "feminine"
+        }
       },
       "examples": [
         {
@@ -606,19 +786,25 @@
               "text": "Hvem fik første/anden/tredje plads?"
             },
             "es": {
-              "text": "@@@@@"
+              "text": "¿Quién obtuvo el primer/segundo/tercer puesto?"
             },
             "fr": {
               "text": "Qui est arrivé en première/deuxième/troisième position ?"
             },
             "ja": {
               "text": "誰が一 / 二 / 三位でしたか。",
-              "alternative_scripts": {
-                "romaji": "Dare ga ichi- / ni- / san=i deshita ka."
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Dare ga ichi- / ni- / san=i deshita ka."
+                }
+              ]
             },
             "no": {
               "text": "Hvem kom på første/andre/tredjeplass?"
+            },
+            "pl": {
+              "text": "Kto zdobył pierwsze/drugie/trzecie miejsce?"
             },
             "sv": {
               "text": "Vem kom på första/andra/tredje plats?"
@@ -635,19 +821,25 @@
               "text": "en kandidat på sidstepladsen"
             },
             "es": {
-              "text": "@@@@@"
+              "text": "un candidato en el último lugar"
             },
             "fr": {
               "text": "un candidat en dernière position"
             },
             "ja": {
               "text": "最下位の候補者",
-              "alternative_scripts": {
-                "romaji": "saikai no koohosha"
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "saikai no koohosha"
+                }
+              ]
             },
             "no": {
               "text": "en kandidat på sisteplass"
+            },
+            "pl": {
+              "text": "kandydat na ostatnim miejscu"
             },
             "sv": {
               "text": "en sökande på sista plats"
@@ -670,13 +862,18 @@
             }
           ]
         },
+        "ca": {
+          "text": "lloc",
+          "gender": "masculine"
+        },
         "dk": {
           "text": "placering",
           "gender": "common"
         },
         "es": {
           "text": "lugar",
-          "gender": "masculine"
+          "gender": "masculine",
+          "number": "singular"
         },
         "fr": {
           "text": "place",
@@ -684,9 +881,12 @@
         },
         "ja": {
           "text": "位置（いち）",
-          "alternative_scripts": {
-            "romaji": "ichi"
-          }
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "ichi"
+            }
+          ]
         },
         "no": [
           {
@@ -698,9 +898,17 @@
             "gender": "masculine"
           }
         ],
+        "pl": {
+          "text": "pozycja",
+          "gender": "feminine"
+        },
         "sv": {
           "text": "ställning",
           "gender": "common"
+        },
+        "vl": {
+          "text": "lloc",
+          "gender": "masculine"
         }
       },
       "examples": [
@@ -714,19 +922,25 @@
               "text": "stedet for minoriteter af etniske grupper i samfundet"
             },
             "es": {
-              "text": "@@@@@"
+              "text": "el lugar de las minorías étnicas en la sociedad"
             },
             "fr": {
               "text": "la place des groupes ethniques minoritaires dans la société"
             },
             "ja": {
               "text": "社会における少数民族グループの立場",
-              "alternative_scripts": {
-                "romaji": "shakai ni okeru shoosuu minzoku guruupu no tachiba"
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "shakai ni okeru shoosuu minzoku guruupu no tachiba"
+                }
+              ]
             },
             "no": {
               "text": "etniske minoritetsgruppers plass i samfunnet"
+            },
+            "pl": {
+              "text": "pozycja mniejszości etnicznych w społeczeństwie"
             },
             "sv": {
               "text": "etniska minoritetsgruppers ställning i samhället"
@@ -749,6 +963,10 @@
             }
           ]
         },
+        "ca": {
+          "text": "cua",
+          "gender": "feminine"
+        },
         "dk": [
           {
             "text": "plads",
@@ -761,7 +979,8 @@
         ],
         "es": {
           "text": "sitio",
-          "gender": "masculine"
+          "gender": "masculine",
+          "number": "singular"
         },
         "fr": {
           "text": "place",
@@ -769,17 +988,28 @@
         },
         "ja": {
           "text": "席（せき）",
-          "alternative_scripts": {
-            "romaji": "seki"
-          }
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "seki"
+            }
+          ]
         },
         "no": {
           "text": "plass",
           "gender": "masculine"
         },
+        "pl": {
+          "text": "miejsce",
+          "gender": "neuter"
+        },
         "sv": {
           "text": "plats",
           "gender": "common"
+        },
+        "vl": {
+          "text": "cua",
+          "gender": "feminine"
         }
       },
       "examples": [
@@ -793,19 +1023,25 @@
               "text": "Jeg holder en plads til dig i køen."
             },
             "es": {
-              "text": "@@@@@"
+              "text": "Te guardaré sitio en la cola."
             },
             "fr": {
               "text": "Je vais garder ta place dans la file."
             },
             "ja": {
               "text": "君の分も並んでおくよ。",
-              "alternative_scripts": {
-                "romaji": "Kimi no bun mo narande oku yo."
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Kimi no bun mo narande oku yo."
+                }
+              ]
             },
             "no": {
               "text": "Jeg skal holde av plassen din i køen."
+            },
+            "pl": {
+              "text": "Zajmę ci miejsce w kolejce."
             },
             "sv": {
               "text": "Jag håller din plats i kön."
@@ -822,6 +1058,10 @@
           "text": "trecho",
           "gender": "masculine"
         },
+        "ca": {
+          "text": "pàgina",
+          "gender": "feminine"
+        },
         "dk": {
           "text": "sted",
           "gender": "common"
@@ -829,11 +1069,13 @@
         "es": [
           {
             "text": "parte",
-            "gender": "feminine"
+            "gender": "feminine",
+            "number": "singular"
           },
           {
             "text": "página",
-            "gender": "feminine"
+            "gender": "feminine",
+            "number": "singular"
           }
         ],
         "fr": {
@@ -842,17 +1084,27 @@
         },
         "ja": {
           "text": "箇所（かしょ）",
-          "alternative_scripts": {
-            "romaji": "kasho"
-          }
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "kasho"
+            }
+          ]
         },
         "no": {
           "text": "sted",
           "gender": "neuter"
         },
+        "pl": {
+          "text": "miejsce gdzie skończyliśmy czytać"
+        },
         "sv": {
           "text": "ställe",
           "gender": "neuter"
+        },
+        "vl": {
+          "text": "pàgina",
+          "gender": "feminine"
         }
       },
       "examples": [
@@ -866,19 +1118,25 @@
               "text": "Jeg kan ikke huske, hvor jeg kom til i bogen."
             },
             "es": {
-              "text": "@@@@@"
+              "text": "He perdido la señalización de la página en el libro."
             },
             "fr": {
               "text": "J'ai perdu ma page dans le livre."
             },
             "ja": {
               "text": "どこまで読んだか忘れてしまった。",
-              "alternative_scripts": {
-                "romaji": "Doko made yondaka wasurete shimatta."
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Doko made yondaka wasurete shimatta."
+                }
+              ]
             },
             "no": {
               "text": "Jeg finner ikke igjen stedet jeg var på i boken."
+            },
+            "pl": {
+              "text": "Zgubiłem miejsce gdzie skończyłem czytać."
             },
             "sv": {
               "text": "Jag kan inte hitta igen stället i boken."
@@ -896,6 +1154,10 @@
           "text": "vaga",
           "gender": "feminine"
         },
+        "ca": {
+          "text": "lloc",
+          "gender": "masculine"
+        },
         "dk": [
           {
             "text": "pladsanvisning",
@@ -908,7 +1170,8 @@
         ],
         "es": {
           "text": "plaza",
-          "gender": "feminine"
+          "gender": "feminine",
+          "number": "singular"
         },
         "fr": {
           "text": "place",
@@ -916,13 +1179,20 @@
         },
         "ja": {
           "text": "籍（せき）",
-          "alternative_scripts": {
-            "romaji": "seki"
-          }
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "seki"
+            }
+          ]
         },
         "no": {
           "text": "plass",
           "gender": "masculine"
+        },
+        "pl": {
+          "text": "miejsce",
+          "gender": "neuter"
         },
         "sv": [
           {
@@ -937,7 +1207,11 @@
             "text": "rätt till barnomsorg",
             "gender": "common"
           }
-        ]
+        ],
+        "vl": {
+          "text": "lloc",
+          "gender": "masculine"
+        }
       },
       "examples": [
         {
@@ -950,19 +1224,25 @@
               "text": "børn, der allerede har en pladsanvisning i børnehaven"
             },
             "es": {
-              "text": "@@@@@"
+              "text": "niños que ya tienen una plaza en la guardería"
             },
             "fr": {
               "text": "les enfants qui ont déjà une place en crèche"
             },
             "ja": {
               "text": "既に託児所に在籍している子供たち",
-              "alternative_scripts": {
-                "romaji": "sude ni takujisho ni zaiseki shite iru kodomotachi"
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "sude ni takujisho ni zaiseki shite iru kodomotachi"
+                }
+              ]
             },
             "no": {
               "text": "barn som allerede har plass i barnehagen"
+            },
+            "pl": {
+              "text": "dzieci, które już mają miejsce w żłobku"
             },
             "sv": {
               "text": "barn som redan har en plats i förskolan"
@@ -981,18 +1261,23 @@
             "br": {
               "text": "pronto/-ta"
             },
+            "ca": {
+              "text": "en el seu degut lloc"
+            },
             "dk": {
               "text": "på plads",
               "gender": "common"
             },
             "es": [
               {
-                "text": "en su puesto",
-                "gender": "-"
+                "text": "en su lugar",
+                "gender": "-",
+                "number": "-"
               },
               {
                 "text": "en su debido puesto",
-                "gender": "-"
+                "gender": "-",
+                "number": "-"
               }
             ],
             "fr": {
@@ -1000,16 +1285,25 @@
             },
             "ja": {
               "text": "準備（じゅんび）が整（ととの）って",
-              "alternative_scripts": {
-                "romaji": "junbi ga totonotte"
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "junbi ga totonotte"
+                }
+              ]
             },
             "no": {
               "text": "på plass"
             },
+            "pl": {
+              "text": "gotowy"
+            },
             "sv": {
               "text": "på plats",
               "gender": "-"
+            },
+            "vl": {
+              "text": "en el seu degut lloc"
             }
           },
           "examples": [
@@ -1023,19 +1317,25 @@
                   "text": "sikkerhedsforanstaltningerne er på plads til præsidentens besøg."
                 },
                 "es": {
-                  "text": "@@@@@"
+                  "text": "Las medidas de seguridad están en su lugar para la visita del presidente."
                 },
                 "fr": {
                   "text": "Le dispositif de sécurité est en place pour la visite du président."
                 },
                 "ja": {
                   "text": "大統領の訪問に備え警備体制は万全です。",
-                  "alternative_scripts": {
-                    "romaji": "Daitooryoo no hoomon ni sonae keebi taisee wa banzen desu."
-                  }
+                  "alternative_scripts": [
+                    {
+                      "type": "romaji",
+                      "text": "Daitooryoo no hoomon ni sonae keebi taisee wa banzen desu."
+                    }
+                  ]
                 },
                 "no": {
                   "text": "Sikkerhetstiltakene er på plass til presidentens besøk."
+                },
+                "pl": {
+                  "text": "Środki bezpieczeństwa są gotowe na wizytę prezydenta."
                 },
                 "sv": {
                   "text": "Säkerhetsåtgärder har vidtagits inför presidentens besök."
@@ -1064,13 +1364,17 @@
                     "text": "fora do lugar"
                   }
                 ],
+                "ca": {
+                  "text": "fora de lloc"
+                },
                 "dk": {
                   "text": "udenfor",
                   "gender": "common"
                 },
                 "es": {
                   "text": "fuera del lugar",
-                  "gender": "-"
+                  "gender": "-",
+                  "number": "-"
                 },
                 "fr": [
                   {
@@ -1082,9 +1386,12 @@
                 ],
                 "ja": {
                   "text": "場違（ばちが）いの",
-                  "alternative_scripts": {
-                    "romaji": "bachigai no"
-                  }
+                  "alternative_scripts": [
+                    {
+                      "type": "romaji",
+                      "text": "bachigai no"
+                    }
+                  ]
                 },
                 "no": [
                   {
@@ -1094,9 +1401,15 @@
                     "text": "utilpass"
                   }
                 ],
+                "pl": {
+                  "text": "nie pasować"
+                },
                 "sv": {
                   "text": "utanför",
                   "gender": "-"
+                },
+                "vl": {
+                  "text": "fora de lloc"
                 }
               },
               "examples": [
@@ -1110,19 +1423,25 @@
                       "text": "Jeg følte mig udenfor i selskab med mine søsters venner."
                     },
                     "es": {
-                      "text": "@@@@@"
+                      "text": "Me sentí fuera de lugar con los amigos de mi hermana."
                     },
                     "fr": {
                       "text": "Je ne me sentais pas à ma place avec les amis de ma sœur."
                     },
                     "ja": {
                       "text": "姉の友人たちと一緒にいて居心地が悪かった。",
-                      "alternative_scripts": {
-                        "romaji": "Ane no yuujintachi to issho ni ite igokochi ga warukatta."
-                      }
+                      "alternative_scripts": [
+                        {
+                          "type": "romaji",
+                          "text": "Ane no yuujintachi to issho ni ite igokochi ga warukatta."
+                        }
+                      ]
                     },
                     "no": {
                       "text": "Jeg følte meg utilpass med vennene av søsteren min."
+                    },
+                    "pl": {
+                      "text": "Czułem, że nie pasuję do przyjaciół mojej siostry."
                     },
                     "sv": {
                       "text": "Jag kände mig utanför tillsammans med min systers vänner."
@@ -1139,19 +1458,25 @@
                       "text": "Den modern kunst så malplaceret ud i det gamle hus."
                     },
                     "es": {
-                      "text": "@@@@@"
+                      "text": "El arte moderno se veía fuera de lugar en la vieja casa."
                     },
                     "fr": {
                       "text": "L'art moderne semblait déplacé dans la maison ancienne."
                     },
                     "ja": {
                       "text": "その現代美術は古い家には合っていなかった。",
-                      "alternative_scripts": {
-                        "romaji": "Sono gendai bijutsu wa furui ie ni wa atteinakatta."
-                      }
+                      "alternative_scripts": [
+                        {
+                          "type": "romaji",
+                          "text": "Sono gendai bijutsu wa furui ie ni wa atteinakatta."
+                        }
+                      ]
                     },
                     "no": {
                       "text": "Den moderne kunsten virket upassende i det gamle huset."
+                    },
+                    "pl": {
+                      "text": "Sztuka współczesna nie pasowała do tego starego domu."
                     },
                     "sv": {
                       "text": "Den moderna konsten passade inte in i det gamla huset."
@@ -1168,11 +1493,14 @@
       "id": "EN_SE00015009",
       "compositional_phrases": [
         {
-          "text": "put/keep sb in their place",
-          "definition": "to make sb feel silly or worthless",
+          "text": "put/keep somebody in their place",
+          "definition": "to make somebody feel silly or worthless",
           "translations": {
             "br": {
               "text": "colocar/manter alguém no seu (devido) lugar"
+            },
+            "ca": {
+              "text": "posar a algú al seu lloc"
             },
             "dk": {
               "text": "sætte nogen på plads",
@@ -1181,28 +1509,39 @@
             "es": [
               {
                 "text": "poner a alguien en su lugar",
-                "gender": "-"
+                "gender": "-",
+                "number": "-"
               },
               {
-                "text": "bajar los humos a alguien",
-                "gender": "-"
+                "text": "bajarle los humos a alguien",
+                "gender": "-",
+                "number": "-"
               }
             ],
             "fr": {
-              "text": "remettre qqn à sa place"
+              "text": "remettre quelqu’un à sa place"
             },
             "ja": {
               "text": "身（み）の程（ほど）をわきまえさせる",
-              "alternative_scripts": {
-                "romaji": "mi no hodo o wakimaesaseru"
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "mi no hodo o wakimaesaseru"
+                }
+              ]
             },
             "no": {
               "text": "sette noen på plass"
             },
+            "pl": {
+              "text": "pokazać komuś gdzie jest jego miejsce"
+            },
             "sv": {
               "text": "sätta någon på plats",
               "gender": "-"
+            },
+            "vl": {
+              "text": "posar a algú al seu lloc"
             }
           },
           "examples": [
@@ -1216,19 +1555,25 @@
                   "text": "Han satte mig på plads med et eneste ord."
                 },
                 "es": {
-                  "text": "@@@@@"
+                  "text": "Él me bajó los humos con una sola palabra."
                 },
                 "fr": {
                   "text": "Il m'a remis à ma place d'un seul mot."
                 },
                 "ja": {
                   "text": "私は彼のたった一言で身の程を思い知った。",
-                  "alternative_scripts": {
-                    "romaji": "Watashi wa kare no tatta hitokoto de minohodo o omoishitta."
-                  }
+                  "alternative_scripts": [
+                    {
+                      "type": "romaji",
+                      "text": "Watashi wa kare no tatta hitokoto de minohodo o omoishitta."
+                    }
+                  ]
                 },
                 "no": {
                   "text": "Han satte meg på plass med ett eneste ord."
+                },
+                "pl": {
+                  "text": "Jednym słowem pokazał mi gdzie moje miejsce."
                 },
                 "sv": {
                   "text": "Han satte mig på plats med ett enda ord."
@@ -1254,22 +1599,36 @@
                 "text": "acontecer"
               }
             ],
+            "ca": {
+              "text": "tenir lloc"
+            },
             "dk": {
               "text": "ske",
               "gender": "-"
             },
-            "es": {
-              "text": "tener lugar algo",
-              "gender": "-"
-            },
+            "es": [
+              {
+                "text": "tener lugar algo",
+                "gender": "-",
+                "number": "-"
+              },
+              {
+                "text": "ocurrir",
+                "gender": "-",
+                "number": "-"
+              }
+            ],
             "fr": {
               "text": "se passer"
             },
             "ja": {
               "text": "起（お）こる",
-              "alternative_scripts": {
-                "romaji": "okoru"
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "okoru"
+                }
+              ]
             },
             "no": [
               {
@@ -1279,9 +1638,15 @@
                 "text": "skje"
               }
             ],
+            "pl": {
+              "text": "wydarzyć się"
+            },
             "sv": {
               "text": "äga rum",
               "gender": "-"
+            },
+            "vl": {
+              "text": "tindre lloc"
             }
           },
           "examples": [
@@ -1295,19 +1660,25 @@
                   "text": "Ingen ved, hvad der skete i nat."
                 },
                 "es": {
-                  "text": "@@@@@"
+                  "text": "Nadie sabe qué ocurrió esa noche."
                 },
                 "fr": {
                   "text": "Personne ne sait ce qui s'est passé cette nuit-là."
                 },
                 "ja": {
                   "text": "その晩何が起こったか誰も知らない。",
-                  "alternative_scripts": {
-                    "romaji": "Sono ban nani ga okottaka dare mo shiranai."
-                  }
+                  "alternative_scripts": [
+                    {
+                      "type": "romaji",
+                      "text": "Sono ban nani ga okottaka dare mo shiranai."
+                    }
+                  ]
                 },
                 "no": {
                   "text": "Ingen vet hva som skjedde den kvelden."
+                },
+                "pl": {
+                  "text": "Nikt nie wie, co wydarzyło się tej nocy."
                 },
                 "sv": {
                   "text": "Ingen vet vad som hände den kvällen."
@@ -1323,10 +1694,13 @@
       "compositional_phrases": [
         {
           "text": "take the place of",
-          "definition": "to do sth instead of sb, or be used instead of sth",
+          "definition": "to do something instead of somebody, or be used instead of something",
           "translations": {
             "br": {
               "text": "ocupar o lugar de"
+            },
+            "ca": {
+              "text": "prendre el lloc de"
             },
             "dk": {
               "text": "tage nogens plads",
@@ -1335,11 +1709,13 @@
             "es": [
               {
                 "text": "ocupar el sitio de",
-                "gender": "-"
+                "gender": "-",
+                "number": "-"
               },
               {
                 "text": "sustituir",
-                "gender": "-"
+                "gender": "-",
+                "number": "-"
               }
             ],
             "fr": {
@@ -1347,9 +1723,12 @@
             },
             "ja": {
               "text": "～に取（と）って代（か）わる",
-              "alternative_scripts": {
-                "romaji": "～ni totte kawaru"
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "～ni totte kawaru"
+                }
+              ]
             },
             "no": [
               {
@@ -1359,9 +1738,15 @@
                 "text": "avløse"
               }
             ],
+            "pl": {
+              "text": "zająć miejsce"
+            },
             "sv": {
-              "text": "ta ngns plats / avlösa/ersätta ngn/ngt",
+              "text": "ta någons plats / avlösa/ersätta någon/något",
               "gender": "-"
+            },
+            "vl": {
+              "text": "prendre el lloc de"
             }
           },
           "examples": [
@@ -1375,19 +1760,25 @@
                   "text": "lederen, der overtog Ryans plads"
                 },
                 "es": {
-                  "text": "@@@@@"
+                  "text": "el gerente que sustituyó a Ryan"
                 },
                 "fr": {
                   "text": "le directeur qui a remplacé Ryan"
                 },
                 "ja": {
                   "text": "ライアンの代わりをしたマネージャー",
-                  "alternative_scripts": {
-                    "romaji": "Raian no kawari o shita maneejaa"
-                  }
+                  "alternative_scripts": [
+                    {
+                      "type": "romaji",
+                      "text": "Raian no kawari o shita maneejaa"
+                    }
+                  ]
                 },
                 "no": {
                   "text": "sjefen som erstattet Ryan"
+                },
+                "pl": {
+                  "text": "kierownik, który zajął miejsce Ryana"
                 },
                 "sv": {
                   "text": "managern som avlöste Ryan"
@@ -1404,19 +1795,25 @@
                   "text": "Videospil har overtaget pladsen frem for brætspil og andre aktiviteter."
                 },
                 "es": {
-                  "text": "@@@@@"
+                  "text": "Los videojuegos han sustituido a los juegos de mesa y los deportes."
                 },
                 "fr": {
                   "text": "Les jeux vidéo ont remplacé les jeux de société et les sports."
                 },
                 "ja": {
                   "text": "ビデオゲームがボードゲームやスポーツに取って代わった。",
-                  "alternative_scripts": {
-                    "romaji": "Bideo geemu ga boodo geemu ya supootsu ni totte kawatta."
-                  }
+                  "alternative_scripts": [
+                    {
+                      "type": "romaji",
+                      "text": "Bideo geemu ga boodo geemu ya supootsu ni totte kawatta."
+                    }
+                  ]
                 },
                 "no": {
                   "text": "Videospill har avløst brettspill og sport."
+                },
+                "pl": {
+                  "text": "Gry wideo zajęły miejsce gier planszowych i sportu."
                 },
                 "sv": {
                   "text": "Videospel har ersatt brädspel och idrott."

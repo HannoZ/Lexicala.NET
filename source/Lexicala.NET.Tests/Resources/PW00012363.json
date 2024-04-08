@@ -18,7 +18,7 @@
           "text": "huis"
         },
         "ar": {
-          "text": "بَيْت"
+          "text": "بَيْت، مَنْزِل، شَقَّة"
         },
         "az": {
           "text": "ev"
@@ -60,7 +60,7 @@
           "text": "maison"
         },
         "fy": {
-          "text": "(wen)hûs"
+          "text": "hûs"
         },
         "he": {
           "text": "בַּיִת"
@@ -72,7 +72,7 @@
           "text": "kuca"
         },
         "hu": {
-          "text": "(lakó)ház"
+          "text": "ház"
         },
         "id": {
           "text": "rumah"
@@ -99,10 +99,10 @@
           "text": "rumah"
         },
         "nl": {
-          "text": "(woon)huis"
+          "text": "huis"
         },
         "no": {
-          "text": "(bolig)hus, villa"
+          "text": "hus, villa"
         },
         "pl": {
           "text": "dom"
@@ -170,7 +170,7 @@
           "text": "huis"
         },
         "ar": {
-          "text": "بَيْت، مَسكِن، مَحَل، مَقَر"
+          "text": "بَيْت، حَظِيرَة، دار، مَقَرّ"
         },
         "az": {
           "text": "bina"
@@ -221,7 +221,7 @@
           "text": "मकान"
         },
         "hr": {
-          "text": "kuca (kazalište, parlament...)"
+          "text": "kuca "
         },
         "hu": {
           "text": "épület"
@@ -239,7 +239,7 @@
           "text": "建物"
         },
         "ko": {
-          "text": "(특정한 목적을 위한) 건물"
+          "text": " 건물"
         },
         "lt": {
           "text": "pastatas"
@@ -313,7 +313,7 @@
           "text": "a hen house"
         },
         {
-          "text": "a public house."
+          "text": "a public house"
         }
       ]
     },
@@ -325,7 +325,7 @@
           "text": "skouburg, gehoor"
         },
         "ar": {
-          "text": "مَسْرَح"
+          "text": "مَسْرَح، جُمْهُور المَسْرَح"
         },
         "az": {
           "text": "tamaşaçılar; teatr binası"
@@ -367,7 +367,7 @@
           "text": "salle"
         },
         "fy": {
-          "text": "teäter(seal); de minsken yn in teäter(seal)"
+          "text": "teäter; de minsken yn in teäter"
         },
         "he": {
           "text": "קָהָל תֵּיאָטרוֹן"
@@ -394,7 +394,7 @@
           "text": "劇場"
         },
         "ko": {
-          "text": "(극장 등의) 관중, 청중"
+          "text": " 관중, 청중"
         },
         "lt": {
           "text": "teatras, teatro salė, žiūrovai"
@@ -409,7 +409,7 @@
           "text": "volle bak"
         },
         "no": {
-          "text": "(teater)sal, (fullt/tomt) hus"
+          "text": "sal,  hus"
         },
         "pl": {
           "text": "widownia, publiczność"
@@ -430,7 +430,7 @@
           "text": "театр; зрители"
         },
         "sk": {
-          "text": "(vypredané) hľadisko, obecenstvo"
+          "text": " hľadisko, obecenstvo"
         },
         "sl": {
           "text": "dvorana"
@@ -445,7 +445,7 @@
           "text": "โรงภาพยนตร์"
         },
         "tr": {
-          "text": "tiyatro binası; (tiyatroda) seyirci, (konserde) izleyici"
+          "text": "tiyatro binası;  seyirci,  izleyici"
         },
         "tw": {
           "text": "劇場，觀眾"
@@ -477,7 +477,7 @@
           "text": "stam"
         },
         "ar": {
-          "text": "عائِلَه، أُسْرَه"
+          "text": "عائِلَة، آل"
         },
         "az": {
           "text": "sülalə"
@@ -617,7 +617,7 @@
       },
       "examples": [
         {
-          "text": "the house of Tudor."
+          "text": "the house of Tudor"
         }
       ]
     }

@@ -17,19 +17,19 @@ namespace Lexicala.NET.Response.Entries
 
         [JsonProperty("antonyms", NullValueHandling = NullValueHandling.Ignore)]
 
-        public string[] Antonyms { get; set; } = { };
+        public string[] Antonyms { get; set; } = [];
 
         [JsonProperty("synonyms", NullValueHandling = NullValueHandling.Ignore)]
-        public string[] Synonyms { get; set; } = { };
+        public string[] Synonyms { get; set; } = [];
 
         [JsonProperty("translations")]
-        public Dictionary<string, LanguageObject> Translations { get; set; } = new Dictionary<string, LanguageObject>();
+        public Dictionary<string, TranslationObject> Translations { get; set; } = [];
 
         [JsonProperty("examples")] 
-        public Example[] Examples { get; set; } = { };
+        public Example[] Examples { get; set; } = [];
 
         [JsonProperty("compositional_phrases")]
-        public CompositionalPhrase[] CompositionalPhrases { get; set; } = { };
+        public CompositionalPhrase[] CompositionalPhrases { get; set; } = [];
     
         [JsonProperty("semantic_subcategory", NullValueHandling = NullValueHandling.Ignore)]
         public string SemanticSubcategory { get; set; }

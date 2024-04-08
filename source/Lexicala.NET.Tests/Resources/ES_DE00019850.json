@@ -3,6 +3,7 @@
   "source": "global",
   "language": "es",
   "version": 1,
+  "frequency": "6187053",
   "headword": {
     "text": "embargo",
     "pronunciation": {
@@ -39,10 +40,13 @@
           "text": "seizure"
         },
         "ja": {
-          "text": "差押（さしおさ）え　、押収（おうしゅう）、没収（ぼっしゅう）",
-          "alternative_scripts": {
-            "romaji": "sashi osae, ooshuu, bos-shuu"
-          }
+          "text": "差押（さしおさ）え 、押収（おうしゅう）、没収（ぼっしゅう）",
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "sashi osae, ooshuu, bos-shuu"
+            }
+          ]
         },
         "nl": {
           "text": "beslaglegging",
@@ -72,9 +76,12 @@
             },
             "ja": {
               "text": "押収（おうしゅう）を免（まぬが）れる",
-              "alternative_scripts": {
-                "romaji": "ooshuu o manugareru"
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "ooshuu o manugareru"
+                }
+              ]
             },
             "nl": {
               "text": "een beslaglegging vermijden"
@@ -116,9 +123,12 @@
         },
         "ja": {
           "text": "輸出入禁止（ゆしゅつにゅうきんし）",
-          "alternative_scripts": {
-            "romaji": "yushutsunyu kinshi"
-          }
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "yushutsunyu kinshi"
+            }
+          ]
         },
         "nl": {
           "text": "beslag",
@@ -148,9 +158,12 @@
             },
             "ja": {
               "text": "輸入品（ゆにゅうひん）が禁止品目（きんしひんもく）に抵触（ていしょく）した。",
-              "alternative_scripts": {
-                "romaji": "Yunyuuhin ga kinshi hinmoku ni teeshoku shita."
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Yunyuuhin ga kinshi hinmoku ni teeshoku shita."
+                }
+              ]
             },
             "nl": {
               "text": "Er viel een beslag op de invoer."
@@ -185,9 +198,12 @@
             },
             "ja": {
               "text": "しかしながら、それでも",
-              "alternative_scripts": {
-                "romaji": "shikashi nagara, soredemo"
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "shikashi nagara, soredemo"
+                }
+              ]
             },
             "nl": {
               "text": "toch"
@@ -207,11 +223,17 @@
                 "dk": {
                   "text": "Jeg er ikke tørstig, men jeg vil alligevel godt prøve din cocktail."
                 },
+                "en": {
+                  "text": "I'm not thirsty. However, I will try your cocktail."
+                },
                 "ja": {
                   "text": "喉（のど）は渇（かわ）いていないが、それでも君（きみ）のカクテルを頂（いただ）こう。",
-                  "alternative_scripts": {
-                    "romaji": "Nodo wa kawaite inaiga, soredemo kimi no kakuteru o itadakoo."
-                  }
+                  "alternative_scripts": [
+                    {
+                      "type": "romaji",
+                      "text": "Nodo wa kawaite inaiga, soredemo kimi no kakuteru o itadakoo."
+                    }
+                  ]
                 },
                 "nl": {
                   "text": "Ik heb geen dorst. Toch zal ik je cocktail proberen."

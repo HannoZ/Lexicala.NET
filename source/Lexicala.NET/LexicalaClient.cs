@@ -218,10 +218,9 @@ namespace Lexicala.NET
                 ETag = headers.ETag?.Tag,
                 RateLimits = new RateLimits
                 {
-                    DailyLimitRemaining = ParseRateLimitHeader(ResponseHeaders.HeaderDailyLimitRemaining),
-                    DailyLimit = ParseRateLimitHeader(ResponseHeaders.HeaderRateLimitDailyLimit),
-                    Limit = ParseRateLimitHeader(ResponseHeaders.HeaderRateLimitLimit),
-                    Remaining = ParseRateLimitHeader(ResponseHeaders.HeaderRateLimitRemaining)
+                    LimitRemaining = ParseRateLimitHeader(ResponseHeaders.HeaderRateLimitRequestsRemaining),
+                    Limit = ParseRateLimitHeader(ResponseHeaders.HeaderRateLimitRequestsLimit),
+                    Reset = ParseRateLimitHeader(ResponseHeaders.HeaderRateLimitReset)
                 }
             };
 
