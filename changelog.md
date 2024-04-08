@@ -1,5 +1,9 @@
 # Change log 
 ## Lexicala.NET
+2.0.0 Now supports .NET 8.0 and .NET standard 2.0. Removed packages Lexicala.NET.Autofac and Lexicala.NET.MicrosoftDependencyInjection. Api calls to old dictapi url were no longer valid, this his been fixed by using the new RapidApi url now. 
+
+1.7.0 Added support for .NET 7
+
 1.6.1 Package updates. Now supports .NET 6.0 and .NET standard 2.0
 
 1.6.0.1 - Fixed some issues that could cause null reference exceptions; Added XML documentation for all public members; Updated dependencies. This version is now compatible with .NET 6. 
