@@ -3,8 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
-using Lexicala.NET.MicrosoftDependencyInjection;
 using Lexicala.NET.Request;
+using Microsoft.Extensions.Logging;
 
 namespace Lexicala.NET.ConsoleApp
 {
@@ -16,10 +16,10 @@ namespace Lexicala.NET.ConsoleApp
         {
             IConfiguration configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddEnvironmentVariables()
                 .AddCommandLine(args)
+                // add your own user name and password to the user secrets store
+                .AddUserSecrets<Program>()
                 .Build();
-
 
             try
             {
@@ -97,6 +97,7 @@ namespace Lexicala.NET.ConsoleApp
         {
             IServiceCollection services = new ServiceCollection();
             services.RegisterLexicala(configuration);
+            services.AddLogging(cfg => cfg.AddConsole());
 
             _serviceProvider = services.BuildServiceProvider(true);
         }

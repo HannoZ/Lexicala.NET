@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Lexicala.NET.Response.Entries
 {
@@ -27,7 +28,7 @@ namespace Lexicala.NET.Response.Entries
         public Inflection[] Inflections { get; set; }
 
         [JsonProperty("additional_inflections")]
-        public string[] AdditionalInflections { get; set; } = { };
+        public string[] AdditionalInflections { get; set; } = [];
 
         public Pronunciation[] Pronunciations
         {
@@ -39,16 +40,16 @@ namespace Lexicala.NET.Response.Entries
                 }
                 else if (PronunciationObject.Pronunciation != null)
                 {
-                    return new[] { PronunciationObject.Pronunciation };
+                    return [PronunciationObject.Pronunciation];
                 }
                 else
                 {
-                    return new Pronunciation[0];
+                    return [];
                 }
             }
         }
 
-        public string[] PartOfSpeeches => Pos.PartOfSpeechArray ?? new[] { Pos.PartOfSpeech };
+        public string[] PartOfSpeeches => Pos.PartOfSpeechArray ?? [Pos.PartOfSpeech];
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

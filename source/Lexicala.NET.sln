@@ -1,19 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30320.27
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexicala.NET", "Lexicala.NET\Lexicala.NET.csproj", "{4EAB2C7F-3CBA-43CB-97B6-DE2B7B89DFD0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexicala.NET.Tests", "Lexicala.NET.Tests\Lexicala.NET.Tests.csproj", "{C5BFFF1B-CA39-49D1-9EBD-1F0A6CEAF577}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexicala.NET.ConsoleApp", "Lexicala.NET.ConsoleApp\Lexicala.NET.ConsoleApp.csproj", "{8CF2797E-7845-4E69-A252-108C2FAB13A3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexicala.NET.ConsoleApp.NET472", "Lexicala.NET.ConsoleApp.NET472\Lexicala.NET.ConsoleApp.NET472.csproj", "{823714A1-5976-4D41-A29A-AB84D8F42CF0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexicala.NET.MicrosoftDependencyInjection", "Lexicala.NET.MicrosoftDependencyInjection\Lexicala.NET.MicrosoftDependencyInjection.csproj", "{AB3F4022-B12F-4478-A12C-4F96ADDB0E11}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexicala.NET.Autofac", "Lexicala.NET.Autofac\Lexicala.NET.Autofac.csproj", "{3D77127A-6CA6-407E-AD49-8A0812A3373D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,18 +27,6 @@ Global
 		{8CF2797E-7845-4E69-A252-108C2FAB13A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CF2797E-7845-4E69-A252-108C2FAB13A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CF2797E-7845-4E69-A252-108C2FAB13A3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{823714A1-5976-4D41-A29A-AB84D8F42CF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{823714A1-5976-4D41-A29A-AB84D8F42CF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{823714A1-5976-4D41-A29A-AB84D8F42CF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{823714A1-5976-4D41-A29A-AB84D8F42CF0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AB3F4022-B12F-4478-A12C-4F96ADDB0E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB3F4022-B12F-4478-A12C-4F96ADDB0E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB3F4022-B12F-4478-A12C-4F96ADDB0E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB3F4022-B12F-4478-A12C-4F96ADDB0E11}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D77127A-6CA6-407E-AD49-8A0812A3373D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D77127A-6CA6-407E-AD49-8A0812A3373D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D77127A-6CA6-407E-AD49-8A0812A3373D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D77127A-6CA6-407E-AD49-8A0812A3373D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

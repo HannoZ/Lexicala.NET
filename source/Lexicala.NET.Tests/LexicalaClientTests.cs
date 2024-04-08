@@ -685,10 +685,9 @@ namespace Lexicala.NET.Client.Tests
 
             var responseMessage = SetupOkResponseMessage(response);
             responseMessage.Headers.ETag = new EntityTagHeaderValue("\"abc-OfxtVSoa\"");
-            responseMessage.Headers.Add(ResponseHeaders.HeaderDailyLimitRemaining, "100");
-            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitDailyLimit, "1000");
-            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitLimit, "10");
-            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitRemaining, "5");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitRequestsRemaining, "100");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitRequestsLimit, "1000");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitReset, "12345");
 
             _handlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
@@ -700,10 +699,9 @@ namespace Lexicala.NET.Client.Tests
 
             // ASSERT
             result.Metadata.ETag.ShouldBe("\"abc-OfxtVSoa\"");
-            result.Metadata.RateLimits.DailyLimitRemaining.ShouldBe(100);
-            result.Metadata.RateLimits.DailyLimit.ShouldBe(1000);
-            result.Metadata.RateLimits.Limit.ShouldBe(10);
-            result.Metadata.RateLimits.Remaining.ShouldBe(5);
+            result.Metadata.RateLimits.LimitRemaining.ShouldBe(100);
+            result.Metadata.RateLimits.Limit.ShouldBe(1000);
+            result.Metadata.RateLimits.Reset.ShouldBe(12345);
         }
 
         [TestMethod]
@@ -827,6 +825,23 @@ namespace Lexicala.NET.Client.Tests
         }
 
         [TestMethod]
+        public async Task LexicalaClient_CanDeserializeEntry_ES_DE00010530()
+        {
+            string response = await LoadResponseFromFile("ES_DE00010530.json");
+
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            // ACT
+            var result = await _client.GetEntryAsync("ES_DE00010530");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+        }
+
+        [TestMethod]
         public async Task LexicalaClient_GetEntry_ETag()
         {
             string response = await LoadResponseFromFile("Entry_EN_DE00009032.json");
@@ -853,10 +868,12 @@ namespace Lexicala.NET.Client.Tests
 
             var responseMessage = SetupOkResponseMessage(response);
             responseMessage.Headers.ETag = new EntityTagHeaderValue("\"abc-OfxtVSoa\"");
-            responseMessage.Headers.Add(ResponseHeaders.HeaderDailyLimitRemaining, "100");
-            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitDailyLimit, "1000");
-            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitLimit, "10");
-            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitRemaining, "5");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitRequestsRemaining, "75");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitRequestsLimit, "100");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRateLimitReset, "12345");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRapidFreePlanHardLimitLimit, "5000");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRapidFreePlanHardLimitRemaining, "1000");
+            responseMessage.Headers.Add(ResponseHeaders.HeaderRapidFreePlanHardLimitReset, "12345");
 
             _handlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
@@ -868,10 +885,9 @@ namespace Lexicala.NET.Client.Tests
 
             // ASSERT
             result.Metadata.ETag.ShouldBe("\"abc-OfxtVSoa\"");
-            result.Metadata.RateLimits.DailyLimitRemaining.ShouldBe(100);
-            result.Metadata.RateLimits.DailyLimit.ShouldBe(1000);
-            result.Metadata.RateLimits.Limit.ShouldBe(10);
-            result.Metadata.RateLimits.Remaining.ShouldBe(5);
+            result.Metadata.RateLimits.LimitRemaining.ShouldBe(75);
+            result.Metadata.RateLimits.Limit.ShouldBe(100);
+            result.Metadata.RateLimits.Reset.ShouldBe(12345);
         }
 
         [TestMethod]

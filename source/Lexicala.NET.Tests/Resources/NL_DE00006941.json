@@ -3,6 +3,7 @@
   "source": "global",
   "language": "nl",
   "version": 1,
+  "frequency": "19486312",
   "headword": {
     "text": "gaan",
     "pronunciation": {
@@ -12,11 +13,17 @@
     "inflections": [
       {
         "text": "ging",
+        "pronunciation": {
+          "value": "xÉªÅ‹"
+        },
         "number": "singular",
         "tense": "past"
       },
       {
         "text": "is gegaan",
+        "pronunciation": {
+          "value": "Éªs ËˆxÉ™xan"
+        },
         "tense": "pastParticiple"
       }
     ]
@@ -84,7 +91,7 @@
               "text": "ir(se) en bicicleta"
             },
             "fr": {
-              "text": "aller à vélo"
+              "text": "aller Ã  vÃ©lo"
             }
           }
         },
@@ -92,7 +99,7 @@
           "text": "teruggaan",
           "translations": {
             "de": {
-              "text": "zurückgehen"
+              "text": "zurÃ¼ckgehen"
             },
             "en": {
               "text": "to go back"
@@ -164,7 +171,7 @@
             "text": "aller"
           },
           {
-            "text": "se mettre à"
+            "text": "se mettre Ã "
           }
         ]
       },
@@ -235,7 +242,7 @@
               "text": "to go into politics"
             },
             "es": {
-              "text": "entrar en la política"
+              "text": "entrar en la polÃ­tica"
             },
             "fr": {
               "text": "entrer en politique"
@@ -255,7 +262,7 @@
               "text": "jubilarse"
             },
             "fr": {
-              "text": "partir à la retraite"
+              "text": "partir Ã  la retraite"
             }
           }
         }
@@ -271,7 +278,7 @@
             "text": "passen"
           },
           {
-            "text": "gehören"
+            "text": "gehÃ¶ren"
           },
           {
             "text": "gehen"
@@ -295,7 +302,7 @@
         ],
         "fr": [
           {
-            "text": "être possible"
+            "text": "Ãªtre possible"
           },
           {
             "text": "pouvoir"
@@ -307,13 +314,13 @@
           "text": "Er gaan twaalf dozen in een kist.",
           "translations": {
             "de": {
-              "text": "Es passen zwölf Kartons in eine Kiste."
+              "text": "Es passen zwÃ¶lf Kartons in eine Kiste."
             },
             "en": {
               "text": "One crate holds twelve carton boxes."
             },
             "es": {
-              "text": "Entran doce cajas en un cajón."
+              "text": "Entran doce cajas en un cajÃ³n."
             },
             "fr": {
               "text": "Une caisse peut contenir douze cartons."
@@ -401,10 +408,10 @@
               "text": "How is it going?"
             },
             "es": {
-              "text": "¿Cómo está?"
+              "text": "Â¿CÃ³mo estÃ¡?"
             },
             "fr": {
-              "text": "Comment ça va?"
+              "text": "Comment Ã§a va?"
             }
           }
         }
@@ -412,12 +419,12 @@
     },
     {
       "id": "NL_SE00008559",
-      "definition": "klinken",
+      "definition": "klinken, geluid voortbrengen",
       "semantic_subcategory": "klinken",
       "translations": {
         "de": [
           {
-            "text": "läuten"
+            "text": "lÃ¤uten"
           },
           {
             "text": "schellen"
@@ -446,16 +453,16 @@
           "text": "De telefoon gaat.",
           "translations": {
             "de": {
-              "text": "Das Telefon läutet."
+              "text": "Das Telefon lÃ¤utet."
             },
             "en": {
               "text": "The telephone rings."
             },
             "es": {
-              "text": "Suena el teléfono."
+              "text": "Suena el telÃ©fono."
             },
             "fr": {
-              "text": "Le téléphone sonne."
+              "text": "Le tÃ©lÃ©phone sonne."
             }
           }
         },
@@ -504,7 +511,7 @@
           "definition": "je ergens helemaal voor inzetten",
           "translations": {
             "de": {
-              "text": "sich für etwas einsetzen"
+              "text": "sich fÃ¼r etwas einsetzen"
             },
             "en": {
               "text": "to go for (something)"
@@ -518,7 +525,7 @@
               }
             ],
             "fr": {
-              "text": "se donner à fond"
+              "text": "se donner Ã  fond"
             }
           }
         },
@@ -550,7 +557,7 @@
                 "text": "se casser"
               },
               {
-                "text": "périr"
+                "text": "pÃ©rir"
               },
               {
                 "text": "mourir"

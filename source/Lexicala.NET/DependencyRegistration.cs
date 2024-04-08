@@ -1,10 +1,9 @@
-﻿using Lexicala.NET.Configuration;
-using Lexicala.NET.Parsing;
+﻿using Lexicala.NET.Parsing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 
-namespace Lexicala.NET.MicrosoftDependencyInjection
+namespace Lexicala.NET
 {
     public static class DependencyRegistration
     {
@@ -17,11 +16,12 @@ namespace Lexicala.NET.MicrosoftDependencyInjection
         public static IServiceCollection RegisterLexicala(this IServiceCollection services, LexicalaConfig config)
         {
             services.AddHttpClient<ILexicalaClient, LexicalaClient>(client =>
-            {
-                client.BaseAddress = LexicalaConfig.BaseAddress;
-                client.DefaultRequestHeaders.Authorization = config.CreateAuthenticationHeader();
-            })
-                .AddTransientHttpErrorPolicy(builder => builder.RetryAsync(2));
+                {
+                    client.BaseAddress = LexicalaConfig.BaseAddress;
+                    client.DefaultRequestHeaders.Add(LexicalaConfig.RapidApiKeyHeader, config.ApiKey);
+                    client.DefaultRequestHeaders.Add(LexicalaConfig.RapidApiHostHeader, LexicalaConfig.RapidApiHostValue);
+                })
+                .AddTransientHttpErrorPolicy(builder => builder.RetryAsync(3));
 
             services.AddMemoryCache();
             services.AddSingleton<ILexicalaSearchParser, LexicalaSearchParser>();

@@ -13,10 +13,11 @@ namespace Lexicala.NET.Response.Entries.JsonConverters
             DateParseHandling = DateParseHandling.None,
             Converters = new List<JsonConverter>
             {
-                CommonLanguageObjectConverter.Singleton,
+                TranslationObjectConverter.Singleton,
                 HeadwordObjectConverter.Singleton,
                 PronunciationObjectConverter.Singleton,
                 PosConverter.Singleton,
+                AlternativeScriptsObjectConverter.Singleton,
                 new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
             }
         };

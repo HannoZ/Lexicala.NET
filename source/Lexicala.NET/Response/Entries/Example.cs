@@ -9,6 +9,6 @@ namespace Lexicala.NET.Response.Entries
         public string Text { get; set; }
 
         [JsonProperty("translations", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, LanguageObject> Translations { get; set; }
+        public Dictionary<string, TranslationObject> Translations { get; set; }
     }
 }

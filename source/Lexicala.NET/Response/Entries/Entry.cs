@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Lexicala.NET.Response.Entries
 {
@@ -17,14 +18,17 @@ namespace Lexicala.NET.Response.Entries
         [JsonProperty("version")]
         public int Version { get; set; }
 
+        [JsonProperty("frequency")]
+        public int Frequency { get; set; }
+
         [JsonProperty("headword")]
         public HeadwordObject HeadwordObject { get; set; }
 
         [JsonProperty("senses")] 
-        public Sense[] Senses { get; set; } = { };
+        public Sense[] Senses { get; set; } = [];
 
         [JsonProperty("related_entries")] 
-        public string[] RelatedEntries { get; set; } = { };
+        public string[] RelatedEntries { get; set; } = [];
 
         public Headword[] Headwords
         {
@@ -36,11 +40,11 @@ namespace Lexicala.NET.Response.Entries
                 }
                 else if (HeadwordObject.Headword != null)
                 {
-                    return new[] { HeadwordObject.Headword };
+                    return [HeadwordObject.Headword];
                 }
                 else
                 {
-                    return new Headword[0];
+                    return [];
                 }
             }
         }

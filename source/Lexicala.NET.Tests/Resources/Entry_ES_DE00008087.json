@@ -3,13 +3,14 @@
   "source": "global",
   "language": "es",
   "version": 1,
+  "frequency": "15797",
   "headword": {
     "text": "blandir",
     "pronunciation": {
       "value": "blan'dir"
     },
     "pos": "verb",
-    "subcategorization": "transitive"
+    "valency": "transitive"
   },
   "senses": [
     {
@@ -32,9 +33,12 @@
         },
         "ja": {
           "text": "武器（ぶき）を振（ふ）りかざす",
-          "alternative_scripts": {
-            "romaji": "buki o furi kazasu"
-          }
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "buki o furi kazasu"
+            }
+          ]
         },
         "nl": {
           "text": "zwaaien"
@@ -61,9 +65,12 @@
             },
             "ja": {
               "text": "彼（かれ）は小刀（こがたな）を振（ふ）りかざした。",
-              "alternative_scripts": {
-                "romaji": "Kare wa kogatana o furi kazashita."
-              }
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Kare wa kogatana o furi kazashita."
+                }
+              ]
             },
             "nl": {
               "text": "Hij zwaaide met het zakmes."
