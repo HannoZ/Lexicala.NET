@@ -1,4 +1,4 @@
-﻿namespace Lexicala.NET.Response.Search
+namespace Lexicala.NET.Response.Search
 {
     public struct HeadwordObject
     {

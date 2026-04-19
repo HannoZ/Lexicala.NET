@@ -1,4 +1,4 @@
-﻿namespace Lexicala.NET.Response
+namespace Lexicala.NET.Response
 {
     /// <summary>
     /// Contains response header constants.

@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Search
 {
     public class Sense
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty("definition")]
+        [JsonPropertyName("definition")]
         public string Definition { get; set; }
     }
 }

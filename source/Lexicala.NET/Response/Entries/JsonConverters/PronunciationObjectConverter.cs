@@ -1,42 +1,41 @@
-﻿using System;
-using Newtonsoft.Json;
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Entries.JsonConverters
 {
-    internal class PronunciationObjectConverter : JsonConverter
+    internal class PronunciationObjectConverter : JsonConverter<PronunciationObject>
     {
-        public override bool CanConvert(Type t) => t == typeof(PronunciationObject) || t == typeof(PronunciationObject?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        public override PronunciationObject Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             switch (reader.TokenType)
             {
-                case JsonToken.StartObject:
-                    var objectValue = serializer.Deserialize<Pronunciation>(reader);
+                case JsonTokenType.StartObject:
+                    var objectValue = JsonSerializer.Deserialize<Pronunciation>(ref reader, options);
                     return new PronunciationObject { Pronunciation = objectValue };
-                case JsonToken.StartArray:
-                    var arrayValue = serializer.Deserialize<Pronunciation[]>(reader);
+                case JsonTokenType.StartArray:
+                    var arrayValue = JsonSerializer.Deserialize<Pronunciation[]>(ref reader, options);
                     return new PronunciationObject { PronunciationArray = arrayValue };
             }
-            throw new Exception("Cannot unmarshal type PronunciationObject");
+
+            throw new JsonException("Cannot unmarshal type PronunciationObject");
         }
 
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, PronunciationObject value, JsonSerializerOptions options)
         {
-            var value = (PronunciationObject)untypedValue;
             if (value.PronunciationArray != null)
             {
-                serializer.Serialize(writer, value.PronunciationArray);
+                JsonSerializer.Serialize(writer, value.PronunciationArray, options);
                 return;
             }
             if (value.Pronunciation != null)
             {
-                serializer.Serialize(writer, value.Pronunciation);
+                JsonSerializer.Serialize(writer, value.Pronunciation, options);
                 return;
             }
-            throw new Exception("Cannot marshal type PronunciationObject");
-        }
 
-        public static readonly PronunciationObjectConverter Singleton = new PronunciationObjectConverter();
+            throw new JsonException("Cannot marshal type PronunciationObject");
+        }
     }
 }
+

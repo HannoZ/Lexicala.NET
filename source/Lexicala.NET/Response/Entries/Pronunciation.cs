@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Entries
 {
     public class Pronunciation
     {
-        [JsonProperty("value")]
+        [JsonPropertyName("value")]
         public string Value { get; set; }
     }
     

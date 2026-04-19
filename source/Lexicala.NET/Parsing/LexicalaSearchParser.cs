@@ -31,6 +31,9 @@ namespace Lexicala.NET.Parsing
         /// <inheritdoc />
         public async Task<SearchResultModel> SearchAsync(string searchText, string sourceLanguage, params string[] targetLanguages)
         {
+            ArgumentException.ThrowIfNullOrEmpty(searchText, nameof(searchText));
+            ArgumentException.ThrowIfNullOrEmpty(sourceLanguage, nameof(sourceLanguage));
+
             var languages = await LoadLanguages();
             if (!languages.Global.SourceLanguages.Contains(sourceLanguage))
             {
@@ -46,10 +49,14 @@ namespace Lexicala.NET.Parsing
         /// <inheritdoc />
         public async Task<SearchResultModel> SearchAsync(AdvancedSearchRequest searchRequest, params string[] targetLanguages)
         {
+            ArgumentNullException.ThrowIfNull(searchRequest);
+            ArgumentException.ThrowIfNullOrEmpty(searchRequest.Language, nameof(searchRequest.Language));
+            ArgumentException.ThrowIfNullOrEmpty(searchRequest.SearchText, nameof(searchRequest.SearchText));
+
             var languages = await LoadLanguages();
             if (!languages.Global.SourceLanguages.Contains(searchRequest.Language))
             {
-                throw new ArgumentException($"Invalid value. '{searchRequest.Language}' does not appear in the Global source languages list");
+                throw new ArgumentException($"Invalid value. '{searchRequest.Language}' does not appear in the Global source languages list", nameof(searchRequest.Language));
             }
 
             var searchResult = await _lexicalaClient.AdvancedSearchAsync(searchRequest);
@@ -66,27 +73,40 @@ namespace Lexicala.NET.Parsing
 
         private async Task<SearchResultModel> ProcessSearchResult(string searchText, SearchResponse searchResult)
         {
-            var entries = new List<Entry>();
+            // Collect all unique entry IDs to fetch
+            var allIds = new HashSet<string>();
             foreach (var result in searchResult.Results)
             {
-                if (entries.Any(e => e.Id == result.Id))
-                {
-                    continue;
-                }
+                allIds.Add(result.Id);
+            }
 
-                var entry = await _lexicalaClient.GetEntryAsync(result.Id);
-                entries.Add(entry);
-                foreach (var relatedEntry in entry.RelatedEntries)
+            // Fetch initial entries in parallel
+            var initialEntryTasks = allIds.Select(id => _lexicalaClient.GetEntryAsync(id)).ToArray();
+            var initialEntries = await Task.WhenAll(initialEntryTasks);
+
+            // Collect related entry IDs
+            var relatedIds = new HashSet<string>();
+            foreach (var entry in initialEntries)
+            {
+                if (entry.RelatedEntries != null)
                 {
-                    if (entries.Any(e => e.Id == relatedEntry))
+                    foreach (var relatedId in entry.RelatedEntries)
                     {
-                        continue;
+                        if (!allIds.Contains(relatedId))
+                        {
+                            relatedIds.Add(relatedId);
+                            allIds.Add(relatedId);
+                        }
                     }
-
-                    var related = await _lexicalaClient.GetEntryAsync(relatedEntry);
-                    entries.Add(related);
                 }
             }
+
+            // Fetch related entries in parallel
+            var relatedEntryTasks = relatedIds.Select(id => _lexicalaClient.GetEntryAsync(id)).ToArray();
+            var relatedEntries = await Task.WhenAll(relatedEntryTasks);
+
+            // Combine all entries
+            var entries = initialEntries.Concat(relatedEntries).ToList();
 
             var returnModel = new SearchResultModel
             {
@@ -175,26 +195,7 @@ namespace Lexicala.NET.Parsing
 
             if (sourceSense.Translations != null)
             {
-                var translations = new List<Translation>();
-                if (targetLanguages?.Length > 0)
-                {
-                    foreach (var languageCode in targetLanguages)
-                    {
-                        if (sourceSense.Translations.ContainsKey(languageCode))
-                        {
-                            translations.AddRange(ParseTranslation(languageCode, sourceSense.Translations[languageCode]));
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var sourceSenseTranslation in sourceSense.Translations)
-                    {
-                        translations.AddRange(ParseTranslation(sourceSenseTranslation.Key, sourceSenseTranslation.Value));
-                    }
-                }
-
-                targetSense.Translations.AddRange(translations);
+                targetSense.Translations.AddRange(FilterTranslations(sourceSense.Translations, targetLanguages));
             }
 
             foreach (var sourceExample in sourceSense.Examples)
@@ -208,23 +209,7 @@ namespace Lexicala.NET.Parsing
 
                 if (sourceExample.Translations != null)
                 {
-                    if (targetLanguages?.Length > 0)
-                    {
-                        foreach (var languageCode in targetLanguages)
-                        {
-                            if (sourceExample.Translations.ContainsKey(languageCode))
-                            {
-                                translations.AddRange(ParseTranslation(languageCode, sourceExample.Translations[languageCode]));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (var sourceExampleTranslation in sourceExample.Translations)
-                        {
-                            translations.AddRange(ParseTranslation(sourceExampleTranslation.Key, sourceExampleTranslation.Value));
-                        }
-                    }
+                    translations.AddRange(FilterTranslations(sourceExample.Translations, targetLanguages));
                 }
 
                 example.Translations.AddRange(translations);
@@ -241,26 +226,7 @@ namespace Lexicala.NET.Parsing
 
                 if (compositionalPhrase.Translations != null)
                 {
-                    var translations = new List<Translation>();
-                    if (targetLanguages?.Length > 0)
-                    {
-                        foreach (var languageCode in targetLanguages)
-                        {
-                            if (compositionalPhrase.Translations.ContainsKey(languageCode))
-                            {
-                                translations.AddRange(ParseTranslation(languageCode, compositionalPhrase.Translations[languageCode]));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (var sourceSenseTranslation in compositionalPhrase.Translations)
-                        {
-                            translations.AddRange(ParseTranslation(sourceSenseTranslation.Key, sourceSenseTranslation.Value));
-                        }
-                    }
-
-                    comp.Translations.AddRange(translations);
+                    comp.Translations.AddRange(FilterTranslations(compositionalPhrase.Translations, targetLanguages));
                 }
 
                 foreach (var sourceExample in compositionalPhrase.Examples)
@@ -274,24 +240,7 @@ namespace Lexicala.NET.Parsing
 
                     if (sourceExample.Translations != null)
                     {
-                        if (targetLanguages?.Length > 0)
-                        {
-                            foreach (var languageCode in targetLanguages)
-                            {
-                                if (sourceExample.Translations.ContainsKey(languageCode))
-                                {
-                                    translations.AddRange(ParseTranslation(languageCode, sourceExample.Translations[languageCode]));
-                                }
-                            }
-                        }
-                        else
-                        {
-                            foreach (var sourceExampleTranslation in sourceExample.Translations)
-                            {
-                                translations.AddRange(ParseTranslation(sourceExampleTranslation.Key,
-                                    sourceExampleTranslation.Value));
-                            }
-                        }
+                        translations.AddRange(FilterTranslations(sourceExample.Translations, targetLanguages));
                     }
 
                     example.Translations.AddRange(translations);
@@ -317,6 +266,29 @@ namespace Lexicala.NET.Parsing
                                    ? new List<Translation> { new() { Language = languageCode, Text = clo.Translation.Text } }
                                    : clo.Translations?.Select(nl => new Translation { Text = nl.Text, Language = languageCode }).ToList())
                                ?? new List<Translation>();
+            return translations;
+        }
+
+        private static List<Translation> FilterTranslations(IDictionary<string, TranslationObject> translationsDict, string[] targetLanguages)
+        {
+            var translations = new List<Translation>();
+            if (targetLanguages?.Length > 0)
+            {
+                foreach (var languageCode in targetLanguages)
+                {
+                    if (translationsDict.ContainsKey(languageCode))
+                    {
+                        translations.AddRange(ParseTranslation(languageCode, translationsDict[languageCode]));
+                    }
+                }
+            }
+            else
+            {
+                foreach (var kvp in translationsDict)
+                {
+                    translations.AddRange(ParseTranslation(kvp.Key, kvp.Value));
+                }
+            }
             return translations;
         }
 

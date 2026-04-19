@@ -1,42 +1,41 @@
-﻿using System;
-using Newtonsoft.Json;
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Entries.JsonConverters
 {
-    internal class AlternativeScriptsObjectConverter : JsonConverter
+    internal class AlternativeScriptsObjectConverter : JsonConverter<AlternativeScriptsObject>
     {
-        public override bool CanConvert(Type t) => t == typeof(AlternativeScriptsObject) || t == typeof(AlternativeScriptsObject?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        public override AlternativeScriptsObject Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             switch (reader.TokenType)
             {
-                case JsonToken.StartObject:
-                    var objectValue = serializer.Deserialize<AlternativeScripts>(reader);
+                case JsonTokenType.StartObject:
+                    var objectValue = JsonSerializer.Deserialize<AlternativeScripts>(ref reader, options);
                     return new AlternativeScriptsObject { AlternativeScripts = objectValue };
-                case JsonToken.StartArray:
-                    var arrayValue = serializer.Deserialize<AlternativeScripts[]>(reader);
+                case JsonTokenType.StartArray:
+                    var arrayValue = JsonSerializer.Deserialize<AlternativeScripts[]>(ref reader, options);
                     return new AlternativeScriptsObject { AlternativeScriptsArray = arrayValue };
             }
-            throw new Exception("Cannot unmarshal type AlternativeScriptsObject");
+
+            throw new JsonException("Cannot unmarshal type AlternativeScriptsObject");
         }
 
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, AlternativeScriptsObject value, JsonSerializerOptions options)
         {
-            var value = (AlternativeScriptsObject)untypedValue;
             if (value.AlternativeScriptsArray != null)
             {
-                serializer.Serialize(writer, value.AlternativeScriptsArray);
+                JsonSerializer.Serialize(writer, value.AlternativeScriptsArray, options);
                 return;
             }
             if (value.AlternativeScripts != null)
             {
-                serializer.Serialize(writer, value.AlternativeScripts);
+                JsonSerializer.Serialize(writer, value.AlternativeScripts, options);
                 return;
             }
-            throw new Exception("Cannot marshal type AlternativeScriptsObject");
-        }
 
-        public static readonly AlternativeScriptsObjectConverter Singleton = new AlternativeScriptsObjectConverter();
+            throw new JsonException("Cannot marshal type AlternativeScriptsObject");
+        }
     }
 }
+

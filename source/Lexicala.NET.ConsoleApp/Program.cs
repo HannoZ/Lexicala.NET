@@ -1,117 +1,96 @@
-﻿using Lexicala.NET.Parsing;
+﻿using Lexicala.NET;
+using Lexicala.NET.Parsing;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
-using Lexicala.NET.Request;
 using Microsoft.Extensions.Logging;
+using Lexicala.NET.Request;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Lexicala.NET.ConsoleApp
 {
     public class Program
     {
-        private static IServiceProvider _serviceProvider;
-
         public static async Task Main(string[] args)
         {
-            IConfiguration configuration = new ConfigurationBuilder()
+            var builder = WebApplication.CreateBuilder(args);
+
+            builder.Configuration
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddCommandLine(args)
-                // add your own user name and password to the user secrets store
-                .AddUserSecrets<Program>()
-                .Build();
+                .AddUserSecrets<Program>();
 
-            try
+            builder.Services.RegisterLexicala(builder.Configuration);
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(options =>
             {
-                RegisterServices(configuration);
+                options.CustomSchemaIds(type => type.FullName);
+            });
+            builder.Services.AddLogging(cfg => cfg.AddConsole());
 
-                await ExecuteMainLoop();
-            }
-            finally
-            {
-                DisposeServices();
-            }
-        }
+            var app = builder.Build();
 
-        private static async Task ExecuteMainLoop()
-        {
-            var parser = _serviceProvider.GetService<ILexicalaSearchParser>();
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
-            string input = string.Empty;
-            while (input != ConsoleKey.Q.ToString())
-            {
-                Console.WriteLine("Enter an entry ID directly, or enter search query: searchterm sourcelang targetlang (eg: estar es en). Q to exit");
-                input = Console.ReadLine();
-                if (input == null)
-                {
-                    continue;
-                }
+            app.MapGet("/health", () => Results.Ok("OK")).WithName("Health");
 
-                
-                var tokens = input.Split(' ');
-                if (tokens.Length == 1)
-                {
-                    var entry = await parser.GetEntryAsync(tokens[0], "ar", "en", "es", "nl", "zh" );
-                }
-                if (tokens.Length != 3)
-                {
-                    continue;
-                }
+            app.MapGet("/test", async (ILexicalaClient client, CancellationToken cancellationToken) =>
+                await client.TestAsync(cancellationToken))
+                .WithName("Test");
 
-                var searchTerm = tokens[0];
-                var srcLang = tokens[1];
-                var tgtLang = tokens[2];
-                if (srcLang.Length != 2 || tgtLang.Length != 2)
-                {
-                    Console.WriteLine("Language must be 2 characters");
-                    continue;
-                }
+            app.MapGet("/languages", async (ILexicalaClient client, CancellationToken cancellationToken) =>
+                await client.LanguagesAsync(cancellationToken))
+                .WithName("Languages");
 
-                try
-                {
-                    var request = new AdvancedSearchRequest()
-                    {
-                        SearchText = searchTerm,
-                        Language = srcLang,
-                        Analyzed = true
-                    };
+            app.MapGet("/search", async (ILexicalaClient client, string text, string language, string? etag, CancellationToken cancellationToken) =>
+                await client.BasicSearchAsync(text, language, etag, cancellationToken))
+                .WithName("BasicSearch");
 
-                    var result = await parser.SearchAsync(request);
-                    var summary = result.Summary(tgtLang);
-                    if (string.IsNullOrEmpty(summary))
-                    {
-                        summary = "No results";
-                    }
-                    Console.WriteLine(summary);
+            app.MapGet("/search-entries", async (ILexicalaClient client, string text, string language, string? etag, CancellationToken cancellationToken) =>
+                await client.SearchEntriesAsync(text, language, etag, cancellationToken))
+                .WithName("SearchEntries");
 
-                    //result = await parser.SearchAsync(searchTerm, srcLang, result.ETag);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
-        }
+            app.MapGet("/search-rdf", async (ILexicalaClient client, string text, string language, string? etag, CancellationToken cancellationToken) =>
+                Results.Text(await client.SearchRdfAsync(text, language, etag, cancellationToken), "application/ld+json"))
+                .WithName("SearchRdf");
 
-        private static void RegisterServices(IConfiguration configuration)
-        {
-            IServiceCollection services = new ServiceCollection();
-            services.RegisterLexicala(configuration);
-            services.AddLogging(cfg => cfg.AddConsole());
+            app.MapGet("/entry/{entryId}", async (ILexicalaClient client, string entryId, string? etag, CancellationToken cancellationToken) =>
+                await client.GetEntryAsync(entryId, etag, cancellationToken))
+                .WithName("GetEntry");
 
-            _serviceProvider = services.BuildServiceProvider(true);
-        }
+            app.MapGet("/sense/{senseId}", async (ILexicalaClient client, string senseId, string? etag, CancellationToken cancellationToken) =>
+                await client.GetSenseAsync(senseId, etag, cancellationToken))
+                .WithName("GetSense");
 
-        private static void DisposeServices()
-        {
-            if (_serviceProvider == null)
-            {
-                return;
-            }
-            if (_serviceProvider is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
+            app.MapGet("/rdf/{entryId}", async (ILexicalaClient client, string entryId, string? etag, CancellationToken cancellationToken) =>
+                Results.Text(await client.GetRdfAsync(entryId, etag, cancellationToken), "application/ld+json"))
+                .WithName("GetRdf");
+
+            app.MapPost("/search-advanced", async (ILexicalaClient client, AdvancedSearchRequest request, CancellationToken cancellationToken) =>
+                await client.AdvancedSearchAsync(request, cancellationToken))
+                .WithName("AdvancedSearch");
+
+            app.MapPost("/search-entries-advanced", async (ILexicalaClient client, AdvancedSearchRequest request, CancellationToken cancellationToken) =>
+                await client.AdvancedSearchEntriesAsync(request, cancellationToken))
+                .WithName("AdvancedSearchEntries");
+
+            app.MapPost("/search-rdf-advanced", async (ILexicalaClient client, AdvancedSearchRequest request, CancellationToken cancellationToken) =>
+                Results.Text(await client.AdvancedSearchRdfAsync(request, cancellationToken), "application/ld+json"))
+                .WithName("AdvancedSearchRdf");
+
+            app.MapGet("/search-definitions", async (ILexicalaClient client, string text, string? language, string? etag, CancellationToken cancellationToken) =>
+                await client.SearchDefinitionsAsync(text, language, etag, cancellationToken))
+                .WithName("SearchDefinitions");
+
+            app.MapGet("/fluky-search", async (ILexicalaClient client, string? source, string? language, string? etag, CancellationToken cancellationToken) =>
+                await client.FlukySearchAsync(source ?? "global", language, etag, cancellationToken))
+                .WithName("FlukySearch");
+
+            await app.RunAsync();
         }
     }
 }

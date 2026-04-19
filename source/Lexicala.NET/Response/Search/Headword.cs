@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Search
 {
     public class Headword
     {
-        [JsonProperty("text")]
+        [JsonPropertyName("text")]
         public string Text { get; set; }
 
-        [JsonProperty("pos")]
+        [JsonPropertyName("pos")]
         public string Pos { get; set; }
     }
 }

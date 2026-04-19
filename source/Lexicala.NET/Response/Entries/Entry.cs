@@ -1,33 +1,33 @@
-﻿using System;
-using Newtonsoft.Json;
+using System;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Entries
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Entry
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty("source")]
+        [JsonPropertyName("source")]
         public string Source { get; set; }
 
-        [JsonProperty("language")]
+        [JsonPropertyName("language")]
         public string Language { get; set; }
 
-        [JsonProperty("version")]
+        [JsonPropertyName("version")]
         public int Version { get; set; }
 
-        [JsonProperty("frequency")]
+        [JsonPropertyName("frequency")]
         public int Frequency { get; set; }
 
-        [JsonProperty("headword")]
+        [JsonPropertyName("headword")]
         public HeadwordObject HeadwordObject { get; set; }
 
-        [JsonProperty("senses")] 
+        [JsonPropertyName("senses")] 
         public Sense[] Senses { get; set; } = [];
 
-        [JsonProperty("related_entries")] 
+        [JsonPropertyName("related_entries")] 
         public string[] RelatedEntries { get; set; } = [];
 
         public Headword[] Headwords
@@ -53,3 +53,4 @@ namespace Lexicala.NET.Response.Entries
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }
+

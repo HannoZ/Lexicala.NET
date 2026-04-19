@@ -1,40 +1,40 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Entries
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Sense
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty("definition")]
+        [JsonPropertyName("definition")]
         public string Definition { get; set; }
 
-        [JsonProperty("range_of_application", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("range_of_application")]
         public string RangeOfApplication { get; set; }
 
-        [JsonProperty("antonyms", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("antonyms")]
 
         public string[] Antonyms { get; set; } = [];
 
-        [JsonProperty("synonyms", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("synonyms")]
         public string[] Synonyms { get; set; } = [];
 
-        [JsonProperty("translations")]
+        [JsonPropertyName("translations")]
         public Dictionary<string, TranslationObject> Translations { get; set; } = [];
 
-        [JsonProperty("examples")] 
+        [JsonPropertyName("examples")] 
         public Example[] Examples { get; set; } = [];
 
-        [JsonProperty("compositional_phrases")]
+        [JsonPropertyName("compositional_phrases")]
         public CompositionalPhrase[] CompositionalPhrases { get; set; } = [];
     
-        [JsonProperty("semantic_subcategory", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("semantic_subcategory")]
         public string SemanticSubcategory { get; set; }
 
-        [JsonProperty("geographical_usage", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("geographical_usage")]
         public string GeographicalUsage { get; set; }
 
         public ResponseMetadata Metadata { get; set; }

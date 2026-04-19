@@ -1,42 +1,41 @@
-﻿using System;
-using Newtonsoft.Json;
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Entries.JsonConverters
 {
-    internal class HeadwordObjectConverter : JsonConverter
+    internal class HeadwordObjectConverter : JsonConverter<HeadwordObject>
     {
-        public override bool CanConvert(Type t) => t == typeof(HeadwordObject) || t == typeof(HeadwordObject?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        public override HeadwordObject Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             switch (reader.TokenType)
             {
-                case JsonToken.StartObject:
-                    var objectValue = serializer.Deserialize<Headword>(reader);
+                case JsonTokenType.StartObject:
+                    var objectValue = JsonSerializer.Deserialize<Headword>(ref reader, options);
                     return new HeadwordObject { Headword = objectValue };
-                case JsonToken.StartArray:
-                    var arrayValue = serializer.Deserialize<Headword[]>(reader);
+                case JsonTokenType.StartArray:
+                    var arrayValue = JsonSerializer.Deserialize<Headword[]>(ref reader, options);
                     return new HeadwordObject { HeadwordElementArray = arrayValue };
             }
-            throw new Exception("Cannot unmarshal type HeadwordObject");
+
+            throw new JsonException("Cannot unmarshal type HeadwordObject");
         }
 
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, HeadwordObject value, JsonSerializerOptions options)
         {
-            var value = (HeadwordObject)untypedValue;
             if (value.HeadwordElementArray != null)
             {
-                serializer.Serialize(writer, value.HeadwordElementArray);
+                JsonSerializer.Serialize(writer, value.HeadwordElementArray, options);
                 return;
             }
             if (value.Headword != null)
             {
-                serializer.Serialize(writer, value.Headword);
+                JsonSerializer.Serialize(writer, value.Headword, options);
                 return;
             }
-            throw new Exception("Cannot marshal type HeadwordObject");
-        }
 
-        public static readonly HeadwordObjectConverter Singleton = new HeadwordObjectConverter();
+            throw new JsonException("Cannot marshal type HeadwordObject");
+        }
     }
 }
+

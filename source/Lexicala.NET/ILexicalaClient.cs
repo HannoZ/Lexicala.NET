@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Lexicala.NET.Request;
 using Lexicala.NET.Response.Entries;
 using Lexicala.NET.Response.Languages;
@@ -16,21 +18,15 @@ namespace Lexicala.NET
         /// <summary>
         ///  Test that the API is up.
         /// </summary>
-        Task<TestResponse> TestAsync();
-        /// <summary>
-        /// View your user account settings.
-        /// </summary>
-        /// <remarks>
-        /// This includes the personal details such as your name and the email you have provided upon registration, your request cap, and the number of requests used in the last 24 hours.
-        /// </remarks>
-        Task<MeResponse> MeAsync();
+        Task<TestResponse> TestAsync(CancellationToken cancellationToken = default);
+
         /// <summary>
         /// Gets information about languages available through the API.
         /// </summary>
         /// <remarks>
         ///By default, results are from KD's Global series. Data from the Password Series and from Random House Webster's College Dictionary are also available. The Global series includes 24 monolingual cores, which are added translation equivalents, producing multilingual versions. The Password series consists of an English core, translated to 46 languages. The Random House Webster's College Dictionary is an extensive monolingual English dictionary.
         /// </remarks>
-        Task<LanguagesResponse> LanguagesAsync();
+        Task<LanguagesResponse> LanguagesAsync(CancellationToken cancellationToken = default);
         /// <summary>
         /// Search for entries in the 'Global' source.
         /// </summary>
@@ -40,14 +36,48 @@ namespace Lexicala.NET
         /// <param name="searchText">Specify a headword</param>
         /// <param name="sourceLanguage">Specify which source language to look in.</param>
         /// <param name="etag">Optional.</param>
-        Task<SearchResponse> BasicSearchAsync(string searchText, string sourceLanguage, string etag = null);
+        Task<SearchResponse> BasicSearchAsync(string searchText, string sourceLanguage, string etag = null, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Search for entries in the 'Global' source and return full entries.
+        /// </summary>
+        /// <remarks>
+        /// The search result consists of full entry objects that match the search criteria.
+        /// </remarks>
+        /// <param name="searchText">Specify a headword</param>
+        /// <param name="sourceLanguage">Specify which source language to look in.</param>
+        /// <param name="etag">Optional.</param>
+        Task<IEnumerable<Entry>> SearchEntriesAsync(string searchText, string sourceLanguage, string etag = null, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Search for entries in RDF/JSON-LD format.
+        /// </summary>
+        /// <param name="searchText">Specify a headword</param>
+        /// <param name="sourceLanguage">Specify which source language to look in.</param>
+        /// <param name="etag">Optional.</param>
+        Task<string> SearchRdfAsync(string searchText, string sourceLanguage, string etag = null, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Search for entries in RDF/JSON-LD format using the parameters that are provided in the <paramref name="searchRequest"/>.
+        /// </summary>
+        Task<string> AdvancedSearchRdfAsync(AdvancedSearchRequest searchRequest, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Retrieve an entry in RDF/JSON-LD format by entry ID.
+        /// </summary>
+        /// <param name="entryId">The entry ID</param>
+        /// <param name="etag">Optional.</param>
+        Task<string> GetRdfAsync(string entryId, string etag = null, CancellationToken cancellationToken = default);
         /// <summary>
         /// Search for entries using the parameters that are provided in the <paramref name="searchRequest"/>.
         /// </summary>
         /// <remarks>
         /// The search result consists of a JSON object containing partial lexical information on entries that match the search criteria. To obtain further, more in-depth information for each entry, see <see cref="GetEntryAsync"/>.
         /// </remarks>
-        Task<SearchResponse> AdvancedSearchAsync(AdvancedSearchRequest searchRequest);
+        Task<SearchResponse> AdvancedSearchAsync(AdvancedSearchRequest searchRequest, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Search for entries using the parameters that are provided in the <paramref name="searchRequest"/> and return full entries.
+        /// </summary>
+        /// <remarks>
+        /// The search result consists of full entry objects that match the search criteria.
+        /// </remarks>
+        Task<IEnumerable<Entry>> AdvancedSearchEntriesAsync(AdvancedSearchRequest searchRequest, CancellationToken cancellationToken = default);
         /// <summary>
         /// Retrieve a dictionary entry by entry ID. 
         /// </summary>
@@ -56,12 +86,32 @@ namespace Lexicala.NET
         /// </remarks>
         /// <param name="entryId">The entry ID</param>
         /// <param name="etag">Optional.</param>
-        Task<Entry> GetEntryAsync(string entryId, string etag = null);
+        Task<Entry> GetEntryAsync(string entryId, string etag = null, CancellationToken cancellationToken = default);
         /// <summary>
         /// Retrieve a sense by it's ID. 
         /// </summary>
         /// <param name="senseId">The sense ID</param>
         /// <param name="etag">Optional.</param>
-        Task<Response.Entries.Sense> GetSenseAsync(string senseId, string etag = null);
+        Task<Response.Entries.Sense> GetSenseAsync(string senseId, string etag = null, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Search for entries by performing a free-text search in definitions.
+        /// </summary>
+        /// <remarks>
+        /// Performs a full-text search in definitions across 20 supported languages (ar, br, cs, da, de, el, en, es, fr, he, hi, it, ja, ko, nl, no, pl, pt, ru, sv, th, tr).
+        /// </remarks>
+        /// <param name="searchText">The text to search for in definitions</param>
+        /// <param name="language">Optional. Filters results to match entries in the specified language. The search text itself can be in any language.</param>
+        /// <param name="etag">Optional.</param>
+        Task<SearchResponse> SearchDefinitionsAsync(string searchText, string language = null, string etag = null, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Get a randomly selected entry for word discovery.
+        /// </summary>
+        /// <remarks>
+        /// Returns a random entry from the available resources, useful for discovering words across supported languages.
+        /// </remarks>
+        /// <param name="source">Specify which resource to look in (global, password, multigloss, random). Default is global.</param>
+        /// <param name="language">Optional. Specify which source language to look in; if not specified, the language is chosen randomly.</param>
+        /// <param name="etag">Optional.</param>
+        Task<SearchResponse> FlukySearchAsync(string source = "global", string language = null, string etag = null, CancellationToken cancellationToken = default);
     }
 }

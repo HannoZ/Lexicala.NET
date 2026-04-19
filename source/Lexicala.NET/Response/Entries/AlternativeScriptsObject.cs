@@ -1,4 +1,4 @@
-﻿namespace Lexicala.NET.Response.Entries
+namespace Lexicala.NET.Response.Entries
 {
     public struct AlternativeScriptsObject   
     {

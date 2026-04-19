@@ -1,4 +1,4 @@
-﻿namespace Lexicala.NET.Response
+namespace Lexicala.NET.Response
 {
     /// <summary>
     /// This class contains metadata information that is returned as response headers for each request.
@@ -15,3 +15,4 @@
         public RateLimits RateLimits { get; set; }
     }
 }
+

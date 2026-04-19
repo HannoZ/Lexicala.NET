@@ -1,20 +1,20 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Search
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Result
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty("language")]
+        [JsonPropertyName("language")]
         public string Language { get; set; }
 
-        [JsonProperty("headword")]
+        [JsonPropertyName("headword")]
         public HeadwordObject Headword { get; set; }
 
-        [JsonProperty("senses")] 
+        [JsonPropertyName("senses")] 
         public Sense[] Senses { get; set; } = { };
     }
 

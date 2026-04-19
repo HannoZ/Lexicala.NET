@@ -1,15 +1,18 @@
-﻿using Lexicala.NET.Client;
+using Lexicala.NET.Client;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.AutoMock;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Shouldly;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Lexicala.NET.Parsing;
+using Lexicala.NET.Request;
 using Lexicala.NET.Response;
 using Lexicala.NET.Response.Entries;
 using Lexicala.NET.Response.Entries.JsonConverters;
@@ -45,7 +48,7 @@ namespace Lexicala.NET.Parser.Tests
             };
 
             _mocker.GetMock<ILexicalaClient>()
-                .Setup(m => m.LanguagesAsync())
+                .Setup(m => m.LanguagesAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(languagesResponse);
 
             _mocker.GetMock<IMemoryCache>()
@@ -60,21 +63,21 @@ namespace Lexicala.NET.Parser.Tests
             string entry1 = await LoadResponseFromFile("ES_DE00008087.json");
             string entry2 = await LoadResponseFromFile("ES_DE00008088.json");
 
-            var apiResult = JsonConvert.DeserializeObject<SearchResponse>(searchResult, SearchResponseJsonConverter.Settings);
+            var apiResult = JsonSerializer.Deserialize<SearchResponse>(searchResult, SearchResponseJsonConverter.Settings);
             apiResult.Metadata = new ResponseMetadata();
-            var entryResult1 = JsonConvert.DeserializeObject<Entry>(entry1, EntryResponseJsonConverter.Settings);
+            var entryResult1 = JsonSerializer.Deserialize<Entry>(entry1, EntryResponseJsonConverter.Settings);
             entryResult1.Metadata = new ResponseMetadata();
-            var entryResult2 = JsonConvert.DeserializeObject<Entry>(entry2, EntryResponseJsonConverter.Settings);
+            var entryResult2 = JsonSerializer.Deserialize<Entry>(entry2, EntryResponseJsonConverter.Settings);
             entryResult2.Metadata = new ResponseMetadata();
 
             _mocker.GetMock<ILexicalaClient>()
-                .Setup(m => m.BasicSearchAsync("test", "es", null))
+                .Setup(m => m.BasicSearchAsync("test", "es", null, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(apiResult);
             _mocker.GetMock<ILexicalaClient>()
-                .Setup(m => m.GetEntryAsync("ES_DE00008088", null))
+                .Setup(m => m.GetEntryAsync("ES_DE00008088", null, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(entryResult2);
             _mocker.GetMock<ILexicalaClient>()
-                .Setup(m => m.GetEntryAsync("ES_DE00008087", null))
+                .Setup(m => m.GetEntryAsync("ES_DE00008087", null, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(entryResult1);
 
 
@@ -93,20 +96,20 @@ namespace Lexicala.NET.Parser.Tests
             string searchResult = await LoadResponseFromFile("Search_es_sin embargo.json");
             string entry1 = await LoadResponseFromFile("ES_DE00019850.json");
 
-            var apiResult = JsonConvert.DeserializeObject<SearchResponse>(searchResult, SearchResponseJsonConverter.Settings);
+            var apiResult = JsonSerializer.Deserialize<SearchResponse>(searchResult, SearchResponseJsonConverter.Settings);
             apiResult.Metadata = new ResponseMetadata();
-            var entryResult1 = JsonConvert.DeserializeObject<Entry>(entry1, EntryResponseJsonConverter.Settings);
+            var entryResult1 = JsonSerializer.Deserialize<Entry>(entry1, EntryResponseJsonConverter.Settings);
             entryResult1.Metadata = new ResponseMetadata();
 
             _mocker.GetMock<ILexicalaClient>()
-                .Setup(m => m.BasicSearchAsync("test", "es", null))
+                .Setup(m => m.BasicSearchAsync("test", "es", null, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(apiResult);
             _mocker.GetMock<ILexicalaClient>()
-                .Setup(m => m.GetEntryAsync(It.IsAny<string>(), null))
+                .Setup(m => m.GetEntryAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new Entry());
             _mocker.GetMock<ILexicalaClient>()
-    .Setup(m => m.GetEntryAsync("ES_DE00019850", null))
-    .ReturnsAsync(entryResult1);
+                .Setup(m => m.GetEntryAsync("ES_DE00019850", null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(entryResult1);
 
 
             var result = await _lexicalaSearchParser.SearchAsync("test", "es");
@@ -120,6 +123,131 @@ namespace Lexicala.NET.Parser.Tests
                 comp.Text.ShouldNotBeNull();
                 comp.Translations.ShouldNotBeEmpty();
             }
+        }
+
+        [TestMethod]
+        public async Task LexicalaSearchParser_SearchAsync_MultipleTargetLanguages()
+        {
+            string searchResult = await LoadResponseFromFile("Search_es_blando_analyzed.json");
+            string entry1 = await LoadResponseFromFile("ES_DE00008087.json");
+
+            var apiResult = JsonSerializer.Deserialize<SearchResponse>(searchResult, SearchResponseJsonConverter.Settings);
+            apiResult.Metadata = new ResponseMetadata();
+            var entryResult1 = JsonSerializer.Deserialize<Entry>(entry1, EntryResponseJsonConverter.Settings);
+            entryResult1.Metadata = new ResponseMetadata();
+
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.BasicSearchAsync("test", "es", null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(apiResult);
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.GetEntryAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(entryResult1);
+
+            // ACT
+            var result = await _lexicalaSearchParser.SearchAsync("test", "es", "en", "nl");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+            result.SearchText.ShouldBe("test");
+            result.Results.ShouldNotBeEmpty();
+        }
+
+        [TestMethod]
+        public async Task LexicalaSearchParser_SearchAsync_InvalidSourceLanguage_ThrowsException()
+        {
+            // ACT & ASSERT
+            await Should.ThrowAsync<ArgumentException>(async () =>
+                await _lexicalaSearchParser.SearchAsync("test", "invalid"));
+        }
+
+        [TestMethod]
+        public async Task LexicalaSearchParser_SearchAsync_EmptySearchText_ThrowsException()
+        {
+            // ACT & ASSERT
+            await Should.ThrowAsync<ArgumentException>(async () =>
+                await _lexicalaSearchParser.SearchAsync("", "es"));
+        }
+
+        [TestMethod]
+        public async Task LexicalaSearchParser_SearchAsync_NullSearchText_ThrowsException()
+        {
+            // ACT & ASSERT
+            await Should.ThrowAsync<ArgumentException>(async () =>
+                await _lexicalaSearchParser.SearchAsync((string)null, "es"));
+        }
+
+        [TestMethod]
+        public async Task LexicalaSearchParser_AdvancedSearchAsync_InvalidLanguage_ThrowsException()
+        {
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "invalid",
+                SearchText = "test"
+            };
+
+            // ACT & ASSERT
+            await Should.ThrowAsync<ArgumentException>(async () =>
+                await _lexicalaSearchParser.SearchAsync(searchRequest));
+        }
+
+        [TestMethod]
+        public async Task LexicalaSearchParser_AdvancedSearchAsync_EmptySearchText_ThrowsException()
+        {
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "es",
+                SearchText = ""
+            };
+
+            // ACT & ASSERT
+            await Should.ThrowAsync<ArgumentException>(async () =>
+                await _lexicalaSearchParser.SearchAsync(searchRequest));
+        }
+
+        [TestMethod]
+        public async Task LexicalaSearchParser_AdvancedSearchAsync_NullRequest_ThrowsException()
+        {
+            // ACT & ASSERT
+            await Should.ThrowAsync<ArgumentNullException>(async () =>
+                await _lexicalaSearchParser.SearchAsync((AdvancedSearchRequest)null));
+        }
+
+        [TestMethod]
+        public async Task LexicalaSearchParser_GetEntryAsync_ValidEntryId()
+        {
+            string entry1 = await LoadResponseFromFile("ES_DE00008087.json");
+            var entryResult1 = JsonSerializer.Deserialize<Entry>(entry1, EntryResponseJsonConverter.Settings);
+            entryResult1.Metadata = new ResponseMetadata();
+
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.GetEntryAsync("ES_DE00008087", null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(entryResult1);
+
+            // ACT
+            var result = await _lexicalaSearchParser.GetEntryAsync("ES_DE00008087");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+            result.Id.ShouldBe("ES_DE00008087");
+        }
+
+        [TestMethod]
+        public async Task LexicalaSearchParser_GetEntryAsync_WithTargetLanguages()
+        {
+            string entry1 = await LoadResponseFromFile("ES_DE00008087.json");
+            var entryResult1 = JsonSerializer.Deserialize<Entry>(entry1, EntryResponseJsonConverter.Settings);
+            entryResult1.Metadata = new ResponseMetadata();
+
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.GetEntryAsync("ES_DE00008087", null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(entryResult1);
+
+            // ACT
+            var result = await _lexicalaSearchParser.GetEntryAsync("ES_DE00008087", "en", "nl");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+            result.Id.ShouldBe("ES_DE00008087");
         }
 
         private static Task<string> LoadResponseFromFile(string fileName)
@@ -138,3 +266,4 @@ namespace Lexicala.NET.Parser.Tests
         }
     }
 }
+

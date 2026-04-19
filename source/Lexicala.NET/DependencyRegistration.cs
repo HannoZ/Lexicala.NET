@@ -1,4 +1,5 @@
-﻿using Lexicala.NET.Parsing;
+﻿using System;
+using Lexicala.NET.Parsing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -15,6 +16,16 @@ namespace Lexicala.NET
 
         public static IServiceCollection RegisterLexicala(this IServiceCollection services, LexicalaConfig config)
         {
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+
+            if (string.IsNullOrWhiteSpace(config.ApiKey))
+            {
+                throw new ArgumentException("ApiKey must be provided and cannot be empty", nameof(config.ApiKey));
+            }
+
             services.AddHttpClient<ILexicalaClient, LexicalaClient>(client =>
                 {
                     client.BaseAddress = LexicalaConfig.BaseAddress;

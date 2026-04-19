@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Languages
 {
     public class Resource
     {
-        [JsonProperty("source_languages")]
+        [JsonPropertyName("source_languages")]
         public string[] SourceLanguages { get; set; }
 
-        [JsonProperty("target_languages")]
+        [JsonPropertyName("target_languages")]
         public string[] TargetLanguages { get; set; }
     }
 }

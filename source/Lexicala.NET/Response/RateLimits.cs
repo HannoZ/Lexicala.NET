@@ -1,4 +1,4 @@
-﻿namespace Lexicala.NET.Response
+namespace Lexicala.NET.Response
 {
     /// <summary>
     /// Rate limit info. 
@@ -40,3 +40,4 @@
         public long Reset { get; set; }
     }
 }
+

@@ -1,30 +1,30 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Entries
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class CompositionalPhrase
     {
-        [JsonProperty("text")]
+        [JsonPropertyName("text")]
         public string Text { get; set; }
 
-        [JsonProperty("definition")]
+        [JsonPropertyName("definition")]
         public string Definition { get; set; }
 
-        [JsonProperty("semantic_subcategory", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("semantic_subcategory")]
         public string SemanticSubcategory { get; set; }
 
-        [JsonProperty("senses")]
+        [JsonPropertyName("senses")]
         public Sense[] Senses { get; set; } = [];
 
-        [JsonProperty("translations")]
+        [JsonPropertyName("translations")]
         public Dictionary<string, TranslationObject> Translations { get; set; }
 
-        [JsonProperty("examples")]
+        [JsonPropertyName("examples")]
         public Example[] Examples { get; set; } = [];
 
-        [JsonProperty("semantic_category", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("semantic_category")]
         public string SemanticCategory { get; set; }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }

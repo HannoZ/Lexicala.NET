@@ -1,21 +1,22 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Me
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class MeResponse
     {
-        [JsonProperty("username")]
+        [JsonPropertyName("username")]
         public string Username { get; set; }
 
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public string Email { get; set; }
 
-        [JsonProperty("permissions")]
+        [JsonPropertyName("permissions")]
         public Permissions Permissions { get; set; }
 
-        [JsonProperty("usage")]
+        [JsonPropertyName("usage")]
         public Usage Usage { get; set; }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
+
