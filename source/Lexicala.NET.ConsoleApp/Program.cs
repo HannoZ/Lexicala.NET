@@ -36,8 +36,6 @@ namespace Lexicala.NET.ConsoleApp
             app.UseSwagger();
             app.UseSwaggerUI();
 
-            app.MapGet("/health", () => Results.Ok("OK")).WithName("Health");
-
             app.MapGet("/test", async (ILexicalaClient client, CancellationToken cancellationToken) =>
                 await client.TestAsync(cancellationToken))
                 .WithName("Test");

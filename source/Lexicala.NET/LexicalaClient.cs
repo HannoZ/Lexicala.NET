@@ -39,25 +39,6 @@ namespace Lexicala.NET
             _logger = logger;
         }
 
-        private async Task<HttpResponseMessage> ExecuteRequestAsync(HttpMethod method, string endpoint, string etag = null, CancellationToken cancellationToken = default)
-        {
-            var request = new HttpRequestMessage(method, endpoint);
-            AddETagIfPresent(etag, request);
-
-            _logger.LogDebug("Executing {Method} request to {Endpoint}", method, endpoint);
-
-            var response = await _httpClient.SendAsync(request, cancellationToken);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                _logger.LogWarning("Request to {Endpoint} failed with status code {StatusCode}", endpoint, response.StatusCode);
-                throw await CreateApiExceptionAsync(response, cancellationToken);
-            }
-
-            _logger.LogDebug("Request to {Endpoint} succeeded with status code {StatusCode}", endpoint, response.StatusCode);
-            return response;
-        }
-
         /// <inheritdoc />
         public async Task<TestResponse> TestAsync(CancellationToken cancellationToken = default)
         {
@@ -141,6 +122,58 @@ namespace Lexicala.NET
         {
             ArgumentException.ThrowIfNullOrEmpty(entryId, nameof(entryId));
             return ExecuteRdfQuery($"{Constants.Rdf}/{Uri.EscapeDataString(entryId)}", etag, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task<Entry> GetEntryAsync(string entryId, string etag = null, CancellationToken cancellationToken = default)
+        {
+            using var response = await ExecuteRequestAsync(HttpMethod.Get, $"{Constants.Entries}/{entryId}", etag, cancellationToken);
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            var responseObject = JsonSerializer.Deserialize<Entry>(content, JsonSerializerDefaults.Options);
+            responseObject.Metadata = GetResponseMetadata(response.Headers);
+            return responseObject;
+        }
+
+        /// <inheritdoc />
+        public async Task<Sense> GetSenseAsync(string senseId, string etag = null, CancellationToken cancellationToken = default)
+        {
+            using var response = await ExecuteRequestAsync(HttpMethod.Get, $"{Constants.Senses}/{senseId}", etag, cancellationToken);
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            var responseObject = JsonSerializer.Deserialize<Sense>(content, JsonSerializerDefaults.Options);
+            responseObject.Metadata = GetResponseMetadata(response.Headers);
+            return responseObject;
+        }
+
+        /// <inheritdoc />
+        public Task<SearchResponse> SearchDefinitionsAsync(string searchText, string language = null, string etag = null, CancellationToken cancellationToken = default)
+        {
+            ValidateSearchText(searchText, nameof(searchText));
+
+            _logger.LogInformation("Performing definitions search for text '{SearchText}' with language filter '{Language}'", searchText, language);
+
+            var query = $"{Constants.SearchDefinitions}?text={Uri.EscapeDataString(searchText)}";
+            if (!string.IsNullOrEmpty(language))
+            {
+                ValidateLanguageCode(language, nameof(language));
+                query += $"&lang={Uri.EscapeDataString(language)}";
+            }
+
+            return ExecuteSearch(query, etag, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<SearchResponse> FlukySearchAsync(string source = "global", string language = null, string etag = null, CancellationToken cancellationToken = default)
+        {
+            _logger.LogInformation("Performing fluky search in source '{Source}' with language '{Language}'", source, language ?? "random");
+
+            var query = $"{Constants.FlukySearch}?source={Uri.EscapeDataString(source)}";
+            if (!string.IsNullOrEmpty(language))
+            {
+                ValidateLanguageCode(language, nameof(language));
+                query += $"&language={Uri.EscapeDataString(language)}";
+            }
+
+            return ExecuteSearch(query, etag, cancellationToken);
         }
 
         private static string BuildAdvancedSearchQueryString(string endpoint, AdvancedSearchRequest searchRequest)
@@ -228,6 +261,25 @@ namespace Lexicala.NET
             ArgumentException.ThrowIfNullOrEmpty(searchText, parameterName);
         }
 
+        private async Task<HttpResponseMessage> ExecuteRequestAsync(HttpMethod method, string endpoint, string etag = null, CancellationToken cancellationToken = default)
+        {
+            var request = new HttpRequestMessage(method, endpoint);
+            AddETagIfPresent(etag, request);
+
+            _logger.LogDebug("Executing {Method} request to {Endpoint}", method, endpoint);
+
+            var response = await _httpClient.SendAsync(request, cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogWarning("Request to {Endpoint} failed with status code {StatusCode}", endpoint, response.StatusCode);
+                throw await CreateApiExceptionAsync(response, cancellationToken);
+            }
+
+            _logger.LogDebug("Request to {Endpoint} succeeded with status code {StatusCode}", endpoint, response.StatusCode);
+            return response;
+        }
+
 
         private async Task<SearchResponse> ExecuteSearch(string querystring, string etag, CancellationToken cancellationToken)
         {
@@ -252,59 +304,7 @@ namespace Lexicala.NET
         {
             using var response = await ExecuteRequestAsync(HttpMethod.Get, querystring, etag, cancellationToken);
             return await response.Content.ReadAsStringAsync(cancellationToken);
-        }
-
-        /// <inheritdoc />
-        public async Task<Entry> GetEntryAsync(string entryId, string etag = null, CancellationToken cancellationToken = default)
-        {
-            using var response = await ExecuteRequestAsync(HttpMethod.Get, $"{Constants.Entries}/{entryId}", etag, cancellationToken);
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
-            var responseObject = JsonSerializer.Deserialize<Entry>(content, JsonSerializerDefaults.Options);
-            responseObject.Metadata = GetResponseMetadata(response.Headers);
-            return responseObject;
-        }
-
-        /// <inheritdoc />
-        public async Task<Sense> GetSenseAsync(string senseId, string etag = null, CancellationToken cancellationToken = default)
-        {
-            using var response = await ExecuteRequestAsync(HttpMethod.Get, $"{Constants.Senses}/{senseId}", etag, cancellationToken);
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
-            var responseObject = JsonSerializer.Deserialize<Sense>(content, JsonSerializerDefaults.Options);
-            responseObject.Metadata = GetResponseMetadata(response.Headers);
-            return responseObject;
-        }
-
-        /// <inheritdoc />
-        public Task<SearchResponse> SearchDefinitionsAsync(string searchText, string language = null, string etag = null, CancellationToken cancellationToken = default)
-        {
-            ValidateSearchText(searchText, nameof(searchText));
-
-            _logger.LogInformation("Performing definitions search for text '{SearchText}' with language filter '{Language}'", searchText, language);
-
-            var query = $"{Constants.SearchDefinitions}?text={Uri.EscapeDataString(searchText)}";
-            if (!string.IsNullOrEmpty(language))
-            {
-                ValidateLanguageCode(language, nameof(language));
-                query += $"&lang={Uri.EscapeDataString(language)}";
-            }
-
-            return ExecuteSearch(query, etag, cancellationToken);
-        }
-
-        /// <inheritdoc />
-        public Task<SearchResponse> FlukySearchAsync(string source = "global", string language = null, string etag = null, CancellationToken cancellationToken = default)
-        {
-            _logger.LogInformation("Performing fluky search in source '{Source}' with language '{Language}'", source, language ?? "random");
-
-            var query = $"{Constants.FlukySearch}?source={Uri.EscapeDataString(source)}";
-            if (!string.IsNullOrEmpty(language))
-            {
-                ValidateLanguageCode(language, nameof(language));
-                query += $"&language={Uri.EscapeDataString(language)}";
-            }
-
-            return ExecuteSearch(query, etag, cancellationToken);
-        }
+        }        
 
         private static void AddETagIfPresent(string etag, HttpRequestMessage request)
         {

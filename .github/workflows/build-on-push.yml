@@ -10,13 +10,17 @@ jobs:
   build:
 
     runs-on: windows-latest
+    
+    strategy:
+      matrix:
+        dotnet-version: ['8.0.x', '10.0.x']
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core 8
+    - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{ matrix.dotnet-version }}
     - name: Install dependencies
       run: dotnet restore ./source/Lexicala.NET.sln
     - name: Build
