@@ -2,25 +2,21 @@ name: Build & Test
 
 on:
   push:
-    paths-ignore: '**.md'
+    paths-ignore: ['**.md']
     # don't run on master because we already have another action for that 
-    branches-ignore: master
+    branches-ignore: [master]
 
 jobs:
   build:
 
     runs-on: windows-latest
-    
-    strategy:
-      matrix:
-        dotnet-version: ['8.0.x', '10.0.x']
 
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{ matrix.dotnet-version }}
+        dotnet-version: '10.0.x'
     - name: Install dependencies
       run: dotnet restore ./source/Lexicala.NET.sln
     - name: Build
