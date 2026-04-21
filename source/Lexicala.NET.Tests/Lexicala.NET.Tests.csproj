@@ -17,8 +17,7 @@
     <None Remove="Resources\ES_DE00008088.json" />
     <None Remove="Resources\ES_DE00010530.json" />
     <None Remove="Resources\ES_DE00019850.json" />
-    <None Remove="Resources\languages.json" />
-    <None Remove="Resources\me.json" />
+    <None Remove="Resources\languages.json" />   
     <None Remove="Resources\NL_DE00006941.json" />
     <None Remove="Resources\PW00012363.json" />
     <None Remove="Resources\RDE00032314_1.json" />
@@ -39,8 +38,7 @@
     <EmbeddedResource Include="Resources\ES_DE00010530.json" />
     <EmbeddedResource Include="Resources\ES_DE00019850.json" />
     <EmbeddedResource Include="Resources\ES_DE00008088.json" />
-    <EmbeddedResource Include="Resources\languages.json" />
-    <EmbeddedResource Include="Resources\me.json" />
+    <EmbeddedResource Include="Resources\languages.json" />   
     <EmbeddedResource Include="Resources\Entry_NL_DE00006941.json" />
     <EmbeddedResource Include="Resources\Entry_PW00012363.json" />
     <EmbeddedResource Include="Resources\Entry_RDE00032314_1.json" />
