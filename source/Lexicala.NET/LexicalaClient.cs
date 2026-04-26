@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +10,6 @@ using Lexicala.NET.Request;
 using Lexicala.NET.Response;
 using Lexicala.NET.Response.Entries;
 using Lexicala.NET.Response.Languages;
-using Lexicala.NET.Response.Me;
 using Lexicala.NET.Response.Search;
 using Lexicala.NET.Response.Test;
 using Microsoft.Extensions.Logging;
@@ -24,8 +22,6 @@ namespace Lexicala.NET
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<LexicalaClient> _logger;
-
-        private const int ExcessiveThreshold = 1000;
 
         /// <summary>
         /// Creates a new instance of the <see cref="LexicalaClient"/> class.
@@ -178,66 +174,68 @@ namespace Lexicala.NET
 
         private static string BuildAdvancedSearchQueryString(string endpoint, AdvancedSearchRequest searchRequest)
         {
-            // build the querystring based on provided search request params
-            var queryStringBuilder = new StringBuilder($"{endpoint}?language={Uri.EscapeDataString(searchRequest.Language)}&text={Uri.EscapeDataString(searchRequest.SearchText)}");
-            queryStringBuilder.Append("&source=" + Uri.EscapeDataString(searchRequest.Source));
-            
-            if (searchRequest.Analyzed)
+            var queryParameters = new List<KeyValuePair<string, string>>
             {
-                queryStringBuilder.Append("&analyzed=true");
-            }
-            if (searchRequest.Monosemous)
+                new("language", searchRequest.Language),
+                new("text", searchRequest.SearchText),
+                new("source", searchRequest.Source)
+            };
+
+            // Add optional boolean search criteria flags only when explicitly enabled.
+            AddIfTrue(searchRequest.Analyzed, "analyzed");
+            AddIfTrue(searchRequest.Monosemous, "monosemous");
+            AddIfTrue(searchRequest.Polysemous, "polysemous");
+            AddIfTrue(searchRequest.Morph, "morph");
+            AddIfTrue(searchRequest.Synonyms, "synonyms");
+            AddIfTrue(searchRequest.Antonyms, "antonyms");
+
+            // Add optional string filters only when provided.
+            AddIfNotEmpty(searchRequest.Pos, "pos");
+            AddIfNotEmpty(searchRequest.Number, "number");
+            AddIfNotEmpty(searchRequest.Gender, "gender");
+            AddIfNotEmpty(searchRequest.Subcategorization, "subcategorization");
+
+            // Enforce existing pagination constraints.
+            if (searchRequest.Page is > 1 and <= Constants.MaxRequestThreshold)
             {
-                queryStringBuilder.Append("&monosemous=true");
-            }
-            if (searchRequest.Polysemous)
-            {
-                queryStringBuilder.Append("&polysemous=true");
-            }
-            if (searchRequest.Morph)
-            {
-                queryStringBuilder.Append("&morph=true");
-            }
-            if (searchRequest.Synonyms)
-            {
-                queryStringBuilder.Append("&synonyms=true");
-            }
-            if (searchRequest.Antonyms)
-            {
-                queryStringBuilder.Append("&antonyms=true");
-            }
-            if (!string.IsNullOrEmpty(searchRequest.Pos))
-            {
-                queryStringBuilder.Append("&pos=" + Uri.EscapeDataString(searchRequest.Pos));
-            }
-            if (!string.IsNullOrEmpty(searchRequest.Number))
-            {
-                queryStringBuilder.Append("&number=" + Uri.EscapeDataString(searchRequest.Number));
-            }
-            if (!string.IsNullOrEmpty(searchRequest.Gender))
-            {
-                queryStringBuilder.Append("&gender=" + Uri.EscapeDataString(searchRequest.Gender));
-            }
-            if (!string.IsNullOrEmpty(searchRequest.Subcategorization))
-            {
-                queryStringBuilder.Append("&subcategorization=" + Uri.EscapeDataString(searchRequest.Subcategorization));
+                queryParameters.Add(new KeyValuePair<string, string>("page", searchRequest.Page.ToString()));
             }
 
-            // pagination - only append if values are other than default values and within reasonable bounds
-            if (searchRequest.Page > 1 && searchRequest.Page <= ExcessiveThreshold) // Prevent excessive page numbers
-            {
-                queryStringBuilder.Append("&page=" + searchRequest.Page);
-            }
             if (searchRequest.PageLength != 10 && searchRequest.PageLength is > 0 and <= 30)
             {
-                queryStringBuilder.Append("&page-length=" + searchRequest.PageLength);
-            }
-            if (searchRequest.Sample > 0 && searchRequest.Sample <= ExcessiveThreshold) // Prevent excessive sampling
-            {
-                queryStringBuilder.Append("&sample=" + searchRequest.Sample);
+                queryParameters.Add(new KeyValuePair<string, string>("page-length", searchRequest.PageLength.ToString()));
             }
 
-            return queryStringBuilder.ToString();
+            if (searchRequest.Sample is > 0 and <= Constants.MaxRequestThreshold)
+            {
+                queryParameters.Add(new KeyValuePair<string, string>("sample", searchRequest.Sample.ToString()));
+            }
+
+            return BuildQueryString(endpoint, queryParameters);
+
+            void AddIfTrue(bool include, string key)
+            {
+                if (include)
+                {
+                    queryParameters.Add(new KeyValuePair<string, string>(key, "true"));
+                }
+            }
+
+            void AddIfNotEmpty(string value, string key)
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    queryParameters.Add(new KeyValuePair<string, string>(key, value));
+                }
+            }
+        }
+
+        private static string BuildQueryString(string endpoint, IEnumerable<KeyValuePair<string, string>> queryParameters)
+        {
+            var encodedPairs = queryParameters
+                .Select(x => $"{Uri.EscapeDataString(x.Key)}={Uri.EscapeDataString(x.Value)}");
+
+            return $"{endpoint}?{string.Join("&", encodedPairs)}";
         }
 
         private static void ValidateSearchRequest(AdvancedSearchRequest searchRequest)
@@ -314,7 +312,20 @@ namespace Lexicala.NET
             }
         }
 
-        private static ResponseMetadata GetResponseMetadata(HttpResponseHeaders headers)
+        /// <summary>
+        /// Extracts response metadata from HTTP response headers, including ETag and rate limit information.
+        /// </summary>
+        /// <param name="headers">The HTTP response headers to parse</param>
+        /// <returns>A ResponseMetadata object containing ETag and rate limit information. Rate limit values are set to -1 if the corresponding headers are missing or unparseable.</returns>
+        /// <remarks>
+        /// This method extracts:
+        /// - ETag header for caching purposes
+        /// - Rate limit headers (limit, remaining, reset) from the API response
+        /// 
+        /// If any rate limit headers are missing or contain unparseable values, they are set to -1 and a warning is logged.
+        /// Callers should check for -1 values when rate limit information is required for decision-making.
+        /// </remarks>
+        private ResponseMetadata GetResponseMetadata(HttpResponseHeaders headers)
         {
             return new ResponseMetadata
             {
@@ -327,17 +338,28 @@ namespace Lexicala.NET
                 }
             };
 
+            // Parses a rate limit header value from the API response.
+            // Returns the parsed integer value, or -1 if the header is missing or cannot be parsed.
             int ParseRateLimitHeader(string header)
             {
                 if (headers.TryGetValues(header, out var headerValues))
                 {
-                    foreach (var headerValue in headerValues)
+                    var headerValuesList = headerValues.ToList();
+                    foreach (var headerValue in headerValuesList)
                     {
                         if (int.TryParse(headerValue, out var value))
                         {
                             return value;
                         }
                     }
+                    
+                    // Header exists but value couldn't be parsed
+                    _logger.LogWarning("Rate limit header '{HeaderName}' exists but contains unparseable values: {HeaderValue}", header, string.Join(", ", headerValuesList));
+                }
+                else
+                {
+                    // Header is missing from the response
+                    _logger.LogWarning("Rate limit header '{HeaderName}' is missing from the API response. This may indicate an API issue or version mismatch.", header);
                 }
 
                 return -1;
@@ -363,9 +385,15 @@ namespace Lexicala.NET
 
             try
             {
+                // Parse JSON response and attempt to extract error message from multiple possible locations
+                // Different API endpoints and error conditions may use different error response formats
                 using var document = JsonDocument.Parse(content);
                 var root = document.RootElement;
 
+                // Try primary error message fields in order of preference:
+                // "message" - standard error message field
+                // "error" - OAuth/standard error field
+                // "error_description" - OAuth error description field
                 if (TryGetString(root, "message", out var message) ||
                     TryGetString(root, "error", out message) ||
                     TryGetString(root, "error_description", out message))
@@ -373,6 +401,8 @@ namespace Lexicala.NET
                     return message;
                 }
 
+                // Check for nested error object with message (some error responses have nested structure)
+                // Example: { "error": { "message": "Error details" } }
                 if (root.TryGetProperty("error", out var errorProperty) && errorProperty.ValueKind == JsonValueKind.Object)
                 {
                     if (TryGetString(errorProperty, "message", out var nestedMessage))

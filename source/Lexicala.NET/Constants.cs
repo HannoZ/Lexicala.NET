@@ -54,5 +54,18 @@ namespace Lexicala.NET
         /// Fluky search endpoint path (random word discovery).
         /// </summary>
         internal const string FlukySearch = "/fluky-search";
+
+        /// <summary>
+        /// Maximum threshold for pagination and sampling parameters to prevent excessive API requests.
+        /// Used to validate page numbers and sample sizes submitted by clients.
+        /// Value of 1000 is chosen to balance flexibility with resource protection.
+        /// </summary>
+        /// <remarks>
+        /// This limit prevents abuse from:
+        /// - Page numbers that would request excessive amounts of data
+        /// - Sample parameters that would return too many results
+        /// Clients requesting values above this threshold will have their parameters clamped or ignored.
+        /// </remarks>
+        internal const int MaxRequestThreshold = 1000;
     }
 }

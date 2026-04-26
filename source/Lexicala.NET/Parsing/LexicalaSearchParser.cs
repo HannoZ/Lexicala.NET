@@ -42,7 +42,7 @@ namespace Lexicala.NET.Parsing
 
             var searchResult = await _lexicalaClient.BasicSearchAsync(searchText.ToLowerInvariant(), sourceLanguage);
 
-            return await ProcessSearchResult(searchText, searchResult);
+            return await ProcessSearchResult(searchText, searchResult, targetLanguages);
         }
 
 
@@ -60,7 +60,7 @@ namespace Lexicala.NET.Parsing
             }
 
             var searchResult = await _lexicalaClient.AdvancedSearchAsync(searchRequest);
-            return await ProcessSearchResult(searchRequest.SearchText, searchResult);
+            return await ProcessSearchResult(searchRequest.SearchText, searchResult, targetLanguages);
         }
 
         /// <inheritdoc />
@@ -71,7 +71,7 @@ namespace Lexicala.NET.Parsing
         }
 
 
-        private async Task<SearchResultModel> ProcessSearchResult(string searchText, SearchResponse searchResult)
+        private async Task<SearchResultModel> ProcessSearchResult(string searchText, SearchResponse searchResult, string[] targetLanguages)
         {
             // Collect all unique entry IDs to fetch
             var allIds = new HashSet<string>();
@@ -117,7 +117,7 @@ namespace Lexicala.NET.Parsing
 
             foreach (var entry in entries)
             {
-                var resultModel = ParseEntry(entry);
+                var resultModel = ParseEntry(entry, targetLanguages);
                 returnModel.Results.Add(resultModel);
             }
 
@@ -128,6 +128,8 @@ namespace Lexicala.NET.Parsing
 
         private static SearchResultEntry ParseEntry(Entry entry, params string[] targetLanguages)
         {
+            // Extract all pronunciations from all headwords into a flat collection
+            // Entry can have multiple headwords, each with multiple pronunciations
             var pronunciations = new List<string>();
             foreach (var headword in entry.Headwords)
             {
@@ -140,29 +142,37 @@ namespace Lexicala.NET.Parsing
                 }
             }
 
+            // Extract gender from first headword that has one
+            // Gender is a property that may vary across different headword entries
             string gender = null;
             foreach (var headword in entry.Headwords)
             {
                 gender = headword.Gender;
-                if (gender != null) break;
+                if (gender != null) break;  // Use first available gender
             }
 
+            // Collect all unique parts of speech from all headwords
             var pos = entry.Headwords.SelectMany(hw => hw.PartOfSpeeches).Distinct().ToList();
 
+            // Build result model with aggregated data from all headwords
             var resultModel = new SearchResultEntry
             {
                 ETag = entry.Metadata.ETag,
                 Id = entry.Id,
-                Pos = string.Join(",", pos),
+                Pos = string.Join(",", pos),  // CSV format for multiple parts of speech
                 SubCategory = string.Join(",", entry.Headwords.Select(hw => hw.Subcategorization)),
-                Pronunciation = string.Join(",", pronunciations),
-                Text = string.Join("/", entry.Headwords.Select(hw => hw.Text)),
+                Pronunciation = string.Join(",", pronunciations),  // All pronunciations concatenated
+                Text = string.Join("/", entry.Headwords.Select(hw => hw.Text)),  // Multiple headwords separated by /
                 Gender = gender
             };
 
-            resultModel.Stems.AddRange(entry.Headwords.SelectMany(hw => hw.AdditionalInflections));
+            // Add any additional inflectional stems from headwords
+            foreach (var stem in entry.Headwords.SelectMany(hw => hw.AdditionalInflections))
+            {
+                resultModel.Stems.Add(stem);
+            }
 
-
+            // Extract and add all inflections from all headwords
             foreach (var infl in entry.Headwords.Select(hw => hw.Inflections))
             {
                 if (infl != null)
@@ -174,6 +184,7 @@ namespace Lexicala.NET.Parsing
                 }
             }
 
+            // Parse senses with translation filtering applied
             foreach (var sourceSense in entry.Senses)
             {
                 var targetSense = ParseSense(sourceSense, targetLanguages);
@@ -191,11 +202,17 @@ namespace Lexicala.NET.Parsing
                 Definition = sourceSense.Definition
             };
 
-            targetSense.Synonyms.AddRange(sourceSense.Synonyms);
+            foreach (var synonym in sourceSense.Synonyms)
+            {
+                targetSense.Synonyms.Add(synonym);
+            }
 
             if (sourceSense.Translations != null)
             {
-                targetSense.Translations.AddRange(FilterTranslations(sourceSense.Translations, targetLanguages));
+                foreach (var translation in FilterTranslations(sourceSense.Translations, targetLanguages))
+                {
+                    targetSense.Translations.Add(translation);
+                }
             }
 
             foreach (var sourceExample in sourceSense.Examples)
@@ -212,7 +229,10 @@ namespace Lexicala.NET.Parsing
                     translations.AddRange(FilterTranslations(sourceExample.Translations, targetLanguages));
                 }
 
-                example.Translations.AddRange(translations);
+                foreach (var translation in translations)
+                {
+                    example.Translations.Add(translation);
+                }
                 targetSense.Examples.Add(example);
             }
 
@@ -226,7 +246,10 @@ namespace Lexicala.NET.Parsing
 
                 if (compositionalPhrase.Translations != null)
                 {
-                    comp.Translations.AddRange(FilterTranslations(compositionalPhrase.Translations, targetLanguages));
+                    foreach (var translation in FilterTranslations(compositionalPhrase.Translations, targetLanguages))
+                    {
+                        comp.Translations.Add(translation);
+                    }
                 }
 
                 foreach (var sourceExample in compositionalPhrase.Examples)
@@ -243,7 +266,10 @@ namespace Lexicala.NET.Parsing
                         translations.AddRange(FilterTranslations(sourceExample.Translations, targetLanguages));
                     }
 
-                    example.Translations.AddRange(translations);
+                    foreach (var translation in translations)
+                    {
+                        example.Translations.Add(translation);
+                    }
                     comp.Examples.Add(example);
                 }
 
@@ -259,37 +285,26 @@ namespace Lexicala.NET.Parsing
             return targetSense;
         }
 
-        private static IEnumerable<Translation> ParseTranslation(string languageCode, TranslationObject clo)
+        private static List<Translation> ParseTranslation(string languageCode, TranslationObject clo)
         {
             // json response is a bit flawed: it returns an object for 1 result, or an array for multiple results. this is difficult to deserialize so that's why this line looks a bit strange
             var translations = (clo.Translation != null
-                                   ? new List<Translation> { new() { Language = languageCode, Text = clo.Translation.Text } }
+                                   ? [new Translation { Language = languageCode, Text = clo.Translation.Text }]
                                    : clo.Translations?.Select(nl => new Translation { Text = nl.Text, Language = languageCode }).ToList())
-                               ?? new List<Translation>();
+                               ?? [];
             return translations;
         }
 
-        private static List<Translation> FilterTranslations(IDictionary<string, TranslationObject> translationsDict, string[] targetLanguages)
+        private static List<Translation> FilterTranslations(Dictionary<string, TranslationObject> translationsDict, string[] targetLanguages)
         {
-            var translations = new List<Translation>();
             if (targetLanguages?.Length > 0)
             {
-                foreach (var languageCode in targetLanguages)
-                {
-                    if (translationsDict.ContainsKey(languageCode))
-                    {
-                        translations.AddRange(ParseTranslation(languageCode, translationsDict[languageCode]));
-                    }
-                }
+                return [.. targetLanguages
+                    .Where(translationsDict.ContainsKey)
+                    .SelectMany(languageCode => ParseTranslation(languageCode, translationsDict[languageCode]))];
             }
-            else
-            {
-                foreach (var kvp in translationsDict)
-                {
-                    translations.AddRange(ParseTranslation(kvp.Key, kvp.Value));
-                }
-            }
-            return translations;
+
+            return [.. translationsDict.SelectMany(kvp => ParseTranslation(kvp.Key, kvp.Value))];
         }
 
         private async Task<Resources> LoadLanguages()

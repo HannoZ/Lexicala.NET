@@ -2,9 +2,9 @@ using System.Text.Json;
 
 namespace Lexicala.NET.Response.Entries.JsonConverters
 {
-    public static class EntryResponseJsonConverter
+    internal static class EntryResponseJsonConverter
     {
-        public static readonly JsonSerializerOptions Settings = JsonSerializerDefaults.Options;
+        internal static readonly JsonSerializerOptions Settings = JsonSerializerDefaults.Options;
     }
 }
 

@@ -250,6 +250,180 @@ namespace Lexicala.NET.Parser.Tests
             result.Id.ShouldBe("ES_DE00008087");
         }
 
+        [TestMethod]
+        public async Task LexicalaSearchParser_SearchAsync_WithTargetLanguages_FiltersTranslations()
+        {
+            string searchResult = await LoadResponseFromFile("Search_es_blando_analyzed.json");
+            string entry1 = await LoadResponseFromFile("ES_DE00008087.json");
+
+            var apiResult = JsonSerializer.Deserialize<SearchResponse>(searchResult, SearchResponseJsonConverter.Settings);
+            apiResult.Metadata = new ResponseMetadata();
+            var entryResult1 = JsonSerializer.Deserialize<Entry>(entry1, EntryResponseJsonConverter.Settings);
+            entryResult1.Metadata = new ResponseMetadata();
+
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.BasicSearchAsync("test", "es", null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(apiResult);
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.GetEntryAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(entryResult1);
+
+            // ACT
+            var result = await _lexicalaSearchParser.SearchAsync("test", "es", "en", "nl");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+            result.Results.ShouldNotBeEmpty();
+
+            // Verify that senses only contain translations for the specified target languages
+            foreach (var resultEntry in result.Results)
+            {
+                foreach (var sense in resultEntry.Senses)
+                {
+                    // All translations should only be in "en" or "nl"
+                    foreach (var translation in sense.Translations)
+                    {
+                        translation.Language.ShouldBeOneOf("en", "nl");
+                    }
+
+                    // Verify examples also respect the target language filter
+                    foreach (var example in sense.Examples)
+                    {
+                        foreach (var translation in example.Translations)
+                        {
+                            translation.Language.ShouldBeOneOf("en", "nl");
+                        }
+                    }
+
+                    // Verify compositional phrases also respect the target language filter
+                    foreach (var compPhrase in sense.CompositionalPhrases)
+                    {
+                        foreach (var translation in compPhrase.Translations)
+                        {
+                            translation.Language.ShouldBeOneOf("en", "nl");
+                        }
+
+                        foreach (var example in compPhrase.Examples)
+                        {
+                            foreach (var translation in example.Translations)
+                            {
+                                translation.Language.ShouldBeOneOf("en", "nl");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task LexicalaSearchParser_SearchAsync_NoTargetLanguages_ReturnsAllTranslations()
+        {
+            string searchResult = await LoadResponseFromFile("Search_es_blando_analyzed.json");
+            string entry1 = await LoadResponseFromFile("ES_DE00008087.json");
+
+            var apiResult = JsonSerializer.Deserialize<SearchResponse>(searchResult, SearchResponseJsonConverter.Settings);
+            apiResult.Metadata = new ResponseMetadata();
+            var entryResult1 = JsonSerializer.Deserialize<Entry>(entry1, EntryResponseJsonConverter.Settings);
+            entryResult1.Metadata = new ResponseMetadata();
+
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.BasicSearchAsync("test", "es", null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(apiResult);
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.GetEntryAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(entryResult1);
+
+            // ACT
+            var result = await _lexicalaSearchParser.SearchAsync("test", "es");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+            result.Results.ShouldNotBeEmpty();
+
+            // Verify that senses contain translations in all available languages
+            var allLanguages = result.Results
+                .SelectMany(r => r.Senses)
+                .SelectMany(s => s.Translations)
+                .Select(t => t.Language)
+                .Distinct()
+                .ToList();
+
+            // Should have multiple languages (br, en, ja, nl, no, sv, etc.)
+            allLanguages.Count.ShouldBeGreaterThan(1);
+        }
+
+        [TestMethod]
+        public async Task LexicalaSearchParser_SearchAsync_AdvancedSearch_WithTargetLanguages()
+        {
+            string searchResult = await LoadResponseFromFile("Search_es_blando_analyzed.json");
+            string entry1 = await LoadResponseFromFile("ES_DE00008087.json");
+
+            var apiResult = JsonSerializer.Deserialize<SearchResponse>(searchResult, SearchResponseJsonConverter.Settings);
+            apiResult.Metadata = new ResponseMetadata();
+            var entryResult1 = JsonSerializer.Deserialize<Entry>(entry1, EntryResponseJsonConverter.Settings);
+            entryResult1.Metadata = new ResponseMetadata();
+
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.AdvancedSearchAsync(It.IsAny<AdvancedSearchRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(apiResult);
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.GetEntryAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(entryResult1);
+
+            var searchRequest = new AdvancedSearchRequest
+            {
+                Language = "es",
+                SearchText = "test"
+            };
+
+            // ACT
+            var result = await _lexicalaSearchParser.SearchAsync(searchRequest, "en", "fr");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+            result.Results.ShouldNotBeEmpty();
+
+            // Verify that only "en" and "fr" translations are returned
+            foreach (var resultEntry in result.Results)
+            {
+                foreach (var sense in resultEntry.Senses)
+                {
+                    foreach (var translation in sense.Translations)
+                    {
+                        translation.Language.ShouldBeOneOf("en", "fr");
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task LexicalaSearchParser_GetEntryAsync_WithTargetLanguages_FiltersTranslations()
+        {
+            string entry1 = await LoadResponseFromFile("ES_DE00008087.json");
+            var entryResult1 = JsonSerializer.Deserialize<Entry>(entry1, EntryResponseJsonConverter.Settings);
+            entryResult1.Metadata = new ResponseMetadata();
+
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.GetEntryAsync("ES_DE00008087", null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(entryResult1);
+
+            // ACT
+            var result = await _lexicalaSearchParser.GetEntryAsync("ES_DE00008087", "en", "nl");
+
+            // ASSERT
+            result.ShouldNotBeNull();
+            result.Id.ShouldBe("ES_DE00008087");
+
+            // Verify translations are filtered to only "en" and "nl"
+            foreach (var sense in result.Senses)
+            {
+                foreach (var translation in sense.Translations)
+                {
+                    translation.Language.ShouldBeOneOf("en", "nl");
+                }
+            }
+        }
+
         private static Task<string> LoadResponseFromFile(string fileName)
         {
             var asm = Assembly.GetExecutingAssembly();

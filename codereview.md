@@ -1,5 +1,11 @@
 # Code Review: Lexicala.NET Repository
 
+## Upcoming Plans
+
+- Modernization: review the codebase for optimizations and language/runtime improvements now available in .NET 6 through .NET 10, since `netstandard` support has been dropped.
+- Documentation: finish XML documentation coverage for all public members.
+- Test scenarios: expand endpoint coverage with real JSON response samples where missing, including the RDF methods exposed through `ILexicalaClient`.
+
 ## Summary
 
 The Lexicala.NET repository implements a .NET client for the Lexicala API, targeting .NET 10.0, .NET 8.0, and .NET Standard 2.0. It includes a main library, Web API host, and comprehensive unit tests. The codebase demonstrates solid async/await patterns, dependency injection integration, and custom response parsing using System.Text.Json. All documented API endpoints are implemented with full Swagger/OpenAPI support for testing.
