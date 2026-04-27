@@ -424,6 +424,122 @@ namespace Lexicala.NET.Parser.Tests
             }
         }
 
+        [TestMethod]
+        public async Task LexicalaSearchParser_SearchAsync_BoundsConcurrentEntryRequests()
+        {
+            const int totalEntries = 16;
+            var apiResult = new SearchResponse
+            {
+                NResults = totalEntries,
+                Results = Enumerable.Range(1, totalEntries).Select(i => new Result { Id = $"ID_{i}" }).ToArray(),
+                Metadata = new ResponseMetadata { RateLimits = new RateLimits { LimitRemaining = 100 } }
+            };
+
+            var currentInFlight = 0;
+            var maxInFlight = 0;
+
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.BasicSearchAsync("test", "es", null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(apiResult);
+
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.GetEntryAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
+                .Returns(async (string id, string etag, CancellationToken cancellationToken) =>
+                {
+                    var inFlight = Interlocked.Increment(ref currentInFlight);
+                    UpdateMax(ref maxInFlight, inFlight);
+
+                    await Task.Delay(25, cancellationToken);
+
+                    Interlocked.Decrement(ref currentInFlight);
+                    return CreateMinimalEntry(id, 100);
+                });
+
+            var result = await _lexicalaSearchParser.SearchAsync("test", "es");
+
+            result.Results.Count.ShouldBe(totalEntries);
+            maxInFlight.ShouldBeLessThanOrEqualTo(4);
+        }
+
+        [TestMethod]
+        public async Task LexicalaSearchParser_SearchAsync_UsesSingleConcurrencyWhenRateLimitIsLow()
+        {
+            const int totalEntries = 8;
+            var apiResult = new SearchResponse
+            {
+                NResults = totalEntries,
+                Results = Enumerable.Range(1, totalEntries).Select(i => new Result { Id = $"LOW_{i}" }).ToArray(),
+                Metadata = new ResponseMetadata { RateLimits = new RateLimits { LimitRemaining = 3 } }
+            };
+
+            var currentInFlight = 0;
+            var maxInFlight = 0;
+
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.BasicSearchAsync("test", "es", null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(apiResult);
+
+            _mocker.GetMock<ILexicalaClient>()
+                .Setup(m => m.GetEntryAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
+                .Returns(async (string id, string etag, CancellationToken cancellationToken) =>
+                {
+                    var inFlight = Interlocked.Increment(ref currentInFlight);
+                    UpdateMax(ref maxInFlight, inFlight);
+
+                    await Task.Delay(20, cancellationToken);
+
+                    Interlocked.Decrement(ref currentInFlight);
+                    return CreateMinimalEntry(id, 3);
+                });
+
+            var result = await _lexicalaSearchParser.SearchAsync("test", "es");
+
+            result.Results.Count.ShouldBe(totalEntries);
+            maxInFlight.ShouldBe(1);
+        }
+
+        private static Entry CreateMinimalEntry(string id, int limitRemaining)
+        {
+            return new Entry
+            {
+                Id = id,
+                HeadwordObject = new Lexicala.NET.Response.Entries.Headword
+                {
+                    Text = id,
+                    Pos = "noun",
+                    PronunciationObject = new Pronunciation { Value = "p" },
+                    AdditionalInflections = [],
+                    Inflections = []
+                },
+                Senses = [],
+                RelatedEntries = [],
+                Metadata = new ResponseMetadata
+                {
+                    RateLimits = new RateLimits
+                    {
+                        LimitRemaining = limitRemaining
+                    }
+                }
+            };
+        }
+
+        private static void UpdateMax(ref int maxValue, int currentValue)
+        {
+            while (true)
+            {
+                var observed = maxValue;
+                if (currentValue <= observed)
+                {
+                    return;
+                }
+
+                if (Interlocked.CompareExchange(ref maxValue, currentValue, observed) == observed)
+                {
+                    return;
+                }
+            }
+        }
+
         private static Task<string> LoadResponseFromFile(string fileName)
         {
             var asm = Assembly.GetExecutingAssembly();

@@ -4,7 +4,7 @@
 		<TargetFrameworks>net10.0;net8.0;</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<GenerateDocumentatonFile>true</GenerateDocumentatonFile>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Authors>Hanno Zwikstra</Authors>
 		<Product>Lexicala.NET</Product>
 		<Description>A .NET client for the Lexicala api.</Description>

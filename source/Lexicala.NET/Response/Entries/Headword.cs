@@ -88,6 +88,6 @@ namespace Lexicala.NET.Response.Entries
         /// <summary>
         /// Gets normalized part-of-speech values as an array.
         /// </summary>
-        public string[] PartOfSpeeches => Pos.PartOfSpeechArray ?? [Pos.PartOfSpeech];
+        public string[] PartOfSpeeches => Pos.PartOfSpeechArray ?? (Pos.PartOfSpeech != null ? [Pos.PartOfSpeech] : []);
     }
 }

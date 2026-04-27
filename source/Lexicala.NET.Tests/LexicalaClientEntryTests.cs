@@ -159,6 +159,46 @@ namespace Lexicala.NET.Client.Tests
                 ItExpr.IsAny<CancellationToken>());
         }
 
+        [TestMethod]
+        public async Task LexicalaClient_GetEntryAsync_EncodesEntryIdInPath()
+        {
+            const string response = "{\"id\":\"id\",\"headword\":[],\"senses\":[],\"related_entries\":[]}";
+
+            HandlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            await Client.GetEntryAsync("EN_DE/unsafe");
+
+            HandlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req => req.RequestUri.ToString() == "http://www.tempuri.org/entries/EN_DE%2Funsafe"),
+                ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_GetSenseAsync_EncodesSenseIdInPath()
+        {
+            const string response = "{\"id\":\"sense-id\"}";
+
+            HandlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            await Client.GetSenseAsync("EN_SE/unsafe");
+
+            HandlerMock.Protected().Verify("SendAsync", Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req => req.RequestUri.ToString() == "http://www.tempuri.org/senses/EN_SE%2Funsafe"),
+                ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public void Headword_PartOfSpeeches_ReturnsEmpty_WhenPosIsAbsent()
+        {
+            var headword = new Lexicala.NET.Response.Entries.Headword();
+
+            headword.PartOfSpeeches.ShouldBeEmpty();
+        }
+
         private async Task AssertEntryDeserializes(string resourceFile, string entryId)
         {
             string response = await LoadResponseFromFile(resourceFile);

@@ -26,6 +26,20 @@ namespace Lexicala.NET.Client.Tests
         }
 
         [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_InvalidSource_ThrowsException()
+        {
+            await Should.ThrowAsync<ArgumentException>(async () =>
+                await Client.AdvancedSearchAsync(new AdvancedSearchRequest { Language = "xx", SearchText = "text", Source = "en" }));
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_AdvancedSearch_NullSource_ThrowsException()
+        {
+            await Should.ThrowAsync<ArgumentException>(async () =>
+                await Client.AdvancedSearchAsync(new AdvancedSearchRequest { Language = "xx", SearchText = "text", Source = null }));
+        }
+
+        [TestMethod]
         public async Task LexicalaClient_AdvancedSearch_AllDefaults()
         {
             await AssertAdvancedSearchQuery(new AdvancedSearchRequest { Language = "xx", SearchText = "text" },

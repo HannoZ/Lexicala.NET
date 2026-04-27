@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Lexicala.NET.Parsing;
+using Lexicala.NET.Response;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
+using Polly.Extensions.Http;
 
 namespace Lexicala.NET
 {
@@ -32,12 +38,59 @@ namespace Lexicala.NET
                     client.DefaultRequestHeaders.Add(LexicalaConfig.RapidApiKeyHeader, config.ApiKey);
                     client.DefaultRequestHeaders.Add(LexicalaConfig.RapidApiHostHeader, LexicalaConfig.RapidApiHostValue);
                 })
-                .AddTransientHttpErrorPolicy(builder => builder.RetryAsync(3));
+                .AddPolicyHandler(CreateRetryPolicy());
 
             services.AddMemoryCache();
             services.AddSingleton<ILexicalaSearchParser, LexicalaSearchParser>();
 
             return services;
+        }
+
+        private static IAsyncPolicy<HttpResponseMessage> CreateRetryPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .OrResult(response => response.StatusCode == HttpStatusCode.TooManyRequests)
+                .RetryAsync(3, async (outcome, retryAttempt, _) =>
+                {
+                    var retryDelay = GetRetryDelay(outcome.Result, retryAttempt);
+                    if (retryDelay > TimeSpan.Zero)
+                    {
+                        await Task.Delay(retryDelay);
+                    }
+                });
+        }
+
+        private static TimeSpan GetRetryDelay(HttpResponseMessage response, int retryAttempt)
+        {
+            if (response != null)
+            {
+                if (response.Headers.RetryAfter?.Delta is TimeSpan delta && delta > TimeSpan.Zero)
+                {
+                    return delta;
+                }
+
+                if (response.Headers.RetryAfter?.Date is DateTimeOffset date)
+                {
+                    var retryAfterDateDelay = date - DateTimeOffset.UtcNow;
+                    if (retryAfterDateDelay > TimeSpan.Zero)
+                    {
+                        return retryAfterDateDelay;
+                    }
+                }
+
+                if (response.Headers.TryGetValues(ResponseHeaders.HeaderRateLimitReset, out var values))
+                {
+                    var value = values.FirstOrDefault();
+                    if (int.TryParse(value, out var secondsUntilReset) && secondsUntilReset > 0)
+                    {
+                        return TimeSpan.FromSeconds(secondsUntilReset);
+                    }
+                }
+            }
+
+            // Exponential backoff fallback when no server guidance is available.
+            return TimeSpan.FromSeconds(Math.Min(Math.Pow(2, retryAttempt), 8));
         }
     }
 }

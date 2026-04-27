@@ -25,7 +25,7 @@ namespace Lexicala.NET
         /// Gets information about languages available through the API.
         /// </summary>
         /// <remarks>
-        ///By default, results are from KD's Global series. Data from the Password Series and from Random House Webster's College Dictionary are also available. The Global series includes 24 monolingual cores, which are added translation equivalents, producing multilingual versions. The Password series consists of an English core, translated to 46 languages. The Random House Webster's College Dictionary is an extensive monolingual English dictionary.
+        ///By default, results are from KD's Global series. Data from the Password Series and from Random House Webster's College Dictionary are also available. The Global series includes 25 monolingual cores, which are added translation equivalents, producing multilingual versions. The Password series consists of an English core, translated to 46 languages. The Random House Webster's College Dictionary is an extensive monolingual English dictionary.
         /// </remarks>
         /// <exception cref="LexicalaApiException">Thrown when the API returns an error.</exception>
         Task<LanguagesResponse> LanguagesAsync(CancellationToken cancellationToken = default);

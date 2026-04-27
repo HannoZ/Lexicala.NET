@@ -55,9 +55,9 @@ namespace Lexicala.NET
         public Task<SearchResponse> BasicSearchAsync(string searchText, string sourceLanguage, string etag = null, CancellationToken cancellationToken = default)
         {
             ValidateLanguageCode(sourceLanguage, nameof(sourceLanguage));
-            ValidateSearchText(searchText, nameof(searchText));
+            ArgumentException.ThrowIfNullOrEmpty(searchText, nameof(searchText));
 
-            _logger.LogInformation("Performing basic search for text '{SearchText}' in language '{SourceLanguage}'", searchText, sourceLanguage);
+            _logger.LogDebug("Performing basic search for text '{SearchText}' in language '{SourceLanguage}'", searchText, sourceLanguage);
 
             var query = $"{Constants.Search}?language={Uri.EscapeDataString(sourceLanguage)}&text={Uri.EscapeDataString(searchText)}";
             return ExecuteSearch(query, etag, cancellationToken);
@@ -68,7 +68,7 @@ namespace Lexicala.NET
         {
             ValidateSearchRequest(searchRequest);
 
-            _logger.LogInformation("Performing advanced search for text '{SearchText}' in language '{SourceLanguage}' with parameters: synonyms={Synonyms}, antonyms={Antonyms}",
+            _logger.LogDebug("Performing advanced search for text '{SearchText}' in language '{SourceLanguage}' with parameters: synonyms={Synonyms}, antonyms={Antonyms}",
                 searchRequest.SearchText, searchRequest.Language, searchRequest.Synonyms, searchRequest.Antonyms);
 
             var queryString = BuildAdvancedSearchQueryString(Constants.Search, searchRequest);
@@ -79,7 +79,7 @@ namespace Lexicala.NET
         public Task<IEnumerable<Entry>> SearchEntriesAsync(string searchText, string sourceLanguage, string etag = null, CancellationToken cancellationToken = default)
         {
             ValidateLanguageCode(sourceLanguage, nameof(sourceLanguage));
-            ValidateSearchText(searchText, nameof(searchText));
+            ArgumentException.ThrowIfNullOrEmpty(searchText, nameof(searchText));
 
             var queryString = $"{Constants.SearchEntries}?language={Uri.EscapeDataString(sourceLanguage)}&text={Uri.EscapeDataString(searchText)}";
             return ExecuteSearchEntries(queryString, etag, cancellationToken);
@@ -98,7 +98,7 @@ namespace Lexicala.NET
         public Task<string> SearchRdfAsync(string searchText, string sourceLanguage, string etag = null, CancellationToken cancellationToken = default)
         {
             ValidateLanguageCode(sourceLanguage, nameof(sourceLanguage));
-            ValidateSearchText(searchText, nameof(searchText));
+            ArgumentException.ThrowIfNullOrEmpty(searchText, nameof(searchText));
 
             var query = $"{Constants.SearchRdf}?language={Uri.EscapeDataString(sourceLanguage)}&text={Uri.EscapeDataString(searchText)}";
             return ExecuteRdfQuery(query, etag, cancellationToken);
@@ -123,7 +123,8 @@ namespace Lexicala.NET
         /// <inheritdoc />
         public async Task<Entry> GetEntryAsync(string entryId, string etag = null, CancellationToken cancellationToken = default)
         {
-            using var response = await ExecuteRequestAsync(HttpMethod.Get, $"{Constants.Entries}/{entryId}", etag, cancellationToken);
+            ArgumentException.ThrowIfNullOrEmpty(entryId, nameof(entryId));
+            using var response = await ExecuteRequestAsync(HttpMethod.Get, $"{Constants.Entries}/{Uri.EscapeDataString(entryId)}", etag, cancellationToken);
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
             var responseObject = JsonSerializer.Deserialize<Entry>(content, JsonSerializerDefaults.Options);
             responseObject.Metadata = GetResponseMetadata(response.Headers);
@@ -133,7 +134,8 @@ namespace Lexicala.NET
         /// <inheritdoc />
         public async Task<Sense> GetSenseAsync(string senseId, string etag = null, CancellationToken cancellationToken = default)
         {
-            using var response = await ExecuteRequestAsync(HttpMethod.Get, $"{Constants.Senses}/{senseId}", etag, cancellationToken);
+            ArgumentException.ThrowIfNullOrEmpty(senseId, nameof(senseId));
+            using var response = await ExecuteRequestAsync(HttpMethod.Get, $"{Constants.Senses}/{Uri.EscapeDataString(senseId)}", etag, cancellationToken);
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
             var responseObject = JsonSerializer.Deserialize<Sense>(content, JsonSerializerDefaults.Options);
             responseObject.Metadata = GetResponseMetadata(response.Headers);
@@ -143,9 +145,9 @@ namespace Lexicala.NET
         /// <inheritdoc />
         public Task<SearchResponse> SearchDefinitionsAsync(string searchText, string language = null, string etag = null, CancellationToken cancellationToken = default)
         {
-            ValidateSearchText(searchText, nameof(searchText));
+            ArgumentException.ThrowIfNullOrEmpty(searchText, nameof(searchText));
 
-            _logger.LogInformation("Performing definitions search for text '{SearchText}' with language filter '{Language}'", searchText, language);
+            _logger.LogDebug("Performing definitions search for text '{SearchText}' with language filter '{Language}'", searchText, language);
 
             var query = $"{Constants.SearchDefinitions}?text={Uri.EscapeDataString(searchText)}";
             if (!string.IsNullOrEmpty(language))
@@ -160,7 +162,9 @@ namespace Lexicala.NET
         /// <inheritdoc />
         public Task<SearchResponse> FlukySearchAsync(string source = "global", string language = null, string etag = null, CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation("Performing fluky search in source '{Source}' with language '{Language}'", source, language ?? "random");
+            ValidateSource(source, nameof(source));
+
+            _logger.LogDebug("Performing fluky search in source '{Source}' with language '{Language}'", source, language ?? "random");
 
             var query = $"{Constants.FlukySearch}?source={Uri.EscapeDataString(source)}";
             if (!string.IsNullOrEmpty(language))
@@ -238,11 +242,26 @@ namespace Lexicala.NET
             return $"{endpoint}?{string.Join("&", encodedPairs)}";
         }
 
+        private static readonly HashSet<string> ValidSources = new(StringComparer.OrdinalIgnoreCase)
+        {
+            Sources.Global, Sources.Password, Sources.Random, Sources.Multigloss
+        };
+
+        private static void ValidateSource(string source, string parameterName)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(source, parameterName);
+            if (!ValidSources.Contains(source))
+            {
+                throw new ArgumentException($"Invalid source provided ({source}), valid values are: {string.Join(", ", ValidSources)}", parameterName);
+            }
+        }
+
         private static void ValidateSearchRequest(AdvancedSearchRequest searchRequest)
         {
             ArgumentNullException.ThrowIfNull(searchRequest);
             ValidateLanguageCode(searchRequest.Language, nameof(searchRequest.Language));
-            ValidateSearchText(searchRequest.SearchText, nameof(searchRequest.SearchText));
+            ArgumentException.ThrowIfNullOrEmpty(searchRequest.SearchText, nameof(searchRequest.SearchText));
+            ValidateSource(searchRequest.Source, nameof(searchRequest.Source));
         }
 
         private static void ValidateLanguageCode(string languageCode, string parameterName)
@@ -252,11 +271,6 @@ namespace Lexicala.NET
             {
                 throw new ArgumentException($"Invalid language code provided ({languageCode}), a valid language code is two characters", parameterName);
             }
-        }
-
-        private static void ValidateSearchText(string searchText, string parameterName)
-        {
-            ArgumentException.ThrowIfNullOrEmpty(searchText, parameterName);
         }
 
         private async Task<HttpResponseMessage> ExecuteRequestAsync(HttpMethod method, string endpoint, string etag = null, CancellationToken cancellationToken = default)

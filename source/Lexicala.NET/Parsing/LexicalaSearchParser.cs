@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Lexicala.NET.Parsing.Dto;
 using Lexicala.NET.Request;
@@ -15,6 +16,10 @@ namespace Lexicala.NET.Parsing
     /// <inheritdoc />
     public class LexicalaSearchParser : ILexicalaSearchParser
     {
+        private const int DefaultMaxConcurrentEntryRequests = 4;
+        private const int LowRateLimitThreshold = 5;
+        private const int MediumRateLimitThreshold = 20;
+
         private readonly ILexicalaClient _lexicalaClient;
         private readonly IMemoryCache _memoryCache;
         
@@ -73,39 +78,38 @@ namespace Lexicala.NET.Parsing
 
         private async Task<SearchResultModel> ProcessSearchResult(string searchText, SearchResponse searchResult, string[] targetLanguages)
         {
-            // Collect all unique entry IDs to fetch
+            // Collect all unique entry IDs to fetch.
             var allIds = new HashSet<string>();
             foreach (var result in searchResult.Results)
             {
                 allIds.Add(result.Id);
             }
 
-            // Fetch initial entries in parallel
-            var initialEntryTasks = allIds.Select(id => _lexicalaClient.GetEntryAsync(id)).ToArray();
-            var initialEntries = await Task.WhenAll(initialEntryTasks);
+            var initialConcurrency = DetermineMaxConcurrency(searchResult.Metadata?.RateLimits?.LimitRemaining ?? -1);
+            var initialEntries = await FetchEntriesWithConcurrencyAsync(allIds, initialConcurrency);
 
-            // Collect related entry IDs
+            // Collect related entry IDs.
             var relatedIds = new HashSet<string>();
             foreach (var entry in initialEntries)
             {
-                if (entry.RelatedEntries != null)
+                if (entry.RelatedEntries == null)
                 {
-                    foreach (var relatedId in entry.RelatedEntries)
+                    continue;
+                }
+
+                foreach (var relatedId in entry.RelatedEntries)
+                {
+                    if (!allIds.Contains(relatedId))
                     {
-                        if (!allIds.Contains(relatedId))
-                        {
-                            relatedIds.Add(relatedId);
-                            allIds.Add(relatedId);
-                        }
+                        relatedIds.Add(relatedId);
+                        allIds.Add(relatedId);
                     }
                 }
             }
 
-            // Fetch related entries in parallel
-            var relatedEntryTasks = relatedIds.Select(id => _lexicalaClient.GetEntryAsync(id)).ToArray();
-            var relatedEntries = await Task.WhenAll(relatedEntryTasks);
+            var relatedConcurrency = DetermineMaxConcurrency(GetLatestKnownRemainingLimit(initialEntries, searchResult.Metadata?.RateLimits?.LimitRemaining ?? -1));
+            var relatedEntries = await FetchEntriesWithConcurrencyAsync(relatedIds, relatedConcurrency);
 
-            // Combine all entries
             var entries = initialEntries.Concat(relatedEntries).ToList();
 
             var returnModel = new SearchResultModel
@@ -123,6 +127,64 @@ namespace Lexicala.NET.Parsing
 
             returnModel.Results = returnModel.Results.OrderBy(r => r.Text).ToList();
             return returnModel;
+        }
+
+        private async Task<List<Entry>> FetchEntriesWithConcurrencyAsync(IEnumerable<string> ids, int maxConcurrency)
+        {
+            var idList = ids.ToList();
+            if (idList.Count == 0)
+            {
+                return [];
+            }
+
+            var safeConcurrency = Math.Max(1, maxConcurrency);
+            var entries = new Entry[idList.Count];
+            using var gate = new SemaphoreSlim(safeConcurrency);
+
+            var tasks = idList.Select(async (id, index) =>
+            {
+                await gate.WaitAsync();
+                try
+                {
+                    entries[index] = await _lexicalaClient.GetEntryAsync(id);
+                }
+                finally
+                {
+                    gate.Release();
+                }
+            });
+
+            await Task.WhenAll(tasks);
+            return [.. entries.Where(entry => entry != null)];
+        }
+
+        private static int DetermineMaxConcurrency(int limitRemaining)
+        {
+            if (limitRemaining is >= 0 and <= LowRateLimitThreshold)
+            {
+                return 1;
+            }
+
+            if (limitRemaining > LowRateLimitThreshold && limitRemaining <= MediumRateLimitThreshold)
+            {
+                return 2;
+            }
+
+            return DefaultMaxConcurrentEntryRequests;
+        }
+
+        private static int GetLatestKnownRemainingLimit(IEnumerable<Entry> entries, int fallback)
+        {
+            foreach (var entry in entries)
+            {
+                var remaining = entry.Metadata?.RateLimits?.LimitRemaining ?? -1;
+                if (remaining >= 0)
+                {
+                    return remaining;
+                }
+            }
+
+            return fallback;
         }
 
 

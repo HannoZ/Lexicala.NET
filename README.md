@@ -118,8 +118,8 @@ foreach (var result in searchResponse.Results)
 ```csharp
 var advancedRequest = new AdvancedSearchRequest
 {
-    Source = "en",
-    Text = "run",
+    Language = "en",
+    SearchText = "run",
     Pos = "verb"  // Part of speech filter
 };
 
@@ -157,7 +157,7 @@ var result = await searchService.SearchAndParseAsync("árbol", "es");
 var englishSummary = result.Summary("en");  // "tree, shaft, post, mast"
 foreach (var searchResult in result.Results)
 {
-    var definition = searchResult.Senses.FirstOrDefault()?.Definition?.Text;
+    var definition = searchResult.Senses.FirstOrDefault()?.Definition;
     Console.WriteLine($"Definition: {definition}");
 }
 ```
@@ -168,13 +168,13 @@ foreach (var searchResult in result.Results)
 var entry = await lexicalaClient.GetEntryAsync("EN00001234");  // Example ID
 foreach (var sense in entry.Senses)
 {
-    Console.WriteLine($"Sense: {sense.Definition?.Text}");
-    if (sense.Pronunciations != null)
+    Console.WriteLine($"Sense: {sense.Definition}");
+}
+foreach (var headword in entry.Headwords)
+{
+    foreach (var pron in headword.Pronunciations)
     {
-        foreach (var pron in sense.Pronunciations)
-        {
-            Console.WriteLine($"Pronunciation: {pron.Value}");
-        }
+        Console.WriteLine($"Pronunciation: {pron.Value}");
     }
 }
 ```
