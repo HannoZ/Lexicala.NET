@@ -38,6 +38,7 @@ namespace Lexicala.NET
         /// <param name="searchText">Specify a headword</param>
         /// <param name="sourceLanguage">Specify which source language to look in (must be a 2-character language code).</param>
         /// <param name="etag">Optional.</param>
+        /// <param name="cancellationToken">Token used to cancel the request.</param>
         /// <exception cref="System.ArgumentException">Thrown when searchText is null or empty, or when sourceLanguage is not a valid 2-character language code.</exception>
         /// <exception cref="LexicalaApiException">Thrown when the API returns an error.</exception>
         Task<SearchResponse> BasicSearchAsync(string searchText, string sourceLanguage, string etag = null, CancellationToken cancellationToken = default);
@@ -50,6 +51,7 @@ namespace Lexicala.NET
         /// <param name="searchText">Specify a headword</param>
         /// <param name="sourceLanguage">Specify which source language to look in (must be a 2-character language code).</param>
         /// <param name="etag">Optional.</param>
+        /// <param name="cancellationToken">Token used to cancel the request.</param>
         /// <exception cref="ArgumentException">Thrown when searchText is null or empty, or when sourceLanguage is not a valid 2-character language code.</exception>
         /// <exception cref="LexicalaApiException">Thrown when the API returns an error.</exception>
         Task<IEnumerable<Entry>> SearchEntriesAsync(string searchText, string sourceLanguage, string etag = null, CancellationToken cancellationToken = default);
@@ -59,6 +61,7 @@ namespace Lexicala.NET
         /// <param name="searchText">Specify a headword</param>
         /// <param name="sourceLanguage">Specify which source language to look in (must be a 2-character language code).</param>
         /// <param name="etag">Optional.</param>
+        /// <param name="cancellationToken">Token used to cancel the request.</param>
         /// <exception cref="ArgumentException">Thrown when searchText is null or empty, or when sourceLanguage is not a valid 2-character language code.</exception>
         /// <exception cref="LexicalaApiException">Thrown when the API returns an error.</exception>
         Task<string> SearchRdfAsync(string searchText, string sourceLanguage, string etag = null, CancellationToken cancellationToken = default);
@@ -74,6 +77,7 @@ namespace Lexicala.NET
         /// </summary>
         /// <param name="entryId">The entry ID</param>
         /// <param name="etag">Optional.</param>
+        /// <param name="cancellationToken">Token used to cancel the request.</param>
         /// <exception cref="ArgumentException">Thrown when entryId is null or empty.</exception>
         /// <exception cref="LexicalaApiException">Thrown when the API returns an error or the entry is not found.</exception>
         Task<string> GetRdfAsync(string entryId, string etag = null, CancellationToken cancellationToken = default);
@@ -105,6 +109,7 @@ namespace Lexicala.NET
         /// </remarks>
         /// <param name="entryId">The entry ID</param>
         /// <param name="etag">Optional.</param>
+        /// <param name="cancellationToken">Token used to cancel the request.</param>
         /// <exception cref="ArgumentException">Thrown when entryId is null or empty.</exception>
         /// <exception cref="LexicalaApiException">Thrown when the API returns an error or the entry is not found.</exception>
         Task<Entry> GetEntryAsync(string entryId, string etag = null, CancellationToken cancellationToken = default);
@@ -113,6 +118,7 @@ namespace Lexicala.NET
         /// </summary>
         /// <param name="senseId">The sense ID</param>
         /// <param name="etag">Optional.</param>
+        /// <param name="cancellationToken">Token used to cancel the request.</param>
         /// <exception cref="ArgumentException">Thrown when senseId is null or empty.</exception>
         /// <exception cref="LexicalaApiException">Thrown when the API returns an error or the sense is not found.</exception>
         Task<Response.Entries.Sense> GetSenseAsync(string senseId, string etag = null, CancellationToken cancellationToken = default);
@@ -125,6 +131,7 @@ namespace Lexicala.NET
         /// <param name="searchText">The text to search for in definitions</param>
         /// <param name="language">Optional. Filters results to match entries in the specified language (must be a 2-character language code if provided). The search text itself can be in any language.</param>
         /// <param name="etag">Optional.</param>
+        /// <param name="cancellationToken">Token used to cancel the request.</param>
         /// <exception cref="ArgumentException">Thrown when searchText is null or empty, or when language is provided but is not a valid 2-character language code.</exception>
         /// <exception cref="LexicalaApiException">Thrown when the API returns an error.</exception>
         Task<SearchResponse> SearchDefinitionsAsync(string searchText, string language = null, string etag = null, CancellationToken cancellationToken = default);
@@ -137,6 +144,7 @@ namespace Lexicala.NET
         /// <param name="source">Specify which resource to look in (global, password, multigloss, random). Default is global.</param>
         /// <param name="language">Optional. Specify which source language to look in (must be a 2-character language code if provided); if not specified, the language is chosen randomly.</param>
         /// <param name="etag">Optional.</param>
+        /// <param name="cancellationToken">Token used to cancel the request.</param>
         /// <exception cref="ArgumentException">Thrown when source is invalid, or when language is provided but is not a valid 2-character language code.</exception>
         /// <exception cref="LexicalaApiException">Thrown when the API returns an error.</exception>
         Task<SearchResponse> FlukySearchAsync(string source = "global", string language = null, string etag = null, CancellationToken cancellationToken = default);

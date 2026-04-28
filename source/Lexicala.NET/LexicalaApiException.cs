@@ -9,6 +9,13 @@ namespace Lexicala.NET
     /// </summary>
     public class LexicalaApiException : Exception
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LexicalaApiException"/> class.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        /// <param name="statusCode">The HTTP status code returned by the API.</param>
+        /// <param name="content">The raw response content returned by the API.</param>
+        /// <param name="metadata">Parsed response metadata, including rate limit headers.</param>
         public LexicalaApiException(string message, HttpStatusCode statusCode, string content, ResponseMetadata metadata)
             : base(message)
         {

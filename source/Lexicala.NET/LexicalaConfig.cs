@@ -12,8 +12,19 @@ namespace Lexicala.NET
         /// </summary>
         public static readonly Uri BaseAddress = new Uri("https://lexicala1.p.rapidapi.com");
 
+        /// <summary>
+        /// HTTP header name used for the RapidAPI key.
+        /// </summary>
         public const string RapidApiKeyHeader = "X-RapidAPI-Key";
+
+        /// <summary>
+        /// HTTP header name used for the RapidAPI host.
+        /// </summary>
         public const string RapidApiHostHeader = "X-RapidAPI-Host";
+
+        /// <summary>
+        /// RapidAPI host header value for the Lexicala API.
+        /// </summary>
         public const string RapidApiHostValue = "lexicala1.p.rapidapi.com";
 
         /// <summary>

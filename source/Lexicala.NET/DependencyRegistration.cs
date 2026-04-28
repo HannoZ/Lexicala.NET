@@ -12,14 +12,31 @@ using Polly.Extensions.Http;
 
 namespace Lexicala.NET
 {
+    /// <summary>
+    /// Provides dependency injection registration helpers for Lexicala services.
+    /// </summary>
     public static class DependencyRegistration
     {
+        /// <summary>
+        /// Registers Lexicala services using configuration from the "Lexicala" section.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <returns>The updated service collection.</returns>
         public static IServiceCollection RegisterLexicala(this IServiceCollection services, IConfiguration configuration)
         {
             var config = configuration.GetSection("Lexicala").Get<LexicalaConfig>();
             return RegisterLexicala(services, config);
         }
 
+        /// <summary>
+        /// Registers Lexicala services using an explicit configuration object.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="config">The Lexicala configuration.</param>
+        /// <returns>The updated service collection.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="config"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Thrown when <see cref="LexicalaConfig.ApiKey"/> is missing.</exception>
         public static IServiceCollection RegisterLexicala(this IServiceCollection services, LexicalaConfig config)
         {
             if (config == null)
