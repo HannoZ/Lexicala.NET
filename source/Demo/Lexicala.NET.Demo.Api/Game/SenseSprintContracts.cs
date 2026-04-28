@@ -9,7 +9,14 @@ public sealed record CreateRoundResponse(
     string Clue,
     int ScoreIfCorrect,
     int MaxClues,
-    int RoundSeconds
+    int RoundSeconds,
+    RateLimitDebugResponse? RateLimit
+);
+
+public sealed record RateLimitDebugResponse(
+    int Limit,
+    int LimitRemaining,
+    long ResetSeconds
 );
 
 public sealed record NextClueResponse(

@@ -11,4 +11,6 @@ public interface ISenseSprintGameService
     Task<NextClueResponse> RevealNextClueAsync(Guid roundId, CancellationToken cancellationToken = default);
 
     Task<GuessResponse> SubmitGuessAsync(Guid roundId, string guess, CancellationToken cancellationToken = default);
+
+    Task<GuessResponse> GiveUpAsync(Guid roundId, CancellationToken cancellationToken = default);
 }

@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Lexicala.NET.Request;
+using Lexicala.NET.Response;
 using Lexicala.NET.Response.Entries;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -52,7 +53,8 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
                 generated.Clues[generated.CurrentClueIndex],
                 ScoresByClueIndex[generated.CurrentClueIndex],
                 generated.Clues.Count,
-                RoundSeconds);
+                RoundSeconds,
+                generated.RateLimit);
         }
 
         throw new InvalidOperationException("Could not generate a playable round from Fluky Search. Try again.");
@@ -82,7 +84,7 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
 
     public Task<GuessResponse> SubmitGuessAsync(Guid roundId, string guess, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(guess, nameof(guess));
+        ArgumentException.ThrowIfNullOrWhiteSpace(guess);
 
         var round = GetRequiredRound(roundId);
 
@@ -152,6 +154,24 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
             "Not quite. Ask for the next clue or guess again."));
     }
 
+    public Task<GuessResponse> GiveUpAsync(Guid roundId, CancellationToken cancellationToken = default)
+    {
+        var round = GetRequiredRound(roundId);
+        EnsureRoundIsActive(roundId, round);
+
+        round.IsCompleted = true;
+        _cache.Set(roundId, round, round.ExpiresAtUtc);
+
+        return Task.FromResult(new GuessResponse(
+            roundId,
+            false,
+            "lost",
+            0,
+            round.CurrentClueIndex,
+            round.Answer,
+            "Round ended. Better luck next time."));
+    }
+
     private async Task<SenseSprintRoundState?> TryGenerateRoundAsync(CancellationToken cancellationToken)
     {
         var fluky = await _lexicalaClient.FlukySearchAsync(Sources.Global, "en", cancellationToken: cancellationToken);
@@ -187,8 +207,25 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
             Clues = clues,
             CurrentClueIndex = 0,
             IsCompleted = false,
-            ExpiresAtUtc = DateTimeOffset.UtcNow.AddSeconds(RoundSeconds)
+            ExpiresAtUtc = DateTimeOffset.UtcNow.AddSeconds(RoundSeconds),
+            RateLimit = BuildRateLimit(entry.Metadata) ?? BuildRateLimit(fluky.Metadata)
         };
+    }
+
+    private static RateLimitDebugResponse? BuildRateLimit(ResponseMetadata? metadata)
+    {
+        var limits = metadata?.RateLimits;
+        if (limits is null)
+        {
+            return null;
+        }
+
+        if (limits.Limit < 0 || limits.LimitRemaining < 0 || limits.Reset < 0)
+        {
+            return null;
+        }
+
+        return new RateLimitDebugResponse(limits.Limit, limits.LimitRemaining, limits.Reset);
     }
 
     private static List<string> BuildClues(Entry entry, Sense sense, string answer)
@@ -307,5 +344,7 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
         public int CurrentClueIndex { get; set; }
 
         public bool IsCompleted { get; set; }
+
+        public RateLimitDebugResponse? RateLimit { get; init; }
     }
 }

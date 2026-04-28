@@ -156,6 +156,24 @@ namespace Lexicala.NET.Demo.Api
                 })
                 .WithName("SenseSprintSubmitGuess");
 
+            app.MapPost("/game/sense-sprint/rounds/{roundId:guid}/give-up", async (ISenseSprintGameService gameService, Guid roundId, CancellationToken cancellationToken) =>
+                {
+                    try
+                    {
+                        var response = await gameService.GiveUpAsync(roundId, cancellationToken);
+                        return Results.Ok(response);
+                    }
+                    catch (KeyNotFoundException ex)
+                    {
+                        return Results.NotFound(new ProblemDetails { Title = "Round not found", Detail = ex.Message });
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        return Results.BadRequest(new ProblemDetails { Title = "Round is not active", Detail = ex.Message });
+                    }
+                })
+                .WithName("SenseSprintGiveUp");
+
             await app.RunAsync();
         }
     }
