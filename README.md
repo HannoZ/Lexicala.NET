@@ -102,7 +102,7 @@ public class TranslationService
 ```csharp
 var languagesResponse = await lexicalaClient.LanguagesAsync();
 var globalLanguages = languagesResponse.Resources.Global;
-Console.WriteLine($"Available languages: {string.Join(", ", globalLanguages)}");
+Console.WriteLine($"Available languages: {string.Join(", ", globalLanguages.SourceLanguages)}");
 ```
 
 ### Basic Search
