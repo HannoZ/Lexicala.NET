@@ -1,6 +1,6 @@
 using System;
 
-namespace Lexicala.NET.ConsoleApp.Game;
+namespace Lexicala.NET.Demo.Api.Game;
 
 public sealed record CreateRoundResponse(
     Guid RoundId,

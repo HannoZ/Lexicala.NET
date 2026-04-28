@@ -26,11 +26,13 @@ Install-Package Lexicala.NET
 ## Configuration
 
 ### 1. Obtain API Key
+
 1. Sign up for a RapidAPI account at [rapidapi.com](https://rapidapi.com/)
 2. Subscribe to the [Lexicala API](https://rapidapi.com/lexicala/api/lexicala/)
 3. Copy your API key from the RapidAPI dashboard
 
 ### 2. Configure Your Application
+
 Add the Lexicala configuration to your `appsettings.json`:
 
 ```json
@@ -42,6 +44,7 @@ Add the Lexicala configuration to your `appsettings.json`:
 ```
 
 ### 3. Register Services
+
 In your `Program.cs` (for .NET 6+):
 
 ```csharp
@@ -183,12 +186,14 @@ foreach (var headword in entry.Headwords)
 
 The repository includes a console application that hosts a Web API with Swagger UI for testing all endpoints.
 
-1. Clone the repository and navigate to the console app:
+1. Clone the repository and navigate to the demo API:
+
    ```bash
-   cd source/Lexicala.NET.ConsoleApp
+   cd source/Demo/Lexicala.NET.Demo.Api
    ```
 
 2. Run the application:
+
    ```bash
    dotnet run
    ```
@@ -204,6 +209,7 @@ The repository includes a console application that hosts a Web API with Swagger 
     - HTTPS: `https://localhost:5001/`
 
 Available endpoints:
+
 - `GET /test` - Test API connectivity
 - `GET /languages` - Get available languages
 - `GET /search` - Basic search
@@ -222,31 +228,35 @@ Available endpoints:
 - `POST /game/sense-sprint/rounds/{roundId}/guess` - Submit a guess for the round
 
 For React frontend development, CORS is enabled for:
+
 - `http://localhost:3000`
 - `http://localhost:5173`
 
-The repository also includes a hosted React-based Sense Sprint UI served by the ConsoleApp from `wwwroot/`.
+The repository also includes a hosted React-based Sense Sprint UI served by the demo API from `wwwroot/`.
 
 ## Sense Sprint Frontend (Vite + React)
 
-A dedicated React frontend is available at `source/sense-sprint-web`.
+A dedicated React frontend is available at `source/Demo/sense-sprint-web`.
 
 1. Start the backend host:
+
    ```bash
-   dotnet run --project source/Lexicala.NET.ConsoleApp/Lexicala.NET.ConsoleApp.csproj
+   dotnet run --project source/Demo/Lexicala.NET.Demo.Api/Lexicala.NET.Demo.Api.csproj
    ```
 
 2. In another terminal, navigate to the frontend and run the dev server:
-   
+
    **PowerShell:**
+
    ```powershell
-   cd source/sense-sprint-web
+   cd source/Demo/sense-sprint-web
    npm.cmd run dev
    ```
-   
+
    **Bash / Command Prompt:**
+
    ```bash
-   cd source/sense-sprint-web
+   cd source/Demo/sense-sprint-web
    npm run dev
    ```
 
@@ -260,17 +270,20 @@ The Vite dev server proxies `/game/*` calls to `http://localhost:5000`, so the g
 ## Building from Source
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/HannoZ/Lexicala.NET.git
    cd Lexicala.NET
    ```
 
 2. Build the solution:
+
    ```bash
    dotnet build source/Lexicala.NET.sln
    ```
 
 3. Run tests:
+
    ```bash
    dotnet test source/Lexicala.NET.sln
    ```
@@ -280,10 +293,12 @@ The Vite dev server proxies `/game/*` calls to `http://localhost:5000`, so the g
 The library implements the following Lexicala API endpoints:
 
 **Utility Endpoints**
+
 - `/test` - Test API connectivity
 - `/languages` - Get available languages
 
 **Search Endpoints**
+
 - `/search` - Basic search
 - `/search-entries` - Search with full entries
 - `/search-rdf` - Search in RDF/JSON-LD format
@@ -291,11 +306,13 @@ The library implements the following Lexicala API endpoints:
 - `/fluky-search` - Random word discovery
 
 **Advanced Search Endpoints**
+
 - `/search-advanced` - Advanced search with custom parameters
 - `/search-entries-advanced` - Advanced search with full entries
 - `/search-rdf-advanced` - Advanced search in RDF/JSON-LD format
 
 **Entry and Sense Endpoints**
+
 - `/entries` - Get entry details by ID
 - `/senses` - Get sense details by ID
 - `/rdf` - Get entry in RDF/JSON-LD format
@@ -308,4 +325,4 @@ Contributions are welcome! Please feel free to submit issues and pull requests.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -360,7 +360,7 @@ MigrationBackup/
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio
 
 
-/source/Lexicala.NET.ConsoleApp/appsettings.json
+/source/Demo/Lexicala.NET.Demo.Api/appsettings.json
 /source/Visual Studio 2022/Visualizers
 # ignnore local Snyk files
 .vscode/settings.json

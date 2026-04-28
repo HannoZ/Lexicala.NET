@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexicala.NET", "Lexicala.NE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexicala.NET.Tests", "Lexicala.NET.Tests\Lexicala.NET.Tests.csproj", "{C5BFFF1B-CA39-49D1-9EBD-1F0A6CEAF577}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexicala.NET.ConsoleApp", "Lexicala.NET.ConsoleApp\Lexicala.NET.ConsoleApp.csproj", "{8CF2797E-7845-4E69-A252-108C2FAB13A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexicala.NET.Demo.Api", "Demo\Lexicala.NET.Demo.Api\Lexicala.NET.Demo.Api.csproj", "{8CF2797E-7845-4E69-A252-108C2FAB13A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

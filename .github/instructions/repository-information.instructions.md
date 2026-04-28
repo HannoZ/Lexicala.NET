@@ -13,11 +13,11 @@ Key repository information:
 - Solution: `source/Lexicala.NET.sln`
 - Projects:
   - `source/Lexicala.NET/` — main library project with the Lexicala client, configuration, parsing, request, and response types
-  - `source/Lexicala.NET.ConsoleApp/` — ASP.NET Core host with Swagger UI for manually exercising the implemented Lexicala endpoints
+  - `source/Demo/Lexicala.NET.Demo.Api/` — ASP.NET Core host with Swagger UI for manually exercising the implemented Lexicala endpoints
   - `source/Lexicala.NET.Tests/` — unit tests and parser tests with embedded JSON fixtures under `Resources/`
 - Target frameworks:
   - `source/Lexicala.NET/` — `net8.0` and `net10.0`
-  - `source/Lexicala.NET.ConsoleApp/` — `net10.0`
+  - `source/Demo/Lexicala.NET.Demo.Api/` — `net10.0`
   - `source/Lexicala.NET.Tests/` — `net10.0`
 - Purpose: provides a .NET SDK for interacting with the Lexicala API, including request models, response models, parser/search abstractions, dependency registration, and a Swagger-enabled local test host.
 - Repository is organized into:

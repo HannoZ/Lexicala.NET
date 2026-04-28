@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Demo/Lexicala.NET.Demo.Api/Lexicala.NET.Demo.Api.csproj" />
+  <Project Path="Lexicala.NET.Tests/Lexicala.NET.Tests.csproj" />
+  <Project Path="Lexicala.NET/Lexicala.NET.csproj" />
+</Solution>

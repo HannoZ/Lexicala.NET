@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Lexicala.NET.ConsoleApp.Game;
+namespace Lexicala.NET.Demo.Api.Game;
 
 public interface ISenseSprintGameService
 {

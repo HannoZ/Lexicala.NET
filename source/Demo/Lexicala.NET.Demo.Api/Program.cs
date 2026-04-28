@@ -1,6 +1,6 @@
 ﻿using Lexicala.NET;
 using Lexicala.NET.Parsing;
-using Lexicala.NET.ConsoleApp.Game;
+using Lexicala.NET.Demo.Api.Game;
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
@@ -14,7 +14,7 @@ using Lexicala.NET.Request;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Lexicala.NET.ConsoleApp
+namespace Lexicala.NET.Demo.Api
 {
     public class Program
     {

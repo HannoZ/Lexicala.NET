@@ -9,7 +9,7 @@ using Lexicala.NET.Response.Entries;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace Lexicala.NET.ConsoleApp.Game;
+namespace Lexicala.NET.Demo.Api.Game;
 
 public sealed class SenseSprintGameService : ISenseSprintGameService
 {
