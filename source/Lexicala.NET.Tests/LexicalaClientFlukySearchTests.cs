@@ -58,5 +58,19 @@ namespace Lexicala.NET.Client.Tests
                 ItExpr.Is<HttpRequestMessage>(req => req.RequestUri.ToString().Contains("source=multigloss")),
                 ItExpr.IsAny<CancellationToken>());
         }
+
+        [TestMethod]
+        public async Task LexicalaClient_FlukySearch_SingleResultPayload_MapsToResultsArray()
+        {
+            HandlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage("{\"id\":\"EN_TEST\",\"language\":\"en\",\"headword\":{\"text\":\"test\"},\"senses\":[{\"id\":\"EN_SE_TEST\",\"definition\":\"a test definition\"}] }"));
+
+            var response = await Client.FlukySearchAsync(source: Sources.Global, language: "en");
+
+            response.NResults.ShouldBe(1);
+            response.Results.Length.ShouldBe(1);
+            response.Results[0].Id.ShouldBe("EN_TEST");
+        }
     }
 }

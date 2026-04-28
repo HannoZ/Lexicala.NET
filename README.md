@@ -204,9 +204,7 @@ The repository includes a console application that hosts a Web API with Swagger 
 
 4. Test the endpoints directly in the UI.
 
-5. Open the Sense Sprint web app:
-    - HTTP: `http://localhost:5000/`
-    - HTTPS: `https://localhost:5001/`
+5. To use the Sense Sprint web app, run the dedicated frontend described in the "Sense Sprint Frontend (Vite + React)" section below.
 
 Available endpoints:
 
@@ -232,8 +230,6 @@ For React frontend development, CORS is enabled for:
 - `http://localhost:3000`
 - `http://localhost:5173`
 
-The repository also includes a hosted React-based Sense Sprint UI served by the demo API from `wwwroot/`.
-
 ## Sense Sprint Frontend (Vite + React)
 
 A dedicated React frontend is available at `source/Demo/sense-sprint-web`.
@@ -244,7 +240,23 @@ A dedicated React frontend is available at `source/Demo/sense-sprint-web`.
    dotnet run --project source/Demo/Lexicala.NET.Demo.Api/Lexicala.NET.Demo.Api.csproj
    ```
 
-2. In another terminal, navigate to the frontend and run the dev server:
+2. In another terminal, navigate to the frontend and install dependencies (required once):
+
+    **PowerShell:**
+
+    ```powershell
+    cd source/Demo/sense-sprint-web
+    npm.cmd install
+    ```
+
+    **Bash / Command Prompt:**
+
+    ```bash
+    cd source/Demo/sense-sprint-web
+    npm install
+    ```
+
+3. Start the frontend dev server:
 
    **PowerShell:**
 
@@ -260,7 +272,7 @@ A dedicated React frontend is available at `source/Demo/sense-sprint-web`.
    npm run dev
    ```
 
-3. Open the app at:
+4. Open the app at:
    - `http://localhost:5173`
 
 The Vite dev server proxies `/game/*` calls to `http://localhost:5000`, so the game endpoints work without extra CORS setup.
@@ -279,14 +291,16 @@ The Vite dev server proxies `/game/*` calls to `http://localhost:5000`, so the g
 2. Build the solution:
 
    ```bash
-   dotnet build source/Lexicala.NET.sln
+    dotnet build source/Lexicala.NET.slnx
    ```
 
 3. Run tests:
 
    ```bash
-   dotnet test source/Lexicala.NET.sln
+    dotnet test source/Lexicala.NET.slnx
    ```
+
+The legacy `source/Lexicala.NET.sln` file has been removed in favor of `source/Lexicala.NET.slnx`.
 
 ## API Coverage
 

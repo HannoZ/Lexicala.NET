@@ -10,7 +10,7 @@ Official documentation: https://api.lexicala.com/documentation/
 
 Key repository information:
 
-- Solution: `source/Lexicala.NET.sln`
+- Solution: `source/Lexicala.NET.slnx`
 - Projects:
   - `source/Lexicala.NET/` — main library project with the Lexicala client, configuration, parsing, request, and response types
   - `source/Demo/Lexicala.NET.Demo.Api/` — ASP.NET Core host with Swagger UI for manually exercising the implemented Lexicala endpoints

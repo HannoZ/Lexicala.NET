@@ -297,9 +297,49 @@ namespace Lexicala.NET
         {
             using var response = await ExecuteRequestAsync(HttpMethod.Get, querystring, etag, cancellationToken);
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
-            var responseObject = JsonSerializer.Deserialize<SearchResponse>(content, JsonSerializerDefaults.Options);
+            var responseObject = DeserializeSearchResponse(content);
             responseObject.Metadata = GetResponseMetadata(response.Headers);
             return responseObject;
+        }
+
+        private static SearchResponse DeserializeSearchResponse(string content)
+        {
+            var responseObject = JsonSerializer.Deserialize<SearchResponse>(content, JsonSerializerDefaults.Options);
+            if (responseObject?.Results is { Length: > 0 })
+            {
+                return responseObject;
+            }
+
+            try
+            {
+                using var document = JsonDocument.Parse(content);
+                var root = document.RootElement;
+
+                if (root.ValueKind == JsonValueKind.Object &&
+                    !root.TryGetProperty("results", out _) &&
+                    root.TryGetProperty("id", out _))
+                {
+                    var singleResult = JsonSerializer.Deserialize<Result>(content, JsonSerializerDefaults.Options);
+                    if (singleResult?.Id != null)
+                    {
+                        return new SearchResponse
+                        {
+                            NResults = 1,
+                            PageNumber = 1,
+                            ResultsPerPage = 1,
+                            NPages = 1,
+                            AvailableNPages = 1,
+                            Results = [singleResult]
+                        };
+                    }
+                }
+            }
+            catch (JsonException)
+            {
+                // Keep original deserialization result for malformed content.
+            }
+
+            return responseObject ?? new SearchResponse();
         }
 
         private async Task<IEnumerable<Entry>> ExecuteSearchEntries(string querystring, string etag, CancellationToken cancellationToken)
