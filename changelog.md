@@ -3,7 +3,7 @@
 
 3.0.0 - Major update: Migrated from Newtonsoft.Json to System.Text.Json for better performance. Replaced console tester app with ASP.NET Core minimal Web API host with full Swagger/OpenAPI support.  Enhanced error handling and logging. Now targets .NET 10.0 and .NET 8.0
 
-2.0.0 - Now supports .NET 8.0 and .NET standard 2.0. Removed packages Lexicala.NET.Autofac and Lexicala.NET.MicrosoftDependencyInjection. Api calls to old dictapi url were no longer valid, this his been fixed by using the new RapidApi url now.
+2.0.0 - Now supports .NET 8.0 and .NET standard 2.0. Removed packages Lexicala.NET.Autofac and Lexicala.NET.MicrosoftDependencyInjection. Api calls to old dictapi url were no longer valid, this has been fixed by using the new RapidApi url now.
 
 1.7.0 Added support for .NET 7
 
