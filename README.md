@@ -87,8 +87,14 @@ public class TranslationService
         if (searchResponse.Results.Any())
         {
             var entry = await _client.GetEntryAsync(searchResponse.Results.First().Id);
-            var sense = entry.Senses.FirstOrDefault(s => s.Translations?.Any(t => t.Language == toLang) == true);
-            return sense?.Translations?.FirstOrDefault(t => t.Language == toLang)?.Text ?? "Translation not found";
+            // Translations is Dictionary<string, TranslationObject> keyed by 2-letter language code
+            var sense = entry.Senses.FirstOrDefault(s => s.Translations.ContainsKey(toLang));
+            if (sense is not null && sense.Translations.TryGetValue(toLang, out var translationObj))
+            {
+                return translationObj.Translation?.Text
+                    ?? translationObj.Translations?.FirstOrDefault()?.Text
+                    ?? "Translation not found";
+            }
         }
         return "Word not found";
     }
