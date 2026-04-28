@@ -199,6 +199,10 @@ The repository includes a console application that hosts a Web API with Swagger 
 
 4. Test the endpoints directly in the UI.
 
+5. Open the Sense Sprint web app:
+    - HTTP: `http://localhost:5000/`
+    - HTTPS: `https://localhost:5001/`
+
 Available endpoints:
 - `GET /test` - Test API connectivity
 - `GET /languages` - Get available languages
@@ -213,6 +217,45 @@ Available endpoints:
 - `POST /search-advanced` - Advanced search
 - `POST /search-entries-advanced` - Advanced search with full entries
 - `POST /search-rdf-advanced` - Advanced search in RDF/JSON-LD format
+- `POST /game/sense-sprint/rounds` - Create a new Sense Sprint round (word sourced from Fluky Search, language fixed to English)
+- `POST /game/sense-sprint/rounds/{roundId}/clues/next` - Reveal the next clue for the active round
+- `POST /game/sense-sprint/rounds/{roundId}/guess` - Submit a guess for the round
+
+For React frontend development, CORS is enabled for:
+- `http://localhost:3000`
+- `http://localhost:5173`
+
+The repository also includes a hosted React-based Sense Sprint UI served by the ConsoleApp from `wwwroot/`.
+
+## Sense Sprint Frontend (Vite + React)
+
+A dedicated React frontend is available at `source/sense-sprint-web`.
+
+1. Start the backend host:
+   ```bash
+   dotnet run --project source/Lexicala.NET.ConsoleApp/Lexicala.NET.ConsoleApp.csproj
+   ```
+
+2. In another terminal, navigate to the frontend and run the dev server:
+   
+   **PowerShell:**
+   ```powershell
+   cd source/sense-sprint-web
+   npm.cmd run dev
+   ```
+   
+   **Bash / Command Prompt:**
+   ```bash
+   cd source/sense-sprint-web
+   npm run dev
+   ```
+
+3. Open the app at:
+   - `http://localhost:5173`
+
+The Vite dev server proxies `/game/*` calls to `http://localhost:5000`, so the game endpoints work without extra CORS setup.
+
+**Note:** PowerShell requires `npm.cmd` due to execution policies. If you see "npm is not recognized", ensure you're using `npm.cmd run dev` (PowerShell) or open Command Prompt / Git Bash instead.
 
 ## Building from Source
 

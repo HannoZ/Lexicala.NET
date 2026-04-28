@@ -1,8 +1,12 @@
 ﻿using Lexicala.NET;
 using Lexicala.NET.Parsing;
+using Lexicala.NET.ConsoleApp.Game;
+using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,7 +28,18 @@ namespace Lexicala.NET.ConsoleApp
                 .AddUserSecrets<Program>();
 
             builder.Services.RegisterLexicala(builder.Configuration);
+            builder.Services.AddSingleton<ISenseSprintGameService, SenseSprintGameService>();
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("ReactDev", policy =>
+                {
+                    policy
+                        .WithOrigins("http://localhost:3000", "http://localhost:5173")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
             builder.Services.AddSwaggerGen(options =>
             {
                 options.CustomSchemaIds(type => type.FullName);
@@ -33,6 +48,9 @@ namespace Lexicala.NET.ConsoleApp
 
             var app = builder.Build();
 
+            app.UseCors("ReactDev");
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             app.UseSwagger();
             app.UseSwaggerUI();
 
@@ -87,6 +105,56 @@ namespace Lexicala.NET.ConsoleApp
             app.MapGet("/fluky-search", async (ILexicalaClient client, string? source, string? language, string? etag, CancellationToken cancellationToken) =>
                 await client.FlukySearchAsync(source ?? "global", language, etag, cancellationToken))
                 .WithName("FlukySearch");
+
+            app.MapPost("/game/sense-sprint/rounds", async (ISenseSprintGameService gameService, CancellationToken cancellationToken) =>
+                {
+                    try
+                    {
+                        var response = await gameService.CreateRoundAsync(cancellationToken);
+                        return Results.Ok(response);
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        return Results.Problem(ex.Message, statusCode: StatusCodes.Status503ServiceUnavailable);
+                    }
+                })
+                .WithName("SenseSprintCreateRound");
+
+            app.MapPost("/game/sense-sprint/rounds/{roundId:guid}/clues/next", async (ISenseSprintGameService gameService, Guid roundId, CancellationToken cancellationToken) =>
+                {
+                    try
+                    {
+                        var response = await gameService.RevealNextClueAsync(roundId, cancellationToken);
+                        return Results.Ok(response);
+                    }
+                    catch (KeyNotFoundException ex)
+                    {
+                        return Results.NotFound(new ProblemDetails { Title = "Round not found", Detail = ex.Message });
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        return Results.BadRequest(new ProblemDetails { Title = "Round is not active", Detail = ex.Message });
+                    }
+                })
+                .WithName("SenseSprintNextClue");
+
+            app.MapPost("/game/sense-sprint/rounds/{roundId:guid}/guess", async (ISenseSprintGameService gameService, Guid roundId, GuessRequest request, CancellationToken cancellationToken) =>
+                {
+                    try
+                    {
+                        var response = await gameService.SubmitGuessAsync(roundId, request.Guess, cancellationToken);
+                        return Results.Ok(response);
+                    }
+                    catch (KeyNotFoundException ex)
+                    {
+                        return Results.NotFound(new ProblemDetails { Title = "Round not found", Detail = ex.Message });
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        return Results.BadRequest(new ProblemDetails { Title = "Invalid guess", Detail = ex.Message });
+                    }
+                })
+                .WithName("SenseSprintSubmitGuess");
 
             await app.RunAsync();
         }
