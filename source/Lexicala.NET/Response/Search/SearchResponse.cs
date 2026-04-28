@@ -30,7 +30,7 @@ namespace Lexicala.NET.Response.Search
         public int AvailableNPages { get; set; }
 
         [JsonPropertyName("results")] 
-        public Result[] Results { get; set; } = { };
+        public Result[] Results { get; set; } = [];
 
         /// <summary>
         /// Gets or sets response header metadata (ETag and rate limits) for this search result.

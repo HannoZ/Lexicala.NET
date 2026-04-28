@@ -15,7 +15,7 @@ namespace Lexicala.NET.Response.Search
         public HeadwordObject Headword { get; set; }
 
         [JsonPropertyName("senses")] 
-        public Sense[] Senses { get; set; } = { };
+        public Sense[] Senses { get; set; } = [];
     }
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
