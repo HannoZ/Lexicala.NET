@@ -280,7 +280,7 @@ function clearStoredSession(): void {
 }
 
 function getSecondsRemaining(expiresAtUtc: string): number {
-  return Math.max(0, Math.floor((new Date(expiresAtUtc).getTime() - Date.now()) / 1000))
+  return Math.max(0, Math.ceil((new Date(expiresAtUtc).getTime() - Date.now()) / 1000))
 }
 
 function getStreakMultiplier(streak: number): number {
@@ -1248,7 +1248,7 @@ function TranslationQuiz() {
     }
 
     const timer = window.setInterval(() => {
-      const diff = Math.max(0, Math.floor((new Date(round.expiresAtUtc).getTime() - Date.now()) / 1000))
+      const diff = Math.max(0, Math.ceil((new Date(round.expiresAtUtc).getTime() - Date.now()) / 1000))
       setTimeLeft(diff)
     }, 250)
 
@@ -1257,19 +1257,17 @@ function TranslationQuiz() {
 
   // Reveal answer when timer expires
   useEffect(() => {
-    if (timeLeft !== 0 || round?.roundStatus !== 'in-progress' || loading || expiryHandledRef.current) {
+    if (timeLeft !== 0 || round?.roundStatus !== 'in-progress' || expiryHandledRef.current) {
       return
     }
 
     expiryHandledRef.current = true
     const roundId = round.roundId
-    let cancelled = false
 
     setLoading(true)
     api
       .expireQuizRound(roundId)
       .then((result) => {
-        if (cancelled) return
         const data = result.data
         setRound((current) => {
           if (!current) return current
@@ -1284,7 +1282,6 @@ function TranslationQuiz() {
         setStats((current) => ({ ...current, currentStreak: 0 }))
       })
       .catch(() => {
-        if (cancelled) return
         setRound((current) => {
           if (!current) return current
           return { ...current, roundStatus: 'expired' }
@@ -1294,13 +1291,12 @@ function TranslationQuiz() {
         setStats((current) => ({ ...current, currentStreak: 0 }))
       })
       .finally(() => {
-        if (!cancelled) setLoading(false)
+        setLoading(false)
       })
-
-    return () => {
-      cancelled = true
-    }
-  }, [timeLeft, round?.roundStatus, round?.roundId, loading])
+    // expiryHandledRef guards against re-entry; loading is intentionally omitted
+    // from deps to prevent the effect cleanup from cancelling an in-flight API call.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeLeft, round?.roundStatus, round?.roundId])
 
   function getLanguageName(code: string): string {
     return quizLanguageOptions.find((o) => o.code === code)?.name ?? code.toUpperCase()
@@ -1335,7 +1331,7 @@ function TranslationQuiz() {
         correctAnswer: null,
         selectedChoice: null,
       })
-      setTimeLeft(Math.max(0, Math.floor((new Date(created.expiresAtUtc).getTime() - Date.now()) / 1000)))
+      setTimeLeft(Math.max(0, Math.ceil((new Date(created.expiresAtUtc).getTime() - Date.now()) / 1000)))
       refreshDebug(result.rateLimit ?? created.rateLimit)
       setStats((current) => ({ ...current, roundsPlayed: current.roundsPlayed + 1 }))
       setStatusMessage(`Choose the correct ${getLanguageName(created.targetLanguage)} translation.`)
@@ -1366,7 +1362,7 @@ function TranslationQuiz() {
         setStats((current) => ({
           ...current,
           currentScore: current.currentScore + data.awardedPoints,
-          highScore: Math.max(current.highScore, current.currentScore + data.awardedPoints),
+          highScore: Math.max(current.highScore, data.awardedPoints),
           roundsWon: current.roundsWon + 1,
           currentStreak: nextStreak,
           highestStreak: Math.max(current.highestStreak, nextStreak),

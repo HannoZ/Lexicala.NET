@@ -160,7 +160,14 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
 
         if (round.IsCompleted)
         {
-            throw new InvalidOperationException("Round already completed. Start a new round.");
+            return Task.FromResult(new GuessResponse(
+                roundId,
+                false,
+                "completed",
+                0,
+                round.CurrentClueIndex,
+                round.Answer,
+                "Round already completed. Start a new round."));
         }
 
         round.IsCompleted = true;

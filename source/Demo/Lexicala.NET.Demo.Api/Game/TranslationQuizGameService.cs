@@ -17,6 +17,11 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
     private const int MaxGenerationAttempts = 8;
     private const int QuizRoundSeconds = 30;
     private const int ChoiceCount = 4;
+    // Keeps rounds accessible for a short window after the game timer elapses so
+    // that /expire and late /answer calls succeed even when the client sends the
+    // request a few seconds after the server-side deadline.
+    private static readonly TimeSpan RoundCacheGracePeriod = TimeSpan.FromMinutes(5);
+    private static readonly TimeSpan ExpireEarlyTolerance = TimeSpan.FromSeconds(3);
 
     private readonly ILexicalaClient _lexicalaClient;
     private readonly IMemoryCache _cache;
@@ -61,7 +66,7 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
             }
 
             var roundId = Guid.NewGuid();
-            _cache.Set(roundId, generated, generated.ExpiresAtUtc);
+            _cache.Set(roundId, generated, generated.ExpiresAtUtc + RoundCacheGracePeriod);
 
             return new CreateQuizRoundResponse(
                 roundId,
@@ -95,7 +100,7 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
         }
 
         round.IsCompleted = true;
-        _cache.Set(roundId, round, round.ExpiresAtUtc);
+        _cache.Set(roundId, round, round.ExpiresAtUtc + RoundCacheGracePeriod);
 
         var isExpired = DateTimeOffset.UtcNow > round.ExpiresAtUtc;
         if (isExpired)
@@ -146,7 +151,20 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
         }
 
         round.IsCompleted = true;
-        _cache.Set(roundId, round, round.ExpiresAtUtc);
+        _cache.Set(roundId, round, round.ExpiresAtUtc + RoundCacheGracePeriod);
+
+        // Allow a small tolerance for client-side timer rounding; reject if called well before expiry
+        var isNearOrPastExpiry = DateTimeOffset.UtcNow >= round.ExpiresAtUtc - ExpireEarlyTolerance;
+        if (!isNearOrPastExpiry)
+        {
+            return Task.FromResult(new QuizAnswerResponse(
+                roundId,
+                false,
+                "lost",
+                0,
+                round.CorrectAnswer,
+                "Round expiry requested before the timer has elapsed."));
+        }
 
         return Task.FromResult(new QuizAnswerResponse(
             roundId,
