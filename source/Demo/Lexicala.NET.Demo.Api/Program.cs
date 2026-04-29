@@ -179,12 +179,8 @@ namespace Lexicala.NET.Demo.Api
                 {
                     try
                     {
-                        var response = await gameService.CreateRoundAsync(targetLanguage ?? "de", cancellationToken);
+                        var response = await gameService.CreateRoundAsync(targetLanguage, cancellationToken);
                         return Results.Ok(response);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        return Results.BadRequest(new ProblemDetails { Title = "Invalid language", Detail = ex.Message });
                     }
                     catch (InvalidOperationException ex)
                     {

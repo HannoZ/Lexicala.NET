@@ -72,6 +72,7 @@ type LanguagesResponse = {
   resources: {
     global?: {
       source_languages?: string[]
+      target_languages?: string[]
     }
   }
 }
@@ -147,13 +148,6 @@ type QuizStats = {
   roundsWon: number
   currentStreak: number
   highestStreak: number
-}
-
-const SUPPORTED_TARGET_LANGUAGES: Record<string, string> = {
-  de: 'German',
-  nl: 'Dutch',
-  fr: 'French',
-  es: 'Spanish',
 }
 
 const statsStorageKey = 'sense-sprint-stats-v1'
@@ -377,8 +371,11 @@ const api = {
     return parseResponse<GuessResponse>(response)
   },
 
-  async createQuizRound(targetLanguage: string): Promise<ApiResult<CreateQuizRoundResponse>> {
-    const response = await fetch(`/game/translation-quiz/rounds?targetLanguage=${encodeURIComponent(targetLanguage)}`, {
+  async createQuizRound(targetLanguage?: string): Promise<ApiResult<CreateQuizRoundResponse>> {
+    const url = targetLanguage
+      ? `/game/translation-quiz/rounds?targetLanguage=${encodeURIComponent(targetLanguage)}`
+      : '/game/translation-quiz/rounds'
+    const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
     })
@@ -1187,8 +1184,10 @@ function SenseSprint() {
 
 function TranslationQuiz() {
   const [round, setRound] = useState<ActiveQuizRound | null>(null)
-  const [targetLanguage, setTargetLanguage] = useState('de')
-  const [statusMessage, setStatusMessage] = useState('Select a target language and start a round.')
+  const [targetLanguage, setTargetLanguage] = useState('')
+  const [quizLanguageOptions, setQuizLanguageOptions] = useState<LanguageOption[]>([])
+  const [loadingQuizLanguages, setLoadingQuizLanguages] = useState(true)
+  const [statusMessage, setStatusMessage] = useState('Choose a target language (or leave on Random) and start a round.')
   const [feedbackTone, setFeedbackTone] = useState<FeedbackTone>('info')
   const [stats, setStats] = useState<QuizStats>(() => loadQuizStats())
   const [loading, setLoading] = useState(false)
@@ -1203,6 +1202,45 @@ function TranslationQuiz() {
   useEffect(() => {
     saveQuizStats(stats)
   }, [stats])
+
+  // Load available target languages from the API
+  useEffect(() => {
+    let isCancelled = false
+
+    const loadLanguages = async () => {
+      setLoadingQuizLanguages(true)
+      try {
+        const result = await api.languages()
+        if (isCancelled) return
+
+        const languageNames = result.data.language_names ?? {}
+        // Prefer explicit target_languages; fall back to source_languages, exclude 'en'
+        const rawList = [
+          ...new Set(
+            (result.data.resources?.global?.target_languages ?? result.data.resources?.global?.source_languages ?? [])
+              .map((code) => code.trim().toLowerCase())
+              .filter((code) => code.length > 0 && code !== 'en'),
+          ),
+        ].sort()
+        const options = rawList.map((code) => ({ code, name: languageNames[code] ?? code.toUpperCase() }))
+        setQuizLanguageOptions(options)
+      } catch {
+        if (!isCancelled) {
+          setQuizLanguageOptions([
+            { code: 'de', name: 'German' },
+            { code: 'nl', name: 'Dutch' },
+            { code: 'fr', name: 'French' },
+            { code: 'es', name: 'Spanish' },
+          ])
+        }
+      } finally {
+        if (!isCancelled) setLoadingQuizLanguages(false)
+      }
+    }
+
+    void loadLanguages()
+    return () => { isCancelled = true }
+  }, [])
 
   useEffect(() => {
     if (!round || round.roundStatus !== 'in-progress') {
@@ -1264,6 +1302,10 @@ function TranslationQuiz() {
     }
   }, [timeLeft, round?.roundStatus, round?.roundId, loading])
 
+  function getLanguageName(code: string): string {
+    return quizLanguageOptions.find((o) => o.code === code)?.name ?? code.toUpperCase()
+  }
+
   function refreshDebug(rateLimit: RateLimitDebug | null): void {
     setDebugCallCount((current) => current + 1)
     setDebugLastUpdated(new Date().toLocaleTimeString())
@@ -1279,7 +1321,8 @@ function TranslationQuiz() {
     expiryHandledRef.current = false
 
     try {
-      const result = await api.createQuizRound(targetLanguage)
+      // Empty string → server picks a random language
+      const result = await api.createQuizRound(targetLanguage || undefined)
       const created = result.data
       setRound({
         roundId: created.roundId,
@@ -1295,7 +1338,7 @@ function TranslationQuiz() {
       setTimeLeft(Math.max(0, Math.floor((new Date(created.expiresAtUtc).getTime() - Date.now()) / 1000)))
       refreshDebug(result.rateLimit ?? created.rateLimit)
       setStats((current) => ({ ...current, roundsPlayed: current.roundsPlayed + 1 }))
-      setStatusMessage(`Choose the correct ${SUPPORTED_TARGET_LANGUAGES[created.targetLanguage] ?? created.targetLanguage} translation.`)
+      setStatusMessage(`Choose the correct ${getLanguageName(created.targetLanguage)} translation.`)
       setFeedbackTone('info')
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unable to start round.'
@@ -1373,11 +1416,12 @@ function TranslationQuiz() {
           className="quiz-lang-select"
           value={targetLanguage}
           onChange={(e) => setTargetLanguage(e.target.value)}
-          disabled={loading}
+          disabled={loading || loadingQuizLanguages}
         >
-          {Object.entries(SUPPORTED_TARGET_LANGUAGES).map(([code, name]) => (
-            <option key={code} value={code}>
-              {name} ({code})
+          <option value="">Random (any language)</option>
+          {quizLanguageOptions.map((option) => (
+            <option key={option.code} value={option.code}>
+              {option.name} ({option.code})
             </option>
           ))}
         </select>
@@ -1413,7 +1457,7 @@ function TranslationQuiz() {
       <div className="quiz-word-panel">
         {round ? (
           <>
-            <p className="quiz-word-label">What is the {SUPPORTED_TARGET_LANGUAGES[round.targetLanguage] ?? round.targetLanguage} translation of:</p>
+            <p className="quiz-word-label">What is the {getLanguageName(round.targetLanguage)} translation of:</p>
             <p className="quiz-word">{round.sourceWord}</p>
           </>
         ) : (

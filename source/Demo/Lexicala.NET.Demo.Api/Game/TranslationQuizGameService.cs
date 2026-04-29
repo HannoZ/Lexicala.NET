@@ -13,7 +13,7 @@ namespace Lexicala.NET.Demo.Api.Game;
 
 public sealed class TranslationQuizGameService : ITranslationQuizGameService
 {
-    private static readonly string[] SupportedTargetLanguages = ["de", "nl", "fr", "es"];
+    private const string LanguagesCacheKey = "translation-quiz-languages";
     private const int MaxGenerationAttempts = 8;
     private const int QuizRoundSeconds = 30;
     private const int ChoiceCount = 4;
@@ -32,16 +32,28 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
         _logger = logger;
     }
 
-    public async Task<CreateQuizRoundResponse> CreateRoundAsync(string targetLanguage = "de", CancellationToken cancellationToken = default)
+    public async Task<CreateQuizRoundResponse> CreateRoundAsync(string? targetLanguage = null, CancellationToken cancellationToken = default)
     {
-        if (!SupportedTargetLanguages.Contains(targetLanguage, StringComparer.OrdinalIgnoreCase))
+        var availableLanguages = await GetTargetLanguagesAsync(cancellationToken);
+
+        string resolvedLanguage;
+        if (string.IsNullOrWhiteSpace(targetLanguage))
         {
-            throw new ArgumentException($"Target language '{targetLanguage}' is not supported. Supported: {string.Join(", ", SupportedTargetLanguages)}.");
+            if (availableLanguages.Length == 0)
+            {
+                throw new InvalidOperationException("No target languages are available. Try again later.");
+            }
+
+            resolvedLanguage = availableLanguages[Random.Shared.Next(availableLanguages.Length)];
+        }
+        else
+        {
+            resolvedLanguage = targetLanguage.Trim().ToLowerInvariant();
         }
 
         for (var attempt = 1; attempt <= MaxGenerationAttempts; attempt++)
         {
-            var generated = await TryGenerateRoundAsync(targetLanguage, cancellationToken);
+            var generated = await TryGenerateRoundAsync(resolvedLanguage, cancellationToken);
             if (generated is null)
             {
                 _logger.LogDebug("Translation Quiz generation attempt {Attempt} failed quality filters", attempt);
@@ -55,7 +67,7 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
                 roundId,
                 generated.SourceWord,
                 "en",
-                targetLanguage,
+                resolvedLanguage,
                 generated.Choices,
                 generated.ExpiresAtUtc,
                 QuizRoundSeconds,
@@ -143,6 +155,40 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
             0,
             round.CorrectAnswer,
             "Time's up!"));
+    }
+
+    public async Task<string[]> GetTargetLanguagesAsync(CancellationToken cancellationToken)
+    {
+        if (_cache.TryGetValue(LanguagesCacheKey, out string[]? cached) && cached is not null)
+        {
+            return cached;
+        }
+
+        try
+        {
+            var languages = await _lexicalaClient.LanguagesAsync(cancellationToken);
+
+            // Prefer explicit target_languages; fall back to source_languages excluding "en"
+            var targetLanguages = (languages.Resources?.Global?.TargetLanguages is { Length: > 0 } tl ? tl
+                : languages.Resources?.Global?.SourceLanguages ?? [])
+                .Select(l => l.Trim().ToLowerInvariant())
+                .Where(l => l.Length > 0 && l != "en")
+                .Distinct()
+                .OrderBy(l => l)
+                .ToArray();
+
+            if (targetLanguages.Length > 0)
+            {
+                _cache.Set(LanguagesCacheKey, targetLanguages, TimeSpan.FromHours(1));
+            }
+
+            return targetLanguages;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to fetch languages from API; using fallback list");
+            return ["de", "nl", "fr", "es"];
+        }
     }
 
     private async Task<TranslationQuizRoundState?> TryGenerateRoundAsync(string targetLanguage, CancellationToken cancellationToken)
