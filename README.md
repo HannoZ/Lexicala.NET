@@ -203,7 +203,28 @@ The repository includes an ASP.NET Core minimal Web API demo host with Swagger U
    cd source/Demo/Lexicala.NET.Demo.Api
    ```
 
-2. Run the application:
+2. Configure your Lexicala API key. Choose one of the following:
+
+   **Recommended: Use User Secrets**
+
+   ```bash
+   dotnet user-secrets init
+   dotnet user-secrets set "Lexicala:ApiKey" "your-rapidapi-key-here"
+   ```
+
+   **Alternative: Edit appsettings.json**
+
+   Open `appsettings.json` in the demo API folder and add:
+
+   ```json
+   {
+     "Lexicala": {
+       "ApiKey": "your-rapidapi-key-here"
+     }
+   }
+   ```
+
+3. Run the application:
 
    ```bash
    dotnet run
@@ -213,9 +234,7 @@ The repository includes an ASP.NET Core minimal Web API demo host with Swagger U
    - HTTP: `http://localhost:5000/swagger`
    - HTTPS: `https://localhost:5001/swagger`
 
-4. Test the endpoints directly in the UI.
-
-5. To use the Sense Sprint web app, run the dedicated frontend described in the "Sense Sprint Frontend (Vite + React)" section below.
+5. To use the Sense Sprint web app, see the [Sense Sprint documentation](https://github.com/HannoZ/Lexicala.NET/blob/main/source/Demo/sense-sprint-web/README.md) for setup and gameplay details.
 
 Available endpoints:
 
@@ -232,7 +251,7 @@ Available endpoints:
 - `POST /search-advanced` - Advanced search
 - `POST /search-entries-advanced` - Advanced search with full entries
 - `POST /search-rdf-advanced` - Advanced search in RDF/JSON-LD format
-- `POST /game/sense-sprint/rounds` - Create a new Sense Sprint round (word sourced from Fluky Search, language fixed to English)
+- `POST /game/sense-sprint/rounds` - Create a new Sense Sprint round (word sourced from Fluky Search in the selected language)
 - `POST /game/sense-sprint/rounds/{roundId}/clues/next` - Reveal the next clue for the active round
 - `POST /game/sense-sprint/rounds/{roundId}/guess` - Submit a guess for the round
 
@@ -241,54 +260,35 @@ For React frontend development, CORS is enabled for:
 - `http://localhost:3000`
 - `http://localhost:5173`
 
-## Sense Sprint Frontend (Vite + React)
+## Sense Sprint Demo Game
 
-A dedicated React frontend is available at `source/Demo/sense-sprint-web`.
+A dedicated React + Vite frontend for a word guessing game is available at `source/Demo/sense-sprint-web`.
 
-1. Start the backend host:
+1. Start the backend API (see Testing with Swagger UI above)
+
+2. In another terminal, navigate to the frontend:
 
    ```bash
-   dotnet run --project source/Demo/Lexicala.NET.Demo.Api/Lexicala.NET.Demo.Api.csproj
+   cd source/Demo/sense-sprint-web
    ```
 
-2. In another terminal, navigate to the frontend and install dependencies (required once):
-
-    **PowerShell:**
-
-    ```powershell
-    cd source/Demo/sense-sprint-web
-    npm.cmd install
-    ```
-
-    **Bash / Command Prompt:**
-
-    ```bash
-    cd source/Demo/sense-sprint-web
-    npm install
-    ```
-
-3. Start the frontend dev server:
+3. Install dependencies and start the dev server:
 
    **PowerShell:**
-
    ```powershell
-   cd source/Demo/sense-sprint-web
+   npm.cmd install
    npm.cmd run dev
    ```
 
    **Bash / Command Prompt:**
-
    ```bash
-   cd source/Demo/sense-sprint-web
+   npm install
    npm run dev
    ```
 
-4. Open the app at:
-   - `http://localhost:5173`
+4. Open the app at `http://localhost:5173`
 
-The Vite dev server proxies `/game/*` calls to `http://localhost:5000`, so the game endpoints work without extra CORS setup.
-
-**Note:** PowerShell requires `npm.cmd` due to execution policies. If you see "npm is not recognized", ensure you're using `npm.cmd run dev` (PowerShell) or open Command Prompt / Git Bash instead.
+For complete game documentation, features, and tips, see the [Sense Sprint README](https://github.com/HannoZ/Lexicala.NET/blob/main/source/Demo/sense-sprint-web/README.md).
 
 ## Building from Source
 
