@@ -157,19 +157,24 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
     public Task<GuessResponse> GiveUpAsync(Guid roundId, CancellationToken cancellationToken = default)
     {
         var round = GetRequiredRound(roundId);
-        EnsureRoundIsActive(roundId, round);
+
+        if (round.IsCompleted)
+        {
+            throw new InvalidOperationException("Round already completed. Start a new round.");
+        }
 
         round.IsCompleted = true;
         _cache.Set(roundId, round, round.ExpiresAtUtc);
 
+        var isExpired = DateTimeOffset.UtcNow > round.ExpiresAtUtc;
         return Task.FromResult(new GuessResponse(
             roundId,
             false,
-            "lost",
+            isExpired ? "expired" : "lost",
             0,
             round.CurrentClueIndex,
             round.Answer,
-            "Round ended. Better luck next time."));
+            isExpired ? "Time's up! The answer was revealed." : "Round ended. Better luck next time."));
     }
 
     private async Task<SenseSprintRoundState?> TryGenerateRoundAsync(CancellationToken cancellationToken)
