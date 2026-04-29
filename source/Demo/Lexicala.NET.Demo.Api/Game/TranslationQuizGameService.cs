@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Lexicala.NET.Request;
-using Lexicala.NET.Response;
 using Lexicala.NET.Response.Entries;
 using Lexicala.NET.Response.Search;
 using Microsoft.Extensions.Caching.Memory;
@@ -119,6 +118,33 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
             $"Incorrect. The correct translation was: {round.CorrectAnswer}"));
     }
 
+    public Task<QuizAnswerResponse> ExpireRoundAsync(Guid roundId, CancellationToken cancellationToken = default)
+    {
+        var round = GetRequiredRound(roundId);
+
+        if (round.IsCompleted)
+        {
+            return Task.FromResult(new QuizAnswerResponse(
+                roundId,
+                false,
+                "completed",
+                0,
+                round.CorrectAnswer,
+                "Round already completed. Start a new round."));
+        }
+
+        round.IsCompleted = true;
+        _cache.Set(roundId, round, round.ExpiresAtUtc);
+
+        return Task.FromResult(new QuizAnswerResponse(
+            roundId,
+            false,
+            "expired",
+            0,
+            round.CorrectAnswer,
+            "Time's up!"));
+    }
+
     private async Task<TranslationQuizRoundState?> TryGenerateRoundAsync(string targetLanguage, CancellationToken cancellationToken)
     {
         // Get a random English word via FlukySearch
@@ -177,7 +203,7 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
             Choices = choices,
             ExpiresAtUtc = DateTimeOffset.UtcNow.AddSeconds(QuizRoundSeconds),
             IsCompleted = false,
-            RateLimit = BuildRateLimit(entry.Metadata) ?? BuildRateLimit(fluky.Metadata)
+            RateLimit = GameServiceHelpers.BuildRateLimit(entry.Metadata) ?? GameServiceHelpers.BuildRateLimit(fluky.Metadata)
         };
     }
 
@@ -211,22 +237,6 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
         return hw.HeadwordElementArray is { Length: > 0 }
             ? hw.HeadwordElementArray[0].Text
             : hw.Headword?.Text;
-    }
-
-    private static RateLimitDebugResponse? BuildRateLimit(ResponseMetadata? metadata)
-    {
-        var limits = metadata?.RateLimits;
-        if (limits is null)
-        {
-            return null;
-        }
-
-        if (limits.Limit < 0 || limits.LimitRemaining < 0 || limits.Reset < 0)
-        {
-            return null;
-        }
-
-        return new RateLimitDebugResponse(limits.Limit, limits.LimitRemaining, limits.Reset);
     }
 
     private TranslationQuizRoundState GetRequiredRound(Guid roundId)

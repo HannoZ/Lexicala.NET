@@ -9,4 +9,6 @@ public interface ITranslationQuizGameService
     Task<CreateQuizRoundResponse> CreateRoundAsync(string targetLanguage = "de", CancellationToken cancellationToken = default);
 
     Task<QuizAnswerResponse> SubmitAnswerAsync(Guid roundId, string choice, CancellationToken cancellationToken = default);
+
+    Task<QuizAnswerResponse> ExpireRoundAsync(Guid roundId, CancellationToken cancellationToken = default);
 }

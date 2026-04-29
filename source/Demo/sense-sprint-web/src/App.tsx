@@ -160,6 +160,15 @@ const api = {
 
     return parseResponse<QuizAnswerResponse>(response)
   },
+
+  async expireQuizRound(roundId: string): Promise<ApiResult<QuizAnswerResponse>> {
+    const response = await fetch(`/game/translation-quiz/rounds/${roundId}/expire`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    return parseResponse<QuizAnswerResponse>(response)
+  },
 }
 
 function getRateLimitFromHeaders(headers: Headers): RateLimitDebug | null {
@@ -645,7 +654,7 @@ function TranslationQuiz() {
 
     setLoading(true)
     api
-      .submitQuizAnswer(roundId, '__expired__')
+      .expireQuizRound(roundId)
       .then((result) => {
         if (cancelled) return
         const data = result.data
@@ -760,7 +769,7 @@ function TranslationQuiz() {
       refreshDebug(result.rateLimit)
 
       if (data.roundStatus === 'won') {
-        setStatusMessage(`Correct! +${data.awardedPoints} point. The translation is: ${data.correctAnswer}`)
+        setStatusMessage(`Correct! +${data.awardedPoints} ${data.awardedPoints === 1 ? 'point' : 'points'}. The translation is: ${data.correctAnswer}`)
         setFeedbackTone('success')
       } else if (data.roundStatus === 'expired') {
         setStatusMessage(`Time's up! The correct answer was: ${data.correctAnswer}`)

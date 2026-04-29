@@ -211,6 +211,20 @@ namespace Lexicala.NET.Demo.Api
                 })
                 .WithName("TranslationQuizSubmitAnswer");
 
+            app.MapPost("/game/translation-quiz/rounds/{roundId:guid}/expire", async (ITranslationQuizGameService gameService, Guid roundId, CancellationToken cancellationToken) =>
+                {
+                    try
+                    {
+                        var response = await gameService.ExpireRoundAsync(roundId, cancellationToken);
+                        return Results.Ok(response);
+                    }
+                    catch (KeyNotFoundException ex)
+                    {
+                        return Results.NotFound(new ProblemDetails { Title = "Round not found", Detail = ex.Message });
+                    }
+                })
+                .WithName("TranslationQuizExpireRound");
+
             await app.RunAsync();
         }
     }
