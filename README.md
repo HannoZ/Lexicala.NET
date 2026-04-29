@@ -119,8 +119,8 @@ var searchResponse = await lexicalaClient.BasicSearchAsync("hello", "en");
 foreach (var result in searchResponse.Results)
 {
     var headwordText =
-        result.Headword?.Single?.Text
-        ?? result.Headword?.Array?.FirstOrDefault()?.Text
+        result.Headword?.Headword?.Text
+        ?? result.Headword?.HeadwordElementArray?.FirstOrDefault()?.Text
         ?? "(no headword)";
 
     Console.WriteLine($"Found: {headwordText} (ID: {result.Id})");
