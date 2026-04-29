@@ -195,7 +195,7 @@ foreach (var headword in entry.Headwords)
 
 ## Testing with Swagger UI
 
-The repository includes a console application that hosts a Web API with Swagger UI for testing all endpoints.
+The repository includes an ASP.NET Core minimal Web API demo host with Swagger UI for testing all endpoints.
 
 1. Clone the repository and navigate to the demo API:
 
