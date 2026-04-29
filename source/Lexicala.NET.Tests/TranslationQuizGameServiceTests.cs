@@ -89,5 +89,14 @@ namespace Lexicala.NET.Client.Tests
             await Should.ThrowAsync<ArgumentException>(() =>
                 _service.SubmitAnswerAsync(Guid.NewGuid(), string.Empty));
         }
+
+        [TestMethod]
+        public async Task ExpireRoundAsync_RoundNotFound_ThrowsKeyNotFoundException()
+        {
+            var unknownId = Guid.NewGuid();
+
+            await Should.ThrowAsync<KeyNotFoundException>(() =>
+                _service.ExpireRoundAsync(unknownId));
+        }
     }
 }
