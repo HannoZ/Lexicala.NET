@@ -38,6 +38,14 @@
         /// Find multiple sense entries only.
         /// </summary>
         public bool Polysemous { get; set; }
+        /// <summary>
+        /// Search for synonyms.
+        /// </summary>
+        public bool Synonyms { get; set; }
+        /// <summary>
+        /// Search for antonyms.
+        /// </summary>
+        public bool Antonyms { get; set; }
 
         /// <summary>
         /// Specify grammatical gender ( = masculine, feminine, ...).

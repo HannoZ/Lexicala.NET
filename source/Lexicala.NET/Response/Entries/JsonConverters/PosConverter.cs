@@ -1,43 +1,41 @@
-﻿using System;
-using Newtonsoft.Json;
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Entries.JsonConverters
 {
-    internal class PosConverter : JsonConverter
+    internal class PosConverter : JsonConverter<Pos>
     {
-        public override bool CanConvert(Type t) => t == typeof(Pos) || t == typeof(Pos?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        public override Pos Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             switch (reader.TokenType)
             {
-                case JsonToken.String:
-                case JsonToken.Date:
-                    var stringValue = serializer.Deserialize<string>(reader);
+                case JsonTokenType.String:
+                    var stringValue = reader.GetString();
                     return new Pos { PartOfSpeech = stringValue };
-                case JsonToken.StartArray:
-                    var arrayValue = serializer.Deserialize<string[]>(reader);
+                case JsonTokenType.StartArray:
+                    var arrayValue = JsonSerializer.Deserialize<string[]>(ref reader, options);
                     return new Pos { PartOfSpeechArray = arrayValue };
             }
-            throw new Exception("Cannot unmarshal type PartOfSpeech");
+
+            throw new JsonException("Cannot unmarshal type PartOfSpeech");
         }
 
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, Pos value, JsonSerializerOptions options)
         {
-            var value = (Pos)untypedValue;
             if (value.PartOfSpeech != null)
             {
-                serializer.Serialize(writer, value.PartOfSpeech);
+                JsonSerializer.Serialize(writer, value.PartOfSpeech, options);
                 return;
             }
             if (value.PartOfSpeechArray != null)
             {
-                serializer.Serialize(writer, value.PartOfSpeechArray);
+                JsonSerializer.Serialize(writer, value.PartOfSpeechArray, options);
                 return;
             }
-            throw new Exception("Cannot marshal type PartOfSpeech");
-        }
 
-        public static readonly PosConverter Singleton = new PosConverter();
+            throw new JsonException("Cannot marshal type PartOfSpeech");
+        }
     }
 }
+

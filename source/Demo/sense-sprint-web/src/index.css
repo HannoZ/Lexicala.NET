@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg-ink: #0f1720;
+  --bg-sky: #12293f;
+  --bg-sunset: #f7b267;
+  --panel: #fefae0;
+  --panel-strong: #fff5c4;
+  --text: #1f2937;
+  --accent: #ef476f;
+  --muted: #6b7280;
+
+  --sans: 'Chivo', sans-serif;
+  --mono: 'Space Mono', monospace;
+
+  font-family: var(--sans);
+  line-height: 1.4;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  color: var(--text);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(247, 178, 103, 0.35), transparent 38%),
+    radial-gradient(circle at 85% 8%, rgba(6, 214, 160, 0.24), transparent 30%),
+    linear-gradient(130deg, var(--bg-ink), var(--bg-sky));
+}
+
+p {
+  margin: 0;
+}

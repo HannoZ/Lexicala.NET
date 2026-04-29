@@ -1,21 +1,34 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Entries
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Represents a translation value for a target language.
+    /// </summary>
     public class Translation
     {
-        [JsonProperty("text")]
+        /// <summary>
+        /// Gets or sets the translated text.
+        /// </summary>
+        [JsonPropertyName("text")]
         public string Text { get; set; }
-        
-        [JsonProperty("gender")]
+
+        /// <summary>
+        /// Gets or sets grammatical gender for this translation, when available.
+        /// </summary>
+        [JsonPropertyName("gender")]
         public string Gender { get; set; }
-       
-        [JsonProperty("inflections", NullValueHandling = NullValueHandling.Ignore)]
+
+        /// <summary>
+        /// Gets or sets inflections associated with this translation.
+        /// </summary>
+        [JsonPropertyName("inflections")]
         public Inflection[] Inflections { get; set; }
 
-        [JsonProperty("alternative_scripts", NullValueHandling = NullValueHandling.Ignore)]
-        public AlternativeScripts [] AlternativeScripts { get; set; }
+        /// <summary>
+        /// Gets or sets alternative script values for this translation.
+        /// </summary>
+        [JsonPropertyName("alternative_scripts")]
+        public AlternativeScripts[] AlternativeScripts { get; set; }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

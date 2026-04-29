@@ -16,6 +16,9 @@
         /// <summary>
         /// RANDOM HOUSE WEBSTER’S COLLEGE DICTIONARY.
         /// </summary>
-        public const string Random = "random";
-    }
+        public const string Random = "random";       
+        /// <summary>
+        /// MULTIGLOSS MULTILINGUAL DICTIONARY.
+        /// </summary>
+        public const string Multigloss = "multigloss";    }
 }

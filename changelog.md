@@ -1,16 +1,19 @@
-# Change log 
+# Change log
 ## Lexicala.NET
-2.0.0 Now supports .NET 8.0 and .NET standard 2.0. Removed packages Lexicala.NET.Autofac and Lexicala.NET.MicrosoftDependencyInjection. Api calls to old dictapi url were no longer valid, this his been fixed by using the new RapidApi url now. 
+
+3.0.0 - Major update: Migrated from Newtonsoft.Json to System.Text.Json for better performance. Replaced console tester app with ASP.NET Core minimal Web API host with full Swagger/OpenAPI support.  Enhanced error handling and logging. Now targets .NET 10.0 and .NET 8.0
+
+2.0.0 - Now supports .NET 8.0 and .NET standard 2.0. Removed packages Lexicala.NET.Autofac and Lexicala.NET.MicrosoftDependencyInjection. Api calls to old dictapi url were no longer valid, this has been fixed by using the new RapidApi url now.
 
 1.7.0 Added support for .NET 7
 
 1.6.1 Package updates. Now supports .NET 6.0 and .NET standard 2.0
 
-1.6.0.1 - Fixed some issues that could cause null reference exceptions; Added XML documentation for all public members; Updated dependencies. This version is now compatible with .NET 6. 
+1.6.0.1 - Fixed some issues that could cause null reference exceptions; Added XML documentation for all public members; Updated dependencies. This version is now compatible with .NET 6.
 
 1.5 - As an updated to version 1.4, an overload was added to `ILexicalaSearchParser` to allow advanced search parameters. For example searching for 'sin embargo' requires parameter '`analysed=true`' in order to return results
 
-1.4 - Implemented 'composite phrases' parsing, this has now been added to the parsed search result. 
+1.4 - Implemented 'composite phrases' parsing, this has now been added to the parsed search result.
 
 1.3 - Updated to .NET 5 packages
 
@@ -18,9 +21,9 @@
 
 1.1.1. - Fixed a bug in the LexicalaSearchParser that caused the Pos property of a SearchResultEntry to display System.String[] instead of the actual value
 
-1.1 - The DependencyRegistration helper has been moved to a new project/package: Lexicala.NET.MicrosoftDependencyInjection. Also an integration package for Autofac is now available. The `LexicalaConfig` class has been extended with helper methods to setup the LexicalaClient. The Microsoft and Autofac integration packages make use of those helper methods. 
+1.1 - The DependencyRegistration helper has been moved to a new project/package: Lexicala.NET.MicrosoftDependencyInjection. Also an integration package for Autofac is now available. The `LexicalaConfig` class has been extended with helper methods to setup the LexicalaClient. The Microsoft and Autofac integration packages make use of those helper methods.
 
-1.0 - The Client and Parser project have been merged into a single project and Nuget package. 
+1.0 - The Client and Parser project have been merged into a single project and Nuget package.
 - `Lexicala.NET.Client` namespaces are changed to `Lexicala.NET`
 - `Lexicala.NET.Parser` namespaces are changed to `Lexicala.NET.Parsing`
 

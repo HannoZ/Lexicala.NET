@@ -1,42 +1,41 @@
-﻿using System;
-using Newtonsoft.Json;
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Entries.JsonConverters
 {
-    internal class TranslationObjectConverter : JsonConverter
+    internal class TranslationObjectConverter : JsonConverter<TranslationObject>
     {
-        public override bool CanConvert(Type t) => t == typeof(TranslationObject) || t == typeof(TranslationObject?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        public override TranslationObject Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             switch (reader.TokenType)
             {
-                case JsonToken.StartObject:
-                    var objectValue = serializer.Deserialize<Translation>(reader);
+                case JsonTokenType.StartObject:
+                    var objectValue = JsonSerializer.Deserialize<Translation>(ref reader, options);
                     return new TranslationObject { Translation = objectValue };
-                case JsonToken.StartArray:
-                    var arrayValue = serializer.Deserialize<Translation[]>(reader);
+                case JsonTokenType.StartArray:
+                    var arrayValue = JsonSerializer.Deserialize<Translation[]>(ref reader, options);
                     return new TranslationObject { Translations = arrayValue };
             }
-            throw new Exception("Cannot unmarshal type TranslationObject");
+
+            throw new JsonException("Cannot unmarshal type TranslationObject");
         }
 
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, TranslationObject value, JsonSerializerOptions options)
         {
-            var value = (TranslationObject)untypedValue;
             if (value.Translations != null)
             {
-                serializer.Serialize(writer, value.Translations);
+                JsonSerializer.Serialize(writer, value.Translations, options);
                 return;
             }
             if (value.Translation != null)
             {
-                serializer.Serialize(writer, value.Translation);
+                JsonSerializer.Serialize(writer, value.Translation, options);
                 return;
             }
-            throw new Exception("Cannot marshal type TranslationObject");
-        }
 
-        public static readonly TranslationObjectConverter Singleton = new TranslationObjectConverter();
+            throw new JsonException("Cannot marshal type TranslationObject");
+        }
     }
 }
+

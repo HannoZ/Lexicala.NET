@@ -1,29 +1,32 @@
-﻿namespace Lexicala.NET.Response
+namespace Lexicala.NET.Response
 {
     /// <summary>
-    /// Rate limit info. 
+    /// Represents rate limit values returned by Lexicala response headers.
     /// </summary>
     /// <remarks>
-    /// The rate limit info is returned as response headers on each response.
+    /// These values are extracted from response headers by <see cref="LexicalaClient"/>.
+    /// If a header is missing or unparseable, the corresponding value can be <c>-1</c>.
     /// </remarks>
     public class RateLimits
     {
         /// <summary>
-        /// Gets or sets the limit (based on your subscription).
+        /// Gets or sets the total request limit for the active billing window.
         /// </summary>
         /// <remarks>
         /// This is a static value indicating the number of requests the plan you are currently subscribed to allows you to make before incurring overages.
         /// </remarks>
         public int Limit { get; set; }
+
         /// <summary>
-        /// Gets or sets the remaining amount of allowed api calls.
+        /// Gets or sets the remaining number of allowed API calls in the current billing window.
         /// </summary>
         /// <remarks>
         /// The number of requests remaining (from your plan) before you reach the limit of requests your application is allowed to make. When this reaches zero, you will begin experiencing overage charges. This will reset each day or each month, depending on how the API pricing plan is configured. You can view these limits and quotas on the pricing page of the API in the API Hub.
         /// </remarks>
         public int LimitRemaining { get; set; }
+
         /// <summary>
-        /// Gets or sets the reset time of the limit in seconds.
+        /// Gets or sets the number of seconds until the rate limit window resets.
         /// </summary>
         /// <remarks>
         /// <p>Indicates the number of seconds until the quota resets. This number of seconds would at most be as long as either a day or a month, depending on how the plan was configured.</p>
@@ -40,3 +43,4 @@
         public long Reset { get; set; }
     }
 }
+

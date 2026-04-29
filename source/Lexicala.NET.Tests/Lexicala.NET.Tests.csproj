@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -17,8 +17,7 @@
     <None Remove="Resources\ES_DE00008088.json" />
     <None Remove="Resources\ES_DE00010530.json" />
     <None Remove="Resources\ES_DE00019850.json" />
-    <None Remove="Resources\languages.json" />
-    <None Remove="Resources\me.json" />
+    <None Remove="Resources\languages.json" />   
     <None Remove="Resources\NL_DE00006941.json" />
     <None Remove="Resources\PW00012363.json" />
     <None Remove="Resources\RDE00032314_1.json" />
@@ -39,8 +38,7 @@
     <EmbeddedResource Include="Resources\ES_DE00010530.json" />
     <EmbeddedResource Include="Resources\ES_DE00019850.json" />
     <EmbeddedResource Include="Resources\ES_DE00008088.json" />
-    <EmbeddedResource Include="Resources\languages.json" />
-    <EmbeddedResource Include="Resources\me.json" />
+    <EmbeddedResource Include="Resources\languages.json" />   
     <EmbeddedResource Include="Resources\Entry_NL_DE00006941.json" />
     <EmbeddedResource Include="Resources\Entry_PW00012363.json" />
     <EmbeddedResource Include="Resources\Entry_RDE00032314_1.json" />
@@ -55,12 +53,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="Moq.AutoMock" Version="3.5.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.3.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.3.1" />
-    <PackageReference Include="coverlet.collector" Version="6.0.2">
+    <PackageReference Include="MSTest.TestAdapter" Version="4.2.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.2.1" />
+    <PackageReference Include="coverlet.collector" Version="8.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

@@ -1,17 +1,17 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Lexicala.NET.Response.Languages
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Resources
     {
-        [JsonProperty("global")]
+        [JsonPropertyName("global")]
         public Resource Global { get; set; }
 
-        [JsonProperty("password")]
+        [JsonPropertyName("password")]
         public Resource Password { get; set; }
 
-        [JsonProperty("random")]
+        [JsonPropertyName("random")]
         public Resource Random { get; set; }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
