@@ -1,6 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 
+// ─── Shared types ─────────────────────────────────────────────────────────────
+
+type GameMode = 'sense-sprint' | 'translation-quiz'
 type RoundStatus = 'in-progress' | 'won' | 'lost' | 'expired' | 'completed'
 type FeedbackTone = 'info' | 'success' | 'warning' | 'error'
 type CelebrationLevel = 'none' | 'win' | 'major'
@@ -69,6 +72,7 @@ type LanguagesResponse = {
   resources: {
     global?: {
       source_languages?: string[]
+      target_languages?: string[]
     }
   }
 }
@@ -103,8 +107,52 @@ type StoredSession = {
   guess: string
 }
 
+// ─── Translation Quiz types ───────────────────────────────────────────────────
+
+type ActiveQuizRound = {
+  roundId: string
+  sourceWord: string
+  sourceLanguage: string
+  targetLanguage: string
+  choices: string[]
+  expiresAtUtc: string
+  roundStatus: RoundStatus
+  correctAnswer: string | null
+  selectedChoice: string | null
+}
+
+type CreateQuizRoundResponse = {
+  roundId: string
+  sourceWord: string
+  sourceLanguage: string
+  targetLanguage: string
+  choices: string[]
+  expiresAtUtc: string
+  roundSeconds: number
+  rateLimit: RateLimitDebug | null
+}
+
+type QuizAnswerResponse = {
+  roundId: string
+  isCorrect: boolean
+  roundStatus: RoundStatus
+  awardedPoints: number
+  correctAnswer: string
+  message: string | null
+}
+
+type QuizStats = {
+  currentScore: number
+  highScore: number
+  roundsPlayed: number
+  roundsWon: number
+  currentStreak: number
+  highestStreak: number
+}
+
 const statsStorageKey = 'sense-sprint-stats-v1'
 const sessionStorageKey = 'sense-sprint-session-v1'
+const quizStatsStorageKey = 'translation-quiz-stats-v1'
 
 const defaultStats: GameStats = {
   currentScore: 0,
@@ -167,6 +215,34 @@ function isValidStoredRound(value: unknown): value is ActiveRound {
   )
 }
 
+// ─── Translation Quiz stats helpers ──────────────────────────────────────────
+
+const defaultQuizStats: QuizStats = {
+  currentScore: 0,
+  highScore: 0,
+  roundsPlayed: 0,
+  roundsWon: 0,
+  currentStreak: 0,
+  highestStreak: 0,
+}
+
+function loadQuizStats(): QuizStats {
+  if (typeof window === 'undefined') return { ...defaultQuizStats }
+  const raw = window.localStorage.getItem(quizStatsStorageKey)
+  if (!raw) return { ...defaultQuizStats }
+  try {
+    return { ...defaultQuizStats, ...(JSON.parse(raw) as Partial<QuizStats>) }
+  } catch {
+    return { ...defaultQuizStats }
+  }
+}
+
+function saveQuizStats(stats: QuizStats): void {
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(quizStatsStorageKey, JSON.stringify(stats))
+  }
+}
+
 function loadStoredSession(): StoredSession | null {
   if (typeof window === 'undefined') {
     return null
@@ -204,7 +280,7 @@ function clearStoredSession(): void {
 }
 
 function getSecondsRemaining(expiresAtUtc: string): number {
-  return Math.max(0, Math.floor((new Date(expiresAtUtc).getTime() - Date.now()) / 1000))
+  return Math.max(0, Math.ceil((new Date(expiresAtUtc).getTime() - Date.now()) / 1000))
 }
 
 function getStreakMultiplier(streak: number): number {
@@ -294,6 +370,37 @@ const api = {
 
     return parseResponse<GuessResponse>(response)
   },
+
+  async createQuizRound(targetLanguage?: string): Promise<ApiResult<CreateQuizRoundResponse>> {
+    const url = targetLanguage
+      ? `/game/translation-quiz/rounds?targetLanguage=${encodeURIComponent(targetLanguage)}`
+      : '/game/translation-quiz/rounds'
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    return parseResponse<CreateQuizRoundResponse>(response)
+  },
+
+  async submitQuizAnswer(roundId: string, choice: string): Promise<ApiResult<QuizAnswerResponse>> {
+    const response = await fetch(`/game/translation-quiz/rounds/${roundId}/answer`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ choice }),
+    })
+
+    return parseResponse<QuizAnswerResponse>(response)
+  },
+
+  async expireQuizRound(roundId: string): Promise<ApiResult<QuizAnswerResponse>> {
+    const response = await fetch(`/game/translation-quiz/rounds/${roundId}/expire`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    return parseResponse<QuizAnswerResponse>(response)
+  },
 }
 
 function getRateLimitFromHeaders(headers: Headers): RateLimitDebug | null {
@@ -330,7 +437,9 @@ async function parseResponse<T>(response: Response): Promise<ApiResult<T>> {
   }
 }
 
-function App() {
+// ─── SenseSprint component ────────────────────────────────────────────────────
+
+function SenseSprint() {
   const [round, setRound] = useState<ActiveRound | null>(null)
   const [guess, setGuess] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState('en')
@@ -853,24 +962,15 @@ function App() {
   }
 
   return (
-    <main className="page">
-      <header className="header">
-        <span className="badge">Lexicala Game</span>
-        <h1 className="title">Sense Sprint</h1>
-        <p className="subtitle">
-          Guess the hidden English word from lexical clues generated with Fluky Search.
-        </p>
-      </header>
-
-      <section className="panel grid">
-        <details open={statsOpen} onToggle={(e) => setStatsOpen(e.currentTarget.open)} className="stats-collapsible">
-          <summary className="stats-summary">Performance Snapshot</summary>
-          <div className="stats">
-          <article className="kpi">
-            <p className="kpi-label">Total Points</p>
-            <p className="kpi-value">{stats.currentScore}</p>
-          </article>
-          <article className="kpi">
+    <section className="panel grid">
+      <details open={statsOpen} onToggle={(e) => setStatsOpen(e.currentTarget.open)} className="stats-collapsible">
+        <summary className="stats-summary">Performance Snapshot</summary>
+        <div className="stats">
+        <article className="kpi">
+          <p className="kpi-label">Total Points</p>
+          <p className="kpi-value">{stats.currentScore}</p>
+        </article>
+        <article className="kpi">
             <p className="kpi-label">High Score</p>
             <p className="kpi-value">{stats.highScore}</p>
           </article>
@@ -1076,7 +1176,393 @@ function App() {
             </p>
           </div>
         </details>
-      </section>
+    </section>
+  )
+}
+
+// ─── Translation Quiz component ───────────────────────────────────────────────
+
+function TranslationQuiz() {
+  const [round, setRound] = useState<ActiveQuizRound | null>(null)
+  const [targetLanguage, setTargetLanguage] = useState('')
+  const [quizLanguageOptions, setQuizLanguageOptions] = useState<LanguageOption[]>([])
+  const [loadingQuizLanguages, setLoadingQuizLanguages] = useState(true)
+  const [statusMessage, setStatusMessage] = useState('Choose a target language (or leave on Random) and start a round.')
+  const [feedbackTone, setFeedbackTone] = useState<FeedbackTone>('info')
+  const [stats, setStats] = useState<QuizStats>(() => loadQuizStats())
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [timeLeft, setTimeLeft] = useState(0)
+  const [rateLimitDebug, setRateLimitDebug] = useState<RateLimitDebug | null>(null)
+  const [debugCallCount, setDebugCallCount] = useState(0)
+  const [debugLastUpdated, setDebugLastUpdated] = useState('-')
+  const [debugPulseTick, setDebugPulseTick] = useState(0)
+  const expiryHandledRef = useRef(false)
+
+  useEffect(() => {
+    saveQuizStats(stats)
+  }, [stats])
+
+  // Load available target languages from the API
+  useEffect(() => {
+    let isCancelled = false
+
+    const loadLanguages = async () => {
+      setLoadingQuizLanguages(true)
+      try {
+        const result = await api.languages()
+        if (isCancelled) return
+
+        const languageNames = result.data.language_names ?? {}
+        // Prefer explicit target_languages; fall back to source_languages, exclude 'en'
+        const rawList = [
+          ...new Set(
+            (result.data.resources?.global?.target_languages ?? result.data.resources?.global?.source_languages ?? [])
+              .map((code) => code.trim().toLowerCase())
+              .filter((code) => code.length > 0 && code !== 'en'),
+          ),
+        ].sort()
+        const options = rawList.map((code) => ({ code, name: languageNames[code] ?? code.toUpperCase() }))
+        setQuizLanguageOptions(options)
+      } catch {
+        if (!isCancelled) {
+          setQuizLanguageOptions([
+            { code: 'de', name: 'German' },
+            { code: 'nl', name: 'Dutch' },
+            { code: 'fr', name: 'French' },
+            { code: 'es', name: 'Spanish' },
+          ])
+        }
+      } finally {
+        if (!isCancelled) setLoadingQuizLanguages(false)
+      }
+    }
+
+    void loadLanguages()
+    return () => { isCancelled = true }
+  }, [])
+
+  useEffect(() => {
+    if (!round || round.roundStatus !== 'in-progress') {
+      return
+    }
+
+    const timer = window.setInterval(() => {
+      const diff = Math.max(0, Math.ceil((new Date(round.expiresAtUtc).getTime() - Date.now()) / 1000))
+      setTimeLeft(diff)
+    }, 250)
+
+    return () => window.clearInterval(timer)
+  }, [round])
+
+  // Reveal answer when timer expires
+  useEffect(() => {
+    if (timeLeft !== 0 || round?.roundStatus !== 'in-progress' || expiryHandledRef.current) {
+      return
+    }
+
+    expiryHandledRef.current = true
+    const roundId = round.roundId
+
+    setLoading(true)
+    api
+      .expireQuizRound(roundId)
+      .then((result) => {
+        const data = result.data
+        setRound((current) => {
+          if (!current) return current
+          return { ...current, roundStatus: data.roundStatus, correctAnswer: data.correctAnswer }
+        })
+        if (result.rateLimit) setRateLimitDebug(result.rateLimit)
+        setDebugCallCount((n) => n + 1)
+        setDebugLastUpdated(new Date().toLocaleTimeString())
+        setDebugPulseTick((n) => n + 1)
+        setStatusMessage(`Time's up! The correct answer was: ${data.correctAnswer}`)
+        setFeedbackTone('warning')
+        setStats((current) => ({ ...current, currentStreak: 0 }))
+      })
+      .catch(() => {
+        setRound((current) => {
+          if (!current) return current
+          return { ...current, roundStatus: 'expired' }
+        })
+        setStatusMessage("Time's up!")
+        setFeedbackTone('warning')
+        setStats((current) => ({ ...current, currentStreak: 0 }))
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+    // expiryHandledRef guards against re-entry; loading is intentionally omitted
+    // from deps to prevent the effect cleanup from cancelling an in-flight API call.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeLeft, round?.roundStatus, round?.roundId])
+
+  function getLanguageName(code: string): string {
+    return quizLanguageOptions.find((o) => o.code === code)?.name ?? code.toUpperCase()
+  }
+
+  function refreshDebug(rateLimit: RateLimitDebug | null): void {
+    setDebugCallCount((current) => current + 1)
+    setDebugLastUpdated(new Date().toLocaleTimeString())
+    setDebugPulseTick((current) => current + 1)
+    if (rateLimit) {
+      setRateLimitDebug(rateLimit)
+    }
+  }
+
+  async function startRound(): Promise<void> {
+    setLoading(true)
+    setError('')
+    expiryHandledRef.current = false
+
+    try {
+      // Empty string → server picks a random language
+      const result = await api.createQuizRound(targetLanguage || undefined)
+      const created = result.data
+      setRound({
+        roundId: created.roundId,
+        sourceWord: created.sourceWord,
+        sourceLanguage: created.sourceLanguage,
+        targetLanguage: created.targetLanguage,
+        choices: created.choices,
+        expiresAtUtc: created.expiresAtUtc,
+        roundStatus: 'in-progress',
+        correctAnswer: null,
+        selectedChoice: null,
+      })
+      setTimeLeft(Math.max(0, Math.ceil((new Date(created.expiresAtUtc).getTime() - Date.now()) / 1000)))
+      refreshDebug(result.rateLimit ?? created.rateLimit)
+      setStats((current) => ({ ...current, roundsPlayed: current.roundsPlayed + 1 }))
+      setStatusMessage(`Choose the correct ${getLanguageName(created.targetLanguage)} translation.`)
+      setFeedbackTone('info')
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unable to start round.'
+      setError(message)
+      setFeedbackTone('error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function submitChoice(choice: string): Promise<void> {
+    if (!round || round.roundStatus !== 'in-progress' || loading) {
+      return
+    }
+
+    setLoading(true)
+    setError('')
+
+    try {
+      const result = await api.submitQuizAnswer(round.roundId, choice)
+      const data = result.data
+
+      if (data.isCorrect) {
+        const nextStreak = stats.currentStreak + 1
+        setStats((current) => ({
+          ...current,
+          currentScore: current.currentScore + data.awardedPoints,
+          highScore: Math.max(current.highScore, data.awardedPoints),
+          roundsWon: current.roundsWon + 1,
+          currentStreak: nextStreak,
+          highestStreak: Math.max(current.highestStreak, nextStreak),
+        }))
+        setStatusMessage(`Correct! +${data.awardedPoints} ${data.awardedPoints === 1 ? 'point' : 'points'}. The translation is: ${data.correctAnswer}`)
+        setFeedbackTone('success')
+      } else {
+        setStats((current) => ({ ...current, currentStreak: 0 }))
+        if (data.roundStatus === 'expired') {
+          setStatusMessage(`Time's up! The correct answer was: ${data.correctAnswer}`)
+        } else {
+          setStatusMessage(`Incorrect. The correct answer was: ${data.correctAnswer}`)
+        }
+        setFeedbackTone('warning')
+      }
+
+      setRound((current) => {
+        if (!current) return current
+        return {
+          ...current,
+          roundStatus: data.roundStatus,
+          correctAnswer: data.correctAnswer,
+          selectedChoice: choice,
+        }
+      })
+      refreshDebug(result.rateLimit)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unable to submit answer.'
+      setError(message)
+      setFeedbackTone('error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const canAnswer = Boolean(round && round.roundStatus === 'in-progress' && !loading)
+  const usedRequests = rateLimitDebug ? Math.max(0, rateLimitDebug.limit - rateLimitDebug.limitRemaining) : null
+
+  return (
+    <section className="panel grid">
+      <div className="quiz-header">
+        <label className="quiz-lang-label" htmlFor="quiz-target-language">
+          Translate to:
+        </label>
+        <select
+          id="quiz-target-language"
+          className="quiz-lang-select"
+          value={targetLanguage}
+          onChange={(e) => setTargetLanguage(e.target.value)}
+          disabled={loading || loadingQuizLanguages}
+        >
+          <option value="">Random (any language)</option>
+          {quizLanguageOptions.map((option) => (
+            <option key={option.code} value={option.code}>
+              {option.name} ({option.code})
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="stats">
+        <article className="kpi">
+          <p className="kpi-label">Total Points</p>
+          <p className="kpi-value">{stats.currentScore}</p>
+        </article>
+        <article className="kpi">
+          <p className="kpi-label">High Score</p>
+          <p className="kpi-value">{stats.highScore}</p>
+        </article>
+        <article className="kpi">
+          <p className="kpi-label">Win Streak 🔥</p>
+          <p className="kpi-value">{stats.currentStreak}</p>
+        </article>
+        <article className="kpi">
+          <p className="kpi-label">Best Streak</p>
+          <p className="kpi-value">{stats.highestStreak}</p>
+        </article>
+        <article className="kpi">
+          <p className="kpi-label">Rounds</p>
+          <p className="kpi-value">{stats.roundsPlayed}</p>
+        </article>
+        <article className="kpi">
+          <p className="kpi-label">Time Left</p>
+          <p className="kpi-value">{round ? `${timeLeft}s` : '-'}</p>
+        </article>
+      </div>
+
+      <div className="quiz-word-panel">
+        {round ? (
+          <>
+            <p className="quiz-word-label">What is the {getLanguageName(round.targetLanguage)} translation of:</p>
+            <p className="quiz-word">{round.sourceWord}</p>
+          </>
+        ) : (
+          <p className="quiz-word-empty">No active round yet.</p>
+        )}
+      </div>
+
+      <div className="quiz-choices" aria-label="Translation choices">
+        {round?.choices.map((choice) => {
+          const isSelected = round.selectedChoice === choice
+          const isCorrect = round.correctAnswer === choice
+          const isFinished = round.roundStatus !== 'in-progress'
+          let choiceClass = 'button quiz-choice'
+          if (isFinished) {
+            if (isCorrect) choiceClass += ' quiz-choice-correct'
+            else if (isSelected) choiceClass += ' quiz-choice-wrong'
+          }
+          return (
+            <button
+              key={choice}
+              className={choiceClass}
+              onClick={() => void submitChoice(choice)}
+              disabled={!canAnswer}
+            >
+              {choice}
+            </button>
+          )
+        }) ?? <p className="quiz-word-empty">Start a round to see choices.</p>}
+      </div>
+
+      <div className="actions">
+        <button className="button button-ghost" onClick={() => void startRound()} disabled={loading}>
+          {round ? 'New Round' : 'Start Round'}
+        </button>
+      </div>
+
+      <p className={`status status-${feedbackTone} ${round?.roundStatus === 'won' ? 'status-win' : ''}`} role="status" aria-live="polite">
+        <strong>Status:</strong> {statusMessage}
+      </p>
+      {round?.roundStatus === 'won' ? <p className="victory-banner">Correct! Streak: {stats.currentStreak} 🔥</p> : null}
+      {error ? <p className="error">{error}</p> : null}
+
+      <details className={`debug-panel ${debugPulseTick % 2 === 0 ? 'debug-panel-pulse-a' : 'debug-panel-pulse-b'}`}>
+        <summary>Debug Info</summary>
+        <div className="debug-grid">
+          <p>
+            <strong>Round ID:</strong> {round?.roundId ?? '-'}
+          </p>
+          <p>
+            <strong>Round Status:</strong> {round?.roundStatus ?? '-'}
+          </p>
+          <p>
+            <strong>Rate Limit:</strong> {rateLimitDebug ? `${rateLimitDebug.limitRemaining}/${rateLimitDebug.limit} remaining` : 'not available yet'}
+          </p>
+          <p>
+            <strong>Rate Used:</strong> {usedRequests ?? '-'}
+          </p>
+          <p>
+            <strong>Rate Reset (sec):</strong> {rateLimitDebug?.resetSeconds ?? '-'}
+          </p>
+          <p>
+            <strong>API Calls:</strong> {debugCallCount}
+          </p>
+          <p>
+            <strong>Debug Updated:</strong> {debugLastUpdated}
+          </p>
+        </div>
+      </details>
+    </section>
+  )
+}
+
+// ─── App ──────────────────────────────────────────────────────────────────────
+
+function App() {
+  const [gameMode, setGameMode] = useState<GameMode>('sense-sprint')
+
+  return (
+    <main className="page">
+      <header className="header">
+        <span className="badge">Lexicala Game</span>
+        <h1 className="title">{gameMode === 'sense-sprint' ? 'Sense Sprint' : 'Translation Quiz'}</h1>
+        <p className="subtitle">
+          {gameMode === 'sense-sprint'
+            ? 'Guess the hidden word from lexical clues generated with Fluky Search.'
+            : 'Select the correct translation from four options — race against the clock!'}
+        </p>
+      </header>
+
+      <div className="mode-tabs" role="tablist" aria-label="Game mode">
+        <button
+          role="tab"
+          aria-selected={gameMode === 'sense-sprint'}
+          className={`mode-tab ${gameMode === 'sense-sprint' ? 'mode-tab-active' : ''}`}
+          onClick={() => setGameMode('sense-sprint')}
+        >
+          Sense Sprint
+        </button>
+        <button
+          role="tab"
+          aria-selected={gameMode === 'translation-quiz'}
+          className={`mode-tab ${gameMode === 'translation-quiz' ? 'mode-tab-active' : ''}`}
+          onClick={() => setGameMode('translation-quiz')}
+        >
+          Translation Quiz
+        </button>
+      </div>
+
+      {gameMode === 'sense-sprint' ? <SenseSprint /> : <TranslationQuiz />}
     </main>
   )
 }

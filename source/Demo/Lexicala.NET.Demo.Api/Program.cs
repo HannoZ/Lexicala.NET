@@ -29,6 +29,7 @@ namespace Lexicala.NET.Demo.Api
 
             builder.Services.RegisterLexicala(builder.Configuration);
             builder.Services.AddSingleton<ISenseSprintGameService, SenseSprintGameService>();
+            builder.Services.AddSingleton<ITranslationQuizGameService, TranslationQuizGameService>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddCors(options =>
             {
@@ -173,6 +174,52 @@ namespace Lexicala.NET.Demo.Api
                     }
                 })
                 .WithName("SenseSprintGiveUp");
+
+            app.MapPost("/game/translation-quiz/rounds", async (ITranslationQuizGameService gameService, string? targetLanguage, CancellationToken cancellationToken) =>
+                {
+                    try
+                    {
+                        var response = await gameService.CreateRoundAsync(targetLanguage, cancellationToken);
+                        return Results.Ok(response);
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        return Results.Problem(ex.Message, statusCode: StatusCodes.Status503ServiceUnavailable);
+                    }
+                })
+                .WithName("TranslationQuizCreateRound");
+
+            app.MapPost("/game/translation-quiz/rounds/{roundId:guid}/answer", async (ITranslationQuizGameService gameService, Guid roundId, QuizAnswerRequest request, CancellationToken cancellationToken) =>
+                {
+                    try
+                    {
+                        var response = await gameService.SubmitAnswerAsync(roundId, request.Choice, cancellationToken);
+                        return Results.Ok(response);
+                    }
+                    catch (KeyNotFoundException ex)
+                    {
+                        return Results.NotFound(new ProblemDetails { Title = "Round not found", Detail = ex.Message });
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        return Results.BadRequest(new ProblemDetails { Title = "Invalid answer", Detail = ex.Message });
+                    }
+                })
+                .WithName("TranslationQuizSubmitAnswer");
+
+            app.MapPost("/game/translation-quiz/rounds/{roundId:guid}/expire", async (ITranslationQuizGameService gameService, Guid roundId, CancellationToken cancellationToken) =>
+                {
+                    try
+                    {
+                        var response = await gameService.ExpireRoundAsync(roundId, cancellationToken);
+                        return Results.Ok(response);
+                    }
+                    catch (KeyNotFoundException ex)
+                    {
+                        return Results.NotFound(new ProblemDetails { Title = "Round not found", Detail = ex.Message });
+                    }
+                })
+                .WithName("TranslationQuizExpireRound");
 
             await app.RunAsync();
         }

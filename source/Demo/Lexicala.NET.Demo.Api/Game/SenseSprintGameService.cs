@@ -157,19 +157,31 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
     public Task<GuessResponse> GiveUpAsync(Guid roundId, CancellationToken cancellationToken = default)
     {
         var round = GetRequiredRound(roundId);
-        EnsureRoundIsActive(roundId, round);
+
+        if (round.IsCompleted)
+        {
+            return Task.FromResult(new GuessResponse(
+                roundId,
+                false,
+                "completed",
+                0,
+                round.CurrentClueIndex,
+                round.Answer,
+                "Round already completed. Start a new round."));
+        }
 
         round.IsCompleted = true;
         _cache.Set(roundId, round, round.ExpiresAtUtc);
 
+        var isExpired = DateTimeOffset.UtcNow > round.ExpiresAtUtc;
         return Task.FromResult(new GuessResponse(
             roundId,
             false,
-            "lost",
+            isExpired ? "expired" : "lost",
             0,
             round.CurrentClueIndex,
             round.Answer,
-            "Round ended. Better luck next time."));
+            isExpired ? "Time's up! The answer was revealed." : "Round ended. Better luck next time."));
     }
 
     private async Task<SenseSprintRoundState?> TryGenerateRoundAsync(CancellationToken cancellationToken)
@@ -208,24 +220,8 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
             CurrentClueIndex = 0,
             IsCompleted = false,
             ExpiresAtUtc = DateTimeOffset.UtcNow.AddSeconds(RoundSeconds),
-            RateLimit = BuildRateLimit(entry.Metadata) ?? BuildRateLimit(fluky.Metadata)
+            RateLimit = GameServiceHelpers.BuildRateLimit(entry.Metadata) ?? GameServiceHelpers.BuildRateLimit(fluky.Metadata)
         };
-    }
-
-    private static RateLimitDebugResponse? BuildRateLimit(ResponseMetadata? metadata)
-    {
-        var limits = metadata?.RateLimits;
-        if (limits is null)
-        {
-            return null;
-        }
-
-        if (limits.Limit < 0 || limits.LimitRemaining < 0 || limits.Reset < 0)
-        {
-            return null;
-        }
-
-        return new RateLimitDebugResponse(limits.Limit, limits.LimitRemaining, limits.Reset);
     }
 
     private static List<string> BuildClues(Entry entry, Sense sense, string answer)
