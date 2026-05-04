@@ -104,6 +104,7 @@ type GameStats = {
 type StoredSession = {
   round: ActiveRound
   revealedClues: string[]
+  wrongGuesses: string[]
   guess: string
 }
 
@@ -264,6 +265,9 @@ function loadStoredSession(): StoredSession | null {
       revealedClues: Array.isArray(parsed.revealedClues)
         ? parsed.revealedClues.filter((item): item is string => typeof item === 'string')
         : [parsed.round.clue],
+      wrongGuesses: Array.isArray(parsed.wrongGuesses)
+        ? parsed.wrongGuesses.filter((item): item is string => typeof item === 'string')
+        : [],
       guess: typeof parsed.guess === 'string' ? parsed.guess : '',
     }
   } catch {
@@ -327,6 +331,104 @@ function formatAverage(value: number): string {
   return value.toFixed(1)
 }
 
+// ─── Languages Caching (Tier 1: ETag + localStorage) ──────────────────────────
+// Caches the /languages response to eliminate redundant API calls
+// Strategy: Check session cache → localStorage (with ETag) → API fallback
+
+type CachedLanguages = {
+  data: LanguagesResponse
+  etag?: string
+  timestamp: number
+}
+
+let sessionLanguagesCache: CachedLanguages | null = null
+
+async function loadLanguagesWithCaching(): Promise<LanguagesResponse> {
+  // 1️⃣ Check session-level cache (fastest, zero API calls if hit)
+  if (sessionLanguagesCache) {
+    return sessionLanguagesCache.data
+  }
+
+  // 2️⃣ Check localStorage (fast, but may need ETag refresh)
+  let storedCache: CachedLanguages | null = null
+  let headers: HeadersInit = {}
+
+  if (typeof window !== 'undefined') {
+    const stored = window.localStorage.getItem('lexicala-languages-cache-v1')
+    if (stored) {
+      try {
+        storedCache = JSON.parse(stored) as CachedLanguages
+        // If we have ETag from previous fetch, use it for conditional request
+        if (storedCache.etag) {
+          headers['If-None-Match'] = storedCache.etag
+        }
+      } catch {
+        // Invalid cached data, clear it
+        window.localStorage.removeItem('lexicala-languages-cache-v1')
+        window.localStorage.removeItem('lexicala-languages-etag-v1')
+      }
+    }
+  }
+
+  // 3️⃣ Fetch from API (with ETag for conditional request)
+  try {
+    const response = await fetch('/languages', {
+      headers: Object.keys(headers).length > 0 ? headers : undefined,
+    })
+
+    let result: LanguagesResponse
+
+    if (response.status === 304 && storedCache) {
+      // 304 Not Modified: Use cached data, content hasn't changed
+      result = storedCache.data
+    } else if (response.ok) {
+      // 200 OK: Fresh response
+      result = (await response.json()) as LanguagesResponse
+
+      // Extract ETag for next request
+      const etag = response.headers.get('ETag')
+      const cacheData: CachedLanguages = {
+        data: result,
+        etag: etag ?? undefined,
+        timestamp: Date.now(),
+      }
+
+      // Store in session cache
+      sessionLanguagesCache = cacheData
+
+      // Store in localStorage for cross-session persistence
+      if (typeof window !== 'undefined') {
+        try {
+          window.localStorage.setItem('lexicala-languages-cache-v1', JSON.stringify(cacheData))
+        } catch (e) {
+          // localStorage may be full or disabled, just skip persistence
+          console.warn('Failed to cache languages to localStorage:', e)
+        }
+      }
+    } else {
+      // Unexpected status code; if we have cached data, use it
+      if (storedCache) {
+        result = storedCache.data
+      } else {
+        throw new Error(`HTTP ${response.status}`)
+      }
+    }
+
+    // Cache in session
+    sessionLanguagesCache = { data: result, etag: storedCache?.etag, timestamp: Date.now() }
+    return result
+  } catch (error) {
+    // API failed; try to use cached version as fallback
+    if (storedCache) {
+      sessionLanguagesCache = storedCache
+      return storedCache.data
+    }
+
+    // No fallback available, throw error
+    throw error
+  }
+}
+
 const api = {
   async createRound(language: string): Promise<ApiResult<CreateRoundResponse>> {
     const response = await fetch('/game/sense-sprint/rounds', {
@@ -339,8 +441,11 @@ const api = {
   },
 
   async languages(): Promise<ApiResult<LanguagesResponse>> {
-    const response = await fetch('/languages')
-    return parseResponse<LanguagesResponse>(response)
+    const data = await loadLanguagesWithCaching()
+    return {
+      data,
+      rateLimit: null, // Cached requests don't consume rate limit quota
+    }
   },
 
   async nextClue(roundId: string): Promise<ApiResult<NextClueResponse>> {
@@ -453,10 +558,12 @@ function SenseSprint() {
   const [timeLeft, setTimeLeft] = useState(0)
   const [rateLimitDebug, setRateLimitDebug] = useState<RateLimitDebug | null>(null)
   const [revealedClues, setRevealedClues] = useState<string[]>([])
+  const [wrongGuesses, setWrongGuesses] = useState<string[]>([])
   const [debugCallCount, setDebugCallCount] = useState(0)
   const [debugLastUpdated, setDebugLastUpdated] = useState('-')
   const [debugPulseTick, setDebugPulseTick] = useState(0)
   const [hasHydratedSession, setHasHydratedSession] = useState(false)
+  const expiryHandledRef = useRef(false)
   const [statsOpen, setStatsOpen] = useState(() => {
     if (typeof window === 'undefined') return true
     return window.innerWidth >= 760
@@ -476,6 +583,10 @@ function SenseSprint() {
     const loadLanguages = async () => {
       setLoadingLanguages(true)
       try {
+        // Calls loadLanguagesWithCaching():
+        // 1️⃣ Session cache (no API call if loaded in this session)
+        // 2️⃣ localStorage with ETag (304 Not Modified if unchanged)
+        // 3️⃣ API fallback, saves ETag for next time
         const languageResult = await api.languages()
         if (isCancelled) {
           return
@@ -555,6 +666,7 @@ function SenseSprint() {
     setRound(storedSession.round)
     setSelectedLanguage(storedSession.round.language)
     setRevealedClues(storedSession.revealedClues.length > 0 ? storedSession.revealedClues : [storedSession.round.clue])
+    setWrongGuesses(storedSession.wrongGuesses)
     setGuess(storedSession.guess)
     setTimeLeft(getSecondsRemaining(storedSession.round.expiresAtUtc))
     setStatusMessage('Round restored. Pick up where you left off.')
@@ -574,11 +686,16 @@ function SenseSprint() {
     const sessionPayload: StoredSession = {
       round,
       revealedClues: revealedClues.length > 0 ? revealedClues : [round.clue],
+      wrongGuesses,
       guess,
     }
 
     window.localStorage.setItem(sessionStorageKey, JSON.stringify(sessionPayload))
-  }, [round, revealedClues, guess])
+  }, [round, revealedClues, wrongGuesses, guess])
+
+  useEffect(() => {
+    expiryHandledRef.current = false
+  }, [round?.roundId, round?.roundStatus])
 
   useEffect(() => {
     if (!round || round.roundStatus !== 'in-progress') {
@@ -592,6 +709,12 @@ function SenseSprint() {
       if (diff > 0) {
         return
       }
+
+      if (expiryHandledRef.current) {
+        return
+      }
+
+      expiryHandledRef.current = true
 
       // Auto-giveup when timer expires to reveal answer
       setLoading(true)
@@ -629,10 +752,42 @@ function SenseSprint() {
           clearStoredSession()
         })
         .catch((err) => {
-          console.error('Failed to process round expiry:', err)
-          setError(String(err))
-          setStatusMessage('Round ended but could not retrieve answer.')
-          setFeedbackTone('error')
+          const message = err instanceof Error ? err.message : String(err)
+          const isRoundAlreadyGone = message.toLowerCase().includes('round not found')
+
+          const streakBeforeExpiry = stats.currentStreak
+
+          setRound((current) => {
+            if (!current || current.roundId !== round.roundId) {
+              return current
+            }
+
+            return {
+              ...current,
+              roundStatus: 'expired',
+            }
+          })
+
+          setStats((current) => ({
+            ...current,
+            roundsExpired: current.roundsExpired + 1,
+            currentStreak: 0,
+            lastPlayedAt: new Date().toISOString(),
+          }))
+
+          setStatusMessage(
+            streakBeforeExpiry > 0
+              ? `Time expired. ${streakBeforeExpiry}-win streak reset.`
+              : 'Time expired. Start a new round.',
+          )
+          setFeedbackTone('warning')
+          setGuess('')
+          setError('')
+          clearStoredSession()
+
+          if (!isRoundAlreadyGone) {
+            console.warn('Timer expiry fallback: round marked expired without give-up payload.', err)
+          }
         })
         .finally(() => {
           setLoading(false)
@@ -664,7 +819,8 @@ function SenseSprint() {
   const averageRequestedCluesPerRound = stats.roundsStarted > 0 ? stats.cluesRequested / stats.roundsStarted : 0
   const nextCelebrationAt = Math.floor(stats.currentStreak / 5) * 5 + 5
   const winsUntilCelebration = nextCelebrationAt - stats.currentStreak
-  const selectedLanguageName = languageOptions.find((option) => option.code === selectedLanguage)?.name ?? selectedLanguage.toUpperCase()
+  const safeSelectedLanguage = typeof selectedLanguage === 'string' && selectedLanguage.trim().length > 0 ? selectedLanguage : 'en'
+  const selectedLanguageName = languageOptions.find((option) => option.code === safeSelectedLanguage)?.name ?? safeSelectedLanguage.toUpperCase()
 
   function refreshDebug(rateLimit: RateLimitDebug | null): void {
     setDebugCallCount((current) => current + 1)
@@ -678,6 +834,7 @@ function SenseSprint() {
   async function startRound(): Promise<void> {
     const isAbandoningActiveRound = round?.roundStatus === 'in-progress'
     const streakBeforeReset = stats.currentStreak
+    const requestedLanguage = safeSelectedLanguage
 
     if (isAbandoningActiveRound) {
       const confirmed = window.confirm(
@@ -695,11 +852,12 @@ function SenseSprint() {
     setError('')
 
     try {
-      const createdResult = await api.createRound(selectedLanguage)
+      const createdResult = await api.createRound(requestedLanguage)
       const created = createdResult.data
+      const resolvedLanguage = typeof created.language === 'string' && created.language.trim().length > 0 ? created.language : requestedLanguage
       setRound({
         roundId: created.roundId,
-        language: created.language,
+        language: resolvedLanguage,
         clue: created.clue,
         clueIndex: created.clueIndex,
         maxClues: created.maxClues,
@@ -708,8 +866,9 @@ function SenseSprint() {
         roundStatus: 'in-progress',
         answer: null,
       })
-      setSelectedLanguage(created.language)
+      setSelectedLanguage(resolvedLanguage)
       setRevealedClues([created.clue])
+      setWrongGuesses([])
       setTimeLeft(getSecondsRemaining(created.expiresAtUtc))
       refreshDebug(createdResult.rateLimit ?? created.rateLimit)
 
@@ -797,12 +956,13 @@ function SenseSprint() {
     }
 
     const streakBeforeGuess = stats.currentStreak
+    const submittedGuess = guess.trim()
 
     setLoading(true)
     setError('')
 
     try {
-      const guessResult = await api.guess(round.roundId, guess)
+      const guessResult = await api.guess(round.roundId, submittedGuess)
       const result = guessResult.data
 
       setStats((current) => ({
@@ -833,6 +993,8 @@ function SenseSprint() {
             : `Correct! +${awardedPoints} points. Streak is now ${nextStreak}.`,
         )
         setFeedbackTone('success')
+      } else {
+        setWrongGuesses((current) => [...current, submittedGuess])
       }
 
       setRound((current) => {
@@ -1037,6 +1199,20 @@ function SenseSprint() {
             ) : (
               <p className="clue-history-empty">No clues revealed yet.</p>
             )}
+
+            <p className="clue-history-label wrong-history-label">Wrong answers entered</p>
+            {wrongGuesses.length > 0 ? (
+              <ol className="clue-history-list wrong-history-list">
+                {wrongGuesses.map((wrongGuess, index) => (
+                  <li key={`${index}-${wrongGuess}`}>
+                    <span className="clue-history-index wrong-history-index">#{index + 1}</span>
+                    <span>{wrongGuess}</span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className="clue-history-empty">No wrong answers yet.</p>
+            )}
           </div>
         </div>
 
@@ -1210,6 +1386,10 @@ function TranslationQuiz() {
     const loadLanguages = async () => {
       setLoadingQuizLanguages(true)
       try {
+        // Calls loadLanguagesWithCaching():
+        // 1️⃣ Session cache (no API call if loaded in this session)
+        // 2️⃣ localStorage with ETag (304 Not Modified if unchanged)
+        // 3️⃣ API fallback, saves ETag for next time
         const result = await api.languages()
         if (isCancelled) return
 

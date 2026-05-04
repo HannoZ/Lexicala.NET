@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lexicala.NET.Demo.Api.Game;
+using Lexicala.NET.Response.Entries;
+using Lexicala.NET.Response.Search;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -72,6 +74,43 @@ namespace Lexicala.NET.Client.Tests
 
             await Should.ThrowAsync<KeyNotFoundException>(() =>
                 _service.GiveUpAsync(unknownId));
+        }
+
+        [TestMethod]
+        public async Task CreateRoundAsync_ReturnsRequestedLanguage()
+        {
+            _clientMock
+                .Setup(c => c.FlukySearchAsync(It.IsAny<string>(), "de", It.IsAny<string>(), It.IsAny<System.Threading.CancellationToken>()))
+                .ReturnsAsync(new SearchResponse
+                {
+                    Results = [new Result { Id = "DE0001" }]
+                });
+
+            _clientMock
+                .Setup(c => c.GetEntryAsync("DE0001", null, It.IsAny<System.Threading.CancellationToken>()))
+                .ReturnsAsync(new Entry
+                {
+                    Id = "DE0001",
+                    HeadwordObject = new Lexicala.NET.Response.Entries.Headword
+                    {
+                        Text = "Haus",
+                        Pos = "noun"
+                    },
+                    Senses =
+                    [
+                        new Lexicala.NET.Response.Entries.Sense
+                        {
+                            Definition = "a building for human habitation",
+                            Synonyms = ["Gebaude"],
+                            Examples = [new Example { Text = "Das Haus ist gross." }]
+                        }
+                    ]
+                });
+
+            var round = await _service.CreateRoundAsync("de");
+
+            round.Language.ShouldBe("de");
+            round.Clue.ShouldNotBeNullOrWhiteSpace();
         }
     }
 }

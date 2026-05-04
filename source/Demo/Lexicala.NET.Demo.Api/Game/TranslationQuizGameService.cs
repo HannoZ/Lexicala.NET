@@ -14,14 +14,17 @@ namespace Lexicala.NET.Demo.Api.Game;
 public sealed class TranslationQuizGameService : ITranslationQuizGameService
 {
     private const string LanguagesCacheKey = "translation-quiz-languages";
+    private const string DistractorPoolCacheKeyPrefix = "translation-quiz-distractors:";
     private const int MaxGenerationAttempts = 8;
     private const int QuizRoundSeconds = 30;
     private const int ChoiceCount = 4;
+    private const int MaxDistractorPoolSize = 24;
     // Keeps rounds accessible for a short window after the game timer elapses so
     // that /expire and late /answer calls succeed even when the client sends the
     // request a few seconds after the server-side deadline.
     private static readonly TimeSpan RoundCacheGracePeriod = TimeSpan.FromMinutes(5);
     private static readonly TimeSpan ExpireEarlyTolerance = TimeSpan.FromSeconds(3);
+    private static readonly TimeSpan DistractorPoolCacheDuration = TimeSpan.FromMinutes(30);
 
     private readonly ILexicalaClient _lexicalaClient;
     private readonly IMemoryCache _cache;
@@ -234,20 +237,7 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
             return null;
         }
 
-        // Fetch distractors in parallel: FlukySearch in the target language, use headwords as wrong choices
-        var distractorTasks = Enumerable.Range(0, ChoiceCount - 1)
-            .Select(_ => _lexicalaClient.FlukySearchAsync(Sources.Global, targetLanguage, cancellationToken: cancellationToken))
-            .ToArray();
-
-        var distractorResults = await Task.WhenAll(distractorTasks);
-
-        var distractors = distractorResults
-            .Select(r => GetFirstHeadword(r.Results.FirstOrDefault()))
-            .OfType<string>()
-            .Where(d => !string.IsNullOrWhiteSpace(d) && !string.Equals(d, correctTranslation, StringComparison.OrdinalIgnoreCase))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .Take(ChoiceCount - 1)
-            .ToList();
+        var distractors = await GetDistractorsAsync(targetLanguage, correctTranslation, cancellationToken);
 
         if (distractors.Count < ChoiceCount - 1)
         {
@@ -270,6 +260,82 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
             RateLimit = GameServiceHelpers.BuildRateLimit(entry.Metadata) ?? GameServiceHelpers.BuildRateLimit(fluky.Metadata)
         };
     }
+
+    private async Task<List<string>> GetDistractorsAsync(string targetLanguage, string correctTranslation, CancellationToken cancellationToken)
+    {
+        var poolKey = GetDistractorPoolCacheKey(targetLanguage);
+        var pool = _cache.TryGetValue(poolKey, out string[]? cachedPool) && cachedPool is not null
+            ? cachedPool
+                .Where(candidate => !string.IsNullOrWhiteSpace(candidate))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Take(MaxDistractorPoolSize)
+                .ToList()
+            : [];
+
+        var distractors = PickDistractors(pool, correctTranslation);
+        if (distractors.Count == ChoiceCount - 1)
+        {
+            return distractors;
+        }
+
+        var missingCount = ChoiceCount - 1 - distractors.Count;
+        var fetchedDistractors = await FetchDistractorCandidatesAsync(targetLanguage, missingCount, cancellationToken);
+        if (fetchedDistractors.Count > 0)
+        {
+            foreach (var candidate in fetchedDistractors)
+            {
+                if (pool.Contains(candidate, StringComparer.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                pool.Add(candidate);
+            }
+
+            var persistedPool = pool
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Take(MaxDistractorPoolSize)
+                .ToArray();
+
+            _cache.Set(poolKey, persistedPool, DistractorPoolCacheDuration);
+            distractors = PickDistractors(persistedPool, correctTranslation);
+        }
+
+        return distractors;
+    }
+
+    private async Task<List<string>> FetchDistractorCandidatesAsync(string targetLanguage, int count, CancellationToken cancellationToken)
+    {
+        if (count <= 0)
+        {
+            return [];
+        }
+
+        var distractorTasks = Enumerable.Range(0, count)
+            .Select(_ => _lexicalaClient.FlukySearchAsync(Sources.Global, targetLanguage, cancellationToken: cancellationToken))
+            .ToArray();
+
+        var distractorResults = await Task.WhenAll(distractorTasks);
+
+        return distractorResults
+            .Select(r => GetFirstHeadword(r.Results.FirstOrDefault()))
+            .OfType<string>()
+            .Where(candidate => !string.IsNullOrWhiteSpace(candidate))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private static List<string> PickDistractors(IEnumerable<string> pool, string correctTranslation)
+    {
+        return pool
+            .Where(candidate => !string.Equals(candidate, correctTranslation, StringComparison.OrdinalIgnoreCase))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(_ => Random.Shared.Next())
+            .Take(ChoiceCount - 1)
+            .ToList();
+    }
+
+    private static string GetDistractorPoolCacheKey(string targetLanguage) => $"{DistractorPoolCacheKeyPrefix}{targetLanguage}";
 
     private static string? FindTranslation(Lexicala.NET.Response.Entries.Entry entry, string targetLanguage)
     {

@@ -6,7 +6,7 @@ namespace Lexicala.NET.Demo.Api.Game;
 
 public interface ISenseSprintGameService
 {
-    Task<CreateRoundResponse> CreateRoundAsync(CancellationToken cancellationToken = default);
+    Task<CreateRoundResponse> CreateRoundAsync(string? language = null, CancellationToken cancellationToken = default);
 
     Task<NextClueResponse> RevealNextClueAsync(Guid roundId, CancellationToken cancellationToken = default);
 

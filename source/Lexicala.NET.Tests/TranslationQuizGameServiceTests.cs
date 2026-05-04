@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Lexicala.NET.Demo.Api.Game;
+using Lexicala.NET.Response.Entries;
 using Lexicala.NET.Response.Languages;
+using Lexicala.NET.Response.Search;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -160,6 +162,53 @@ namespace Lexicala.NET.Client.Tests
         }
 
         [TestMethod]
+        public async Task CreateRoundAsync_ReusesCachedDistractors_ForSameTargetLanguage()
+        {
+            _clientMock
+                .Setup(c => c.GetEntryAsync("EN0001", null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Entry
+                {
+                    Id = "EN0001",
+                    HeadwordObject = new Lexicala.NET.Response.Entries.Headword { Text = "house" },
+                    Senses =
+                    [
+                        new Lexicala.NET.Response.Entries.Sense
+                        {
+                            Translations = new Dictionary<string, TranslationObject>
+                            {
+                                ["de"] = new Translation { Text = "Haus" }
+                            }
+                        }
+                    ]
+                });
+
+            _clientMock
+                .Setup(c => c.FlukySearchAsync(It.IsAny<string>(), "en", It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new SearchResponse
+                {
+                    Results = [new Result { Id = "EN0001" }]
+                });
+
+            var distractorResponses = new Queue<SearchResponse>(
+            [
+                BuildDistractorResponse("Auto"),
+                BuildDistractorResponse("Baum"),
+                BuildDistractorResponse("Buch")
+            ]);
+
+            _clientMock
+                .Setup(c => c.FlukySearchAsync(It.IsAny<string>(), "de", It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => distractorResponses.Dequeue());
+
+            var firstRound = await _service.CreateRoundAsync("de", CancellationToken.None);
+            var secondRound = await _service.CreateRoundAsync("de", CancellationToken.None);
+
+            firstRound.Choices.Length.ShouldBe(4);
+            secondRound.Choices.Length.ShouldBe(4);
+            _clientMock.Verify(c => c.FlukySearchAsync(It.IsAny<string>(), "de", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Exactly(3));
+        }
+
+        [TestMethod]
         public async Task SubmitAnswerAsync_RoundNotFound_ThrowsKeyNotFoundException()
         {
             var unknownId = Guid.NewGuid();
@@ -189,6 +238,21 @@ namespace Lexicala.NET.Client.Tests
 
             await Should.ThrowAsync<KeyNotFoundException>(() =>
                 _service.ExpireRoundAsync(unknownId));
+        }
+
+        private static SearchResponse BuildDistractorResponse(string headword)
+        {
+            return new SearchResponse
+            {
+                Results =
+                [
+                    new Result
+                    {
+                        Id = headword,
+                        Headword = new Lexicala.NET.Response.Search.Headword { Text = headword }
+                    }
+                ]
+            };
         }
     }
 }

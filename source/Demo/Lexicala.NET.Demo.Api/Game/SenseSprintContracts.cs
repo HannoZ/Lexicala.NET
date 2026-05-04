@@ -4,6 +4,7 @@ namespace Lexicala.NET.Demo.Api.Game;
 
 public sealed record CreateRoundResponse(
     Guid RoundId,
+    string Language,
     DateTimeOffset ExpiresAtUtc,
     int ClueIndex,
     string Clue,
@@ -12,6 +13,8 @@ public sealed record CreateRoundResponse(
     int RoundSeconds,
     RateLimitDebugResponse? RateLimit
 );
+
+public sealed record CreateRoundRequest(string? Language);
 
 public sealed record RateLimitDebugResponse(
     int Limit,

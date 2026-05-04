@@ -107,11 +107,11 @@ namespace Lexicala.NET.Demo.Api
                 await client.FlukySearchAsync(source ?? "global", language, etag, cancellationToken))
                 .WithName("FlukySearch");
 
-            app.MapPost("/game/sense-sprint/rounds", async (ISenseSprintGameService gameService, CancellationToken cancellationToken) =>
+            app.MapPost("/game/sense-sprint/rounds", async (ISenseSprintGameService gameService, CreateRoundRequest? request, CancellationToken cancellationToken) =>
                 {
                     try
                     {
-                        var response = await gameService.CreateRoundAsync(cancellationToken);
+                        var response = await gameService.CreateRoundAsync(request?.Language, cancellationToken);
                         return Results.Ok(response);
                     }
                     catch (InvalidOperationException ex)

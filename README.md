@@ -264,6 +264,8 @@ For React frontend development, CORS is enabled for:
 
 A dedicated React + Vite frontend for a word guessing game is available at `source/Demo/sense-sprint-web`.
 
+The web demo currently includes two game modes. `Sense Sprint` is the lower-cost mode. `Translation Quiz` makes more Lexicala calls per round because it has to source a word, fetch its entry, and build multiple distractor choices. If you are using a free evaluation subscription, use Translation Quiz sparingly.
+
 1. Start the backend API (see Testing with Swagger UI above)
 
 2. In another terminal, navigate to the frontend:

@@ -1,6 +1,10 @@
 # Sense Sprint
 
-A lexical word guessing game powered by the Lexicala API. Guess the hidden English word from progressively revealed linguistic clues using Fluky Search.
+A lexical word guessing game powered by the Lexicala API. The web demo includes `Sense Sprint` and `Translation Quiz`.
+
+## Token Usage Warning
+
+`Translation Quiz` consumes substantially more Lexicala API quota than `Sense Sprint`. Each round needs a random source word, a full entry lookup, and several extra lookups to assemble plausible wrong answers. If you are testing with a free evaluation subscription, use game mode 2 with care.
 
 ## Features
 
