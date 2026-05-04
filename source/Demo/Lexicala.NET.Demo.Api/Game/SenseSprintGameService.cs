@@ -17,6 +17,7 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
     private static readonly int[] ScoresByClueIndex = [4, 3, 2, 1];
     private const int MaxGenerationAttempts = 8;
     private const int RoundSeconds = 60;
+    private const string DefaultLanguage = "en";
 
     private readonly ILexicalaClient _lexicalaClient;
     private readonly IMemoryCache _cache;
@@ -32,11 +33,13 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
         _logger = logger;
     }
 
-    public async Task<CreateRoundResponse> CreateRoundAsync(CancellationToken cancellationToken = default)
+    public async Task<CreateRoundResponse> CreateRoundAsync(string? language = null, CancellationToken cancellationToken = default)
     {
+        var normalizedLanguage = NormalizeLanguage(language);
+
         for (var attempt = 1; attempt <= MaxGenerationAttempts; attempt++)
         {
-            var generated = await TryGenerateRoundAsync(cancellationToken);
+            var generated = await TryGenerateRoundAsync(normalizedLanguage, cancellationToken);
             if (generated is null)
             {
                 _logger.LogDebug("Sense Sprint generation attempt {Attempt} failed quality filters", attempt);
@@ -48,6 +51,7 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
 
             return new CreateRoundResponse(
                 roundId,
+                generated.Language,
                 generated.ExpiresAtUtc,
                 generated.CurrentClueIndex,
                 generated.Clues[generated.CurrentClueIndex],
@@ -157,24 +161,36 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
     public Task<GuessResponse> GiveUpAsync(Guid roundId, CancellationToken cancellationToken = default)
     {
         var round = GetRequiredRound(roundId);
-        EnsureRoundIsActive(roundId, round);
+
+        if (round.IsCompleted)
+        {
+            return Task.FromResult(new GuessResponse(
+                roundId,
+                false,
+                "completed",
+                0,
+                round.CurrentClueIndex,
+                round.Answer,
+                "Round already completed. Start a new round."));
+        }
 
         round.IsCompleted = true;
         _cache.Set(roundId, round, round.ExpiresAtUtc);
 
+        var isExpired = DateTimeOffset.UtcNow > round.ExpiresAtUtc;
         return Task.FromResult(new GuessResponse(
             roundId,
             false,
-            "lost",
+            isExpired ? "expired" : "lost",
             0,
             round.CurrentClueIndex,
             round.Answer,
-            "Round ended. Better luck next time."));
+            isExpired ? "Time's up! The answer was revealed." : "Round ended. Better luck next time."));
     }
 
-    private async Task<SenseSprintRoundState?> TryGenerateRoundAsync(CancellationToken cancellationToken)
+    private async Task<SenseSprintRoundState?> TryGenerateRoundAsync(string language, CancellationToken cancellationToken)
     {
-        var fluky = await _lexicalaClient.FlukySearchAsync(Sources.Global, "en", cancellationToken: cancellationToken);
+        var fluky = await _lexicalaClient.FlukySearchAsync(Sources.Global, language, cancellationToken: cancellationToken);
         var candidate = fluky.Results.FirstOrDefault();
         if (candidate?.Id is null)
         {
@@ -204,28 +220,19 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
         return new SenseSprintRoundState
         {
             Answer = answer,
+            Language = language,
             Clues = clues,
             CurrentClueIndex = 0,
             IsCompleted = false,
             ExpiresAtUtc = DateTimeOffset.UtcNow.AddSeconds(RoundSeconds),
-            RateLimit = BuildRateLimit(entry.Metadata) ?? BuildRateLimit(fluky.Metadata)
+            RateLimit = GameServiceHelpers.BuildRateLimit(entry.Metadata) ?? GameServiceHelpers.BuildRateLimit(fluky.Metadata)
         };
     }
 
-    private static RateLimitDebugResponse? BuildRateLimit(ResponseMetadata? metadata)
+    private static string NormalizeLanguage(string? language)
     {
-        var limits = metadata?.RateLimits;
-        if (limits is null)
-        {
-            return null;
-        }
-
-        if (limits.Limit < 0 || limits.LimitRemaining < 0 || limits.Reset < 0)
-        {
-            return null;
-        }
-
-        return new RateLimitDebugResponse(limits.Limit, limits.LimitRemaining, limits.Reset);
+        var normalized = language?.Trim().ToLowerInvariant();
+        return string.IsNullOrWhiteSpace(normalized) ? DefaultLanguage : normalized;
     }
 
     private static List<string> BuildClues(Entry entry, Sense sense, string answer)
@@ -336,6 +343,8 @@ public sealed class SenseSprintGameService : ISenseSprintGameService
     private sealed class SenseSprintRoundState
     {
         public required string Answer { get; init; }
+
+        public required string Language { get; init; }
 
         public required List<string> Clues { get; init; }
 

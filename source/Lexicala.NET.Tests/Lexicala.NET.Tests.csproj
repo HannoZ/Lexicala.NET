@@ -67,6 +67,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lexicala.NET\Lexicala.NET.csproj" />
+    <ProjectReference Include="..\Demo\Lexicala.NET.Demo.Api\Lexicala.NET.Demo.Api.csproj" />
   </ItemGroup>
 
 </Project>
