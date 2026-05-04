@@ -379,8 +379,9 @@ async function loadLanguagesWithCaching(): Promise<LanguagesResponse> {
     let result: LanguagesResponse
 
     if (response.status === 304 && storedCache) {
-      // 304 Not Modified: Use cached data, content hasn't changed
+      // 304 Not Modified: Use cached data, content hasn't changed; preserve existing ETag
       result = storedCache.data
+      sessionLanguagesCache = storedCache
     } else if (response.ok) {
       // 200 OK: Fresh response
       result = (await response.json()) as LanguagesResponse
@@ -393,7 +394,7 @@ async function loadLanguagesWithCaching(): Promise<LanguagesResponse> {
         timestamp: Date.now(),
       }
 
-      // Store in session cache
+      // Store in session cache with the freshly fetched ETag
       sessionLanguagesCache = cacheData
 
       // Store in localStorage for cross-session persistence
@@ -409,13 +410,12 @@ async function loadLanguagesWithCaching(): Promise<LanguagesResponse> {
       // Unexpected status code; if we have cached data, use it
       if (storedCache) {
         result = storedCache.data
+        sessionLanguagesCache = storedCache
       } else {
         throw new Error(`HTTP ${response.status}`)
       }
     }
 
-    // Cache in session
-    sessionLanguagesCache = { data: result, etag: storedCache?.etag, timestamp: Date.now() }
     return result
   } catch (error) {
     // API failed; try to use cached version as fallback
