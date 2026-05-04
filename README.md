@@ -251,9 +251,6 @@ Available endpoints:
 - `POST /search-advanced` - Advanced search
 - `POST /search-entries-advanced` - Advanced search with full entries
 - `POST /search-rdf-advanced` - Advanced search in RDF/JSON-LD format
-- `POST /game/sense-sprint/rounds` - Create a new Sense Sprint round (word sourced from Fluky Search in the selected language)
-- `POST /game/sense-sprint/rounds/{roundId}/clues/next` - Reveal the next clue for the active round
-- `POST /game/sense-sprint/rounds/{roundId}/guess` - Submit a guess for the round
 
 For React frontend development, CORS is enabled for:
 
@@ -290,7 +287,7 @@ The web demo currently includes two game modes. `Sense Sprint` is the lower-cost
 
 4. Open the app at `http://localhost:5173`
 
-For complete game documentation, features, and tips, see the [Sense Sprint README](https://github.com/HannoZ/Lexicala.NET/blob/main/source/Demo/sense-sprint-web/README.md).
+For complete game documentation, features, and tips, see the [Sense Sprint README](https://github.com/HannoZ/Lexicala.NET/blob/master/source/Demo/sense-sprint-web/README.md).
 
 ## Building from Source
 
