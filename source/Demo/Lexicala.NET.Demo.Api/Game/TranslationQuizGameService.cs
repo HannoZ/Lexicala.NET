@@ -153,9 +153,6 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
                 "Round already completed. Start a new round."));
         }
 
-        round.IsCompleted = true;
-        _cache.Set(roundId, round, round.ExpiresAtUtc + RoundCacheGracePeriod);
-
         // Allow a small tolerance for client-side timer rounding; reject if called well before expiry
         var isNearOrPastExpiry = DateTimeOffset.UtcNow >= round.ExpiresAtUtc - ExpireEarlyTolerance;
         if (!isNearOrPastExpiry)
@@ -168,6 +165,9 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
                 round.CorrectAnswer,
                 "Round expiry requested before the timer has elapsed."));
         }
+
+        round.IsCompleted = true;
+        _cache.Set(roundId, round, round.ExpiresAtUtc + RoundCacheGracePeriod);
 
         return Task.FromResult(new QuizAnswerResponse(
             roundId,
