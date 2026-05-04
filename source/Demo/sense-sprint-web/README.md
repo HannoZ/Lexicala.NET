@@ -35,7 +35,7 @@ A lexical word guessing game powered by the Lexicala API. The web demo includes 
    dotnet run --project ../Lexicala.NET.Demo.Api/Lexicala.NET.Demo.Api.csproj
    ```
 
-2. **Node.js**: Ensure Node.js is installed (v16+)
+2. **Node.js**: Ensure Node.js is installed (v18+)
 
 ### Development
 
