@@ -24,10 +24,26 @@ namespace Lexicala.NET.Client.Tests
                 BaseAddress = new Uri("http://www.tempuri.org")
             };
 
+            Client = CreateClient(httpClient, useLiteEndpoints: false);
+        }
+
+        protected void InitializeClient(bool useLiteEndpoints)
+        {
+            var httpClient = new HttpClient(HandlerMock.Object)
+            {
+                BaseAddress = new Uri("http://www.tempuri.org")
+            };
+
+            Client = CreateClient(httpClient, useLiteEndpoints);
+        }
+
+        private static LexicalaClient CreateClient(HttpClient httpClient, bool useLiteEndpoints)
+        {
             var mocker = new AutoMocker(MockBehavior.Loose);
             mocker.Use(httpClient);
+            mocker.Use(new LexicalaConfig("test-key", useLiteEndpoints));
 
-            Client = mocker.CreateInstance<LexicalaClient>();
+            return mocker.CreateInstance<LexicalaClient>();
         }
 
         protected static HttpResponseMessage SetupOkResponseMessage(string content)

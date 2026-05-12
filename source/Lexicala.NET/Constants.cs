@@ -21,9 +21,19 @@ namespace Lexicala.NET
         internal const string SearchEntries = "/search-entries";
 
         /// <summary>
+        /// Search entries lite endpoint path.
+        /// </summary>
+        internal const string SearchEntriesLite = "/search-entries-lite";
+
+        /// <summary>
         /// Entries endpoint path.
         /// </summary>
         internal const string Entries = "/entries";
+
+        /// <summary>
+        /// Entries lite endpoint path.
+        /// </summary>
+        internal const string EntriesLite = "/entries-lite";
 
         /// <summary>
         /// Search RDF endpoint path.
@@ -44,6 +54,11 @@ namespace Lexicala.NET
         /// Senses endpoint path.
         /// </summary>
         internal const string Senses = "/senses";
+
+        /// <summary>
+        /// Senses lite endpoint path.
+        /// </summary>
+        internal const string SensesLite = "/senses-lite";
 
         /// <summary>
         /// Search definitions endpoint path.
