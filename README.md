@@ -263,7 +263,7 @@ Available endpoints:
 - `POST /search-entries-advanced` - Advanced search with full entries
 - `POST /search-rdf-advanced` - Advanced search in RDF/JSON-LD format
 
-Missing endpoints compared to Rapid Api test console / Lexicala MCP tooling  - these endpoints are NOT listed in the official documentation!:
+Missing endpoints compared to Rapid Api test console / Lexicala MCP tooling - these endpoints are NOT listed in the official documentation!:
 
 - `GET /abbreviations`
 - `GET /reverse-abbreviations`

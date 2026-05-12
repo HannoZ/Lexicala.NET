@@ -87,7 +87,7 @@ namespace Lexicala.NET.Demo.Api
                 .WithSummary("Search by headword")
                 .WithDescription("Search for entries in the Global source by headword. Returns partial lexical information. Use /entry/{entryId} to retrieve a full entry.");
             
-            app.MapGet("/-search-with-parser", async (ILexicalaSearchParser parser, string text, string language) =>
+            app.MapGet("/search-with-parser", async (ILexicalaSearchParser parser, string text, string language) =>
                 await parser.SearchAsync(text, language))
                 .WithName("ParserSearch")
                 .WithTags("Search")
