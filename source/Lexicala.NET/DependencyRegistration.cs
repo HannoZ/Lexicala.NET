@@ -57,6 +57,7 @@ namespace Lexicala.NET
                 })
                 .AddPolicyHandler(CreateRetryPolicy());
 
+            services.AddSingleton(config);
             services.AddMemoryCache();
             services.AddSingleton<ILexicalaSearchParser, LexicalaSearchParser>();
 

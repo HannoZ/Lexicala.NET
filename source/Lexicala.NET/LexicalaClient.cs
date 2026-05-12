@@ -22,6 +22,11 @@ namespace Lexicala.NET
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<LexicalaClient> _logger;
+        private readonly bool _useLiteEndpoints;
+
+        private string SearchEntriesEndpoint => _useLiteEndpoints ? Constants.SearchEntriesLite : Constants.SearchEntries;
+        private string EntriesEndpoint => _useLiteEndpoints ? Constants.EntriesLite : Constants.Entries;
+        private string SensesEndpoint => _useLiteEndpoints ? Constants.SensesLite : Constants.Senses;
 
         /// <summary>
         /// Creates a new instance of the <see cref="LexicalaClient"/> class.
@@ -30,9 +35,18 @@ namespace Lexicala.NET
         /// This class should not be instantiated directly, but registered as implementation of the <see cref="ILexicalaClient"/> interface in the dependency injection framework.
         /// </remarks>
         public LexicalaClient(HttpClient httpClient, ILogger<LexicalaClient> logger)
+            : this(httpClient, logger, new LexicalaConfig())
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="LexicalaClient"/> class with endpoint mode configuration.
+        /// </summary>
+        public LexicalaClient(HttpClient httpClient, ILogger<LexicalaClient> logger, LexicalaConfig config)
         {
             _httpClient = httpClient;
             _logger = logger;
+            _useLiteEndpoints = config?.UseLiteEndpoints ?? false;
         }
 
         /// <inheritdoc />
@@ -81,7 +95,7 @@ namespace Lexicala.NET
             ValidateLanguageCode(sourceLanguage, nameof(sourceLanguage));
             ArgumentException.ThrowIfNullOrEmpty(searchText, nameof(searchText));
 
-            var queryString = $"{Constants.SearchEntries}?language={Uri.EscapeDataString(sourceLanguage)}&text={Uri.EscapeDataString(searchText)}";
+            var queryString = $"{SearchEntriesEndpoint}?language={Uri.EscapeDataString(sourceLanguage)}&text={Uri.EscapeDataString(searchText)}";
             return ExecuteSearchEntries(queryString, etag, cancellationToken);
         }
 
@@ -90,7 +104,7 @@ namespace Lexicala.NET
         {
             ValidateSearchRequest(searchRequest);
 
-            var queryString = BuildAdvancedSearchQueryString(Constants.SearchEntries, searchRequest);
+            var queryString = BuildAdvancedSearchQueryString(SearchEntriesEndpoint, searchRequest);
             return ExecuteSearchEntries(queryString, searchRequest.ETag, cancellationToken);
         }
 
@@ -124,7 +138,7 @@ namespace Lexicala.NET
         public async Task<Entry> GetEntryAsync(string entryId, string etag = null, CancellationToken cancellationToken = default)
         {
             ArgumentException.ThrowIfNullOrEmpty(entryId, nameof(entryId));
-            using var response = await ExecuteRequestAsync(HttpMethod.Get, $"{Constants.Entries}/{Uri.EscapeDataString(entryId)}", etag, cancellationToken);
+            using var response = await ExecuteRequestAsync(HttpMethod.Get, $"{EntriesEndpoint}/{Uri.EscapeDataString(entryId)}", etag, cancellationToken);
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
             var responseObject = JsonSerializer.Deserialize<Entry>(content, JsonSerializerDefaults.Options);
             responseObject.Metadata = GetResponseMetadata(response.Headers);
@@ -135,7 +149,7 @@ namespace Lexicala.NET
         public async Task<Sense> GetSenseAsync(string senseId, string etag = null, CancellationToken cancellationToken = default)
         {
             ArgumentException.ThrowIfNullOrEmpty(senseId, nameof(senseId));
-            using var response = await ExecuteRequestAsync(HttpMethod.Get, $"{Constants.Senses}/{Uri.EscapeDataString(senseId)}", etag, cancellationToken);
+            using var response = await ExecuteRequestAsync(HttpMethod.Get, $"{SensesEndpoint}/{Uri.EscapeDataString(senseId)}", etag, cancellationToken);
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
             var responseObject = JsonSerializer.Deserialize<Sense>(content, JsonSerializerDefaults.Options);
             responseObject.Metadata = GetResponseMetadata(response.Headers);

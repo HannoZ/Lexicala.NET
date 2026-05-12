@@ -44,9 +44,23 @@ namespace Lexicala.NET
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="LexicalaConfig"/> class, with specified API key and endpoint mode.
+        /// </summary>
+        public LexicalaConfig(string apiKey, bool useLiteEndpoints)
+        {
+            ApiKey = apiKey;
+            UseLiteEndpoints = useLiteEndpoints;
+        }
+
+        /// <summary>
         /// The RapidAPI Api key.
         /// </summary>
         public string ApiKey { get; set; }
+
+        /// <summary>
+        /// When true, uses the Lite API variants for entry and sense retrieval/search where available.
+        /// </summary>
+        public bool UseLiteEndpoints { get; set; }
 
     }
 }

@@ -38,10 +38,17 @@ Add the Lexicala configuration to your `appsettings.json`:
 ```json
 {
   "Lexicala": {
-    "ApiKey": "your-rapidapi-key-here"
+        "ApiKey": "your-rapidapi-key-here",
+        "UseLiteEndpoints": false
   }
 }
 ```
+
+Set `UseLiteEndpoints` to `true` if your subscription only allows Lite entry/sense endpoints. When enabled, the client automatically uses:
+
+- `/search-entries-lite` instead of `/search-entries`
+- `/entries-lite/{entryId}` instead of `/entries/{entryId}`
+- `/senses-lite/{senseId}` instead of `/senses/{senseId}`
 
 ### 3. Register Services
 
@@ -219,7 +226,8 @@ The repository includes an ASP.NET Core minimal Web API demo host with Swagger U
    ```json
    {
      "Lexicala": {
-       "ApiKey": "your-rapidapi-key-here"
+             "ApiKey": "your-rapidapi-key-here",
+             "UseLiteEndpoints": false
      }
    }
    ```
@@ -242,15 +250,36 @@ Available endpoints:
 - `GET /languages` - Get available languages
 - `GET /search` - Basic search
 - `GET /search-entries` - Basic search with full entries
+- `GET /search-entries-lite` - Basic search with full entries in lite mode (`UseLiteEndpoints=true`)
 - `GET /search-rdf` - Basic search in RDF/JSON-LD format
 - `GET /search-definitions` - Free-text search in definitions
 - `GET /fluky-search` - Random word discovery
-- `GET /entry/{entryId}` - Get dictionary entry by ID
-- `GET /sense/{senseId}` - Get sense by ID
+- `GET /entries/{entryId}` - Get dictionary entry by ID
+- `GET /entries-lite/{entryId}` - Get dictionary entry by ID in lite mode (`UseLiteEndpoints=true`)
+- `GET /senses/{senseId}` - Get sense by ID
+- `GET /senses-lite/{senseId}` - Get sense by ID in lite mode (`UseLiteEndpoints=true`)
 - `GET /rdf/{entryId}` - Get entry in RDF/JSON-LD format
 - `POST /search-advanced` - Advanced search
 - `POST /search-entries-advanced` - Advanced search with full entries
 - `POST /search-rdf-advanced` - Advanced search in RDF/JSON-LD format
+
+Missing endpoints compared to Rapid Api test console / Lexicala MCP tooling - these endpoints are NOT listed in the official documentation!:
+
+- `GET /abbreviations`
+- `GET /reverse-abbreviations`
+- `GET /antonyms`
+- `GET /definitions`
+- `GET /examples`
+- `GET /frequencies`
+- `GET /phrases`
+- `GET /pronunciations`
+- `GET /registers`
+- `GET /semantic-categories`
+- `GET /subcategorizations`
+- `GET /synonyms`
+- `GET /translate-to`
+- `GET /translate-example`
+- `GET /translate-phrase`
 
 For React frontend development, CORS is enabled for:
 
@@ -312,6 +341,16 @@ For complete game documentation, features, and tips, see the [Sense Sprint READM
 
 The legacy `source/Lexicala.NET.sln` file has been removed in favor of `source/Lexicala.NET.slnx`.
 
+## Supported API Values
+
+The library validates and supports these commonly used API parameter values:
+
+- `source` values for `FlukySearchAsync` and `AdvancedSearch*Async`: `global`, `password`, `random`, `multigloss`
+- Language parameters (`language`, `sourceLanguage`) must be 2-character language codes
+- `AdvancedSearchRequest.Page` accepts values up to `1000`
+- `AdvancedSearchRequest.Sample` accepts values up to `1000`
+- `AdvancedSearchRequest.PageLength` accepts values between `1` and `30` (default `10`)
+
 ## API Coverage
 
 The library implements the following Lexicala API endpoints:
@@ -325,6 +364,7 @@ The library implements the following Lexicala API endpoints:
 
 - `/search` - Basic search
 - `/search-entries` - Search with full entries
+- `/search-entries-lite` - Search with full entries in lite mode (`UseLiteEndpoints=true`)
 - `/search-rdf` - Search in RDF/JSON-LD format
 - `/search-definitions` - Free-text search in definitions
 - `/fluky-search` - Random word discovery
@@ -338,7 +378,9 @@ The library implements the following Lexicala API endpoints:
 **Entry and Sense Endpoints**
 
 - `/entries` - Get entry details by ID
+- `/entries-lite` - Get entry details by ID in lite mode (`UseLiteEndpoints=true`)
 - `/senses` - Get sense details by ID
+- `/senses-lite` - Get sense details by ID in lite mode (`UseLiteEndpoints=true`)
 - `/rdf` - Get entry in RDF/JSON-LD format
 
 For complete API documentation, visit the [Lexicala API Documentation](https://api.lexicala.com/documentation).
