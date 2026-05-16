@@ -7,6 +7,7 @@ using Lexicala.NET.Response.Entries;
 using Lexicala.NET.Response.Languages;
 using Lexicala.NET.Response.Search;
 using Lexicala.NET.Response.Test;
+using Lexicala.NET.Response.Translation;
 
 namespace Lexicala.NET
 {
@@ -148,5 +149,63 @@ namespace Lexicala.NET
         /// <exception cref="ArgumentException">Thrown when source is invalid, or when language is provided but is not a valid 2-character language code.</exception>
         /// <exception cref="LexicalaApiException">Thrown when the API returns an error.</exception>
         Task<SearchResponse> FlukySearchAsync(string source = "global", string language = null, string etag = null, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Retrieves an entry by ID and enriches missing lite translation fields using translation endpoints.
+        /// </summary>
+        /// <param name="entryId">The entry ID.</param>
+        /// <param name="targetLanguage">The 2-character target language code for enrichment.</param>
+        /// <param name="etag">Optional.</param>
+        /// <param name="cancellationToken">Token used to cancel the request.</param>
+        /// <exception cref="ArgumentException">Thrown when entryId is null/empty or targetLanguage is invalid.</exception>
+        /// <exception cref="LexicalaApiException">Thrown when the API returns an error.</exception>
+        Task<Entry> GetEntryWithTranslationsAsync(string entryId, string targetLanguage, string etag = null, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Retrieves a sense by ID and enriches missing lite translation fields using translation endpoints.
+        /// </summary>
+        /// <param name="senseId">The sense ID.</param>
+        /// <param name="targetLanguage">The 2-character target language code for enrichment.</param>
+        /// <param name="etag">Optional.</param>
+        /// <param name="cancellationToken">Token used to cancel the request.</param>
+        /// <exception cref="ArgumentException">Thrown when senseId is null/empty or targetLanguage is invalid.</exception>
+        /// <exception cref="LexicalaApiException">Thrown when the API returns an error.</exception>
+        Task<Response.Entries.Sense> GetSenseWithTranslationsAsync(string senseId, string targetLanguage, string etag = null, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Translates a lexical unit into a target language.
+        /// </summary>
+        /// <param name="text">The source text to translate.</param>
+        /// <param name="targetLanguage">The 2-character target language code.</param>
+        /// <param name="language">Optional 2-character source language code.</param>
+        /// <param name="etag">Optional.</param>
+        /// <param name="cancellationToken">Token used to cancel the request.</param>
+        /// <exception cref="ArgumentException">Thrown when text is null/empty, targetLanguage is invalid, or language is provided but invalid.</exception>
+        /// <exception cref="LexicalaApiException">Thrown when the API returns an error.</exception>
+        Task<TranslationResponse> TranslateToAsync(string text, string targetLanguage, string language = null, string etag = null, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Translates an example sentence into a target language.
+        /// </summary>
+        /// <param name="text">The source sentence to translate.</param>
+        /// <param name="targetLanguage">The 2-character target language code.</param>
+        /// <param name="language">Optional 2-character source language code.</param>
+        /// <param name="etag">Optional.</param>
+        /// <param name="cancellationToken">Token used to cancel the request.</param>
+        /// <exception cref="ArgumentException">Thrown when text is null/empty, targetLanguage is invalid, or language is provided but invalid.</exception>
+        /// <exception cref="LexicalaApiException">Thrown when the API returns an error.</exception>
+        Task<TranslationResponse> TranslateExampleAsync(string text, string targetLanguage, string language = null, string etag = null, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Translates a phrase into a target language.
+        /// </summary>
+        /// <param name="text">The source phrase to translate.</param>
+        /// <param name="targetLanguage">The 2-character target language code.</param>
+        /// <param name="language">Optional 2-character source language code.</param>
+        /// <param name="etag">Optional.</param>
+        /// <param name="cancellationToken">Token used to cancel the request.</param>
+        /// <exception cref="ArgumentException">Thrown when text is null/empty, targetLanguage is invalid, or language is provided but invalid.</exception>
+        /// <exception cref="LexicalaApiException">Thrown when the API returns an error.</exception>
+        Task<TranslationResponse> TranslatePhraseAsync(string text, string targetLanguage, string language = null, string etag = null, CancellationToken cancellationToken = default);
     }
 }

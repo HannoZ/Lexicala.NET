@@ -26,6 +26,9 @@
     <None Remove="Resources\Search_Es_Hacer.json" />
     <None Remove="Resources\Search_es_sin embargo.json" />
     <None Remove="Resources\Test_Api_is_up.json" />
+    <None Remove="Resources\fluky-search.json" />
+    <None Remove="Resources\Search_en_summer_definitions.json" />
+    <None Remove="Resources\Entry-lite_ES_DE55546d93a4a9.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,7 +52,10 @@
     <EmbeddedResource Include="Resources\Search_es_sin embargo.json" />
     <EmbeddedResource Include="Resources\Search_es_blando_analyzed.json" />
     <EmbeddedResource Include="Resources\Search_Es_Hacer.json" />
+    <EmbeddedResource Include="Resources\Search_en_summer_definitions.json" />
     <EmbeddedResource Include="Resources\Test_Api_is_up.json" />
+    <EmbeddedResource Include="Resources\fluky-search.json" />
+    <EmbeddedResource Include="Resources\Entry-lite_ES_DE55546d93a4a9.json" />
   </ItemGroup>
 
   <ItemGroup>

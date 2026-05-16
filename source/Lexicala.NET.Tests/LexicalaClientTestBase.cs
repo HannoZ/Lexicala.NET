@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Moq;
 using Moq.AutoMock;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -37,12 +38,12 @@ namespace Lexicala.NET.Client.Tests
             Client = CreateClient(httpClient, useLiteEndpoints);
         }
 
-        private static LexicalaClient CreateClient(HttpClient httpClient, bool useLiteEndpoints)
+        protected LexicalaClient CreateClient(HttpClient httpClient, bool useLiteEndpoints)
         {
             var mocker = new AutoMocker(MockBehavior.Loose);
             mocker.Use(httpClient);
-            mocker.Use(new LexicalaConfig("test-key", useLiteEndpoints));
-
+            var config = new LexicalaConfig("test-key", useLiteEndpoints);
+            mocker.Use<IOptions<LexicalaConfig>>(Options.Create(config));
             return mocker.CreateInstance<LexicalaClient>();
         }
 

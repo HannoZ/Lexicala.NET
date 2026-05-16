@@ -119,6 +119,52 @@ namespace Lexicala.NET.Client.Tests
         }
 
         [TestMethod]
+        public async Task LexicalaClient_CanDeserializeEntryLite_ES_DE55546d93a4a9()
+        {
+            InitializeClient(useLiteEndpoints: true);
+            await AssertEntryDeserializes("Entry-lite_ES_DE55546d93a4a9.json", "ES_DE55546d93a4a9");
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_EntryLite_ParsesHeadword()
+        {
+            InitializeClient(useLiteEndpoints: true);
+            string response = await LoadResponseFromFile("Entry-lite_ES_DE55546d93a4a9.json");
+
+            HandlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var result = await Client.GetEntryAsync("ES_DE55546d93a4a9");
+
+            result.Language.ShouldBe("es");
+            result.Source.ShouldBe("global");
+            result.Headwords.Length.ShouldBe(1);
+            result.Headwords[0].Text.ShouldBe("trepar");
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_EntryLite_ParsesSensesWithAvailableTranslations()
+        {
+            InitializeClient(useLiteEndpoints: true);
+            string response = await LoadResponseFromFile("Entry-lite_ES_DE55546d93a4a9.json");
+
+            HandlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(response));
+
+            var result = await Client.GetEntryAsync("ES_DE55546d93a4a9");
+
+            result.Senses.Length.ShouldBe(3);
+            result.Senses[0].Id.ShouldBe("ES_SEc436bcfd17e2");
+            result.Senses[0].Definition.ShouldBe("subir una altura usando los pies y las manos");
+            result.Senses[0].Synonyms.ShouldContain("escalar");
+            result.Senses[0].Translations.ShouldBeEmpty();
+            result.Senses[0].AvailableTranslations.ShouldContain("en");
+            result.Senses[0].AvailableTranslations.Length.ShouldBe(7);
+        }
+
+        [TestMethod]
         public async Task LexicalaClient_SearchEntries_Basic_IncludesSearchEntriesEndpoint()
         {
             string response = await LoadResponseFromFile("Entry_EN_DE00009032.json");
