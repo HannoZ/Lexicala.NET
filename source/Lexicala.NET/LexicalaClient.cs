@@ -12,7 +12,10 @@ using Lexicala.NET.Response.Entries;
 using Lexicala.NET.Response.Languages;
 using Lexicala.NET.Response.Search;
 using Lexicala.NET.Response.Test;
+using Lexicala.NET.Response.Translation;
+using Lexicala.NET.Internal;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Sense = Lexicala.NET.Response.Entries.Sense;
 
 namespace Lexicala.NET
@@ -23,30 +26,27 @@ namespace Lexicala.NET
         private readonly HttpClient _httpClient;
         private readonly ILogger<LexicalaClient> _logger;
         private readonly bool _useLiteEndpoints;
+        private readonly TranslationEnricher _translationEnricher = new();
 
         private string SearchEntriesEndpoint => _useLiteEndpoints ? Constants.SearchEntriesLite : Constants.SearchEntries;
         private string EntriesEndpoint => _useLiteEndpoints ? Constants.EntriesLite : Constants.Entries;
         private string SensesEndpoint => _useLiteEndpoints ? Constants.SensesLite : Constants.Senses;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="LexicalaClient"/> class.
+        /// Creates a new instance of the <see cref="LexicalaClient"/> class using DI configuration.
         /// </summary>
+        /// <param name="httpClient">The injected HttpClient instance.</param>
+        /// <param name="logger">The injected logger instance.</param>
+        /// <param name="configOptions">The injected configuration options for Lexicala.</param>
         /// <remarks>
-        /// This class should not be instantiated directly, but registered as implementation of the <see cref="ILexicalaClient"/> interface in the dependency injection framework.
+        /// This constructor is intended for use with Microsoft.Extensions.DependencyInjection and IOptions pattern.
         /// </remarks>
-        public LexicalaClient(HttpClient httpClient, ILogger<LexicalaClient> logger)
-            : this(httpClient, logger, new LexicalaConfig())
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="LexicalaClient"/> class with endpoint mode configuration.
-        /// </summary>
-        public LexicalaClient(HttpClient httpClient, ILogger<LexicalaClient> logger, LexicalaConfig config)
+        public LexicalaClient(HttpClient httpClient, ILogger<LexicalaClient> logger, IOptions<LexicalaConfig> configOptions)
         {
             _httpClient = httpClient;
             _logger = logger;
-            _useLiteEndpoints = config?.UseLiteEndpoints ?? false;
+            var config = configOptions?.Value ?? new LexicalaConfig();
+            _useLiteEndpoints = config.UseLiteEndpoints;
         }
 
         /// <inheritdoc />
@@ -146,6 +146,20 @@ namespace Lexicala.NET
         }
 
         /// <inheritdoc />
+        public async Task<Entry> GetEntryWithTranslationsAsync(string entryId, string targetLanguage, string etag = null, CancellationToken cancellationToken = default)
+        {
+            ValidateLanguageCode(targetLanguage, nameof(targetLanguage));
+            var entry = await GetEntryAsync(entryId, etag, cancellationToken);
+            await _translationEnricher.EnrichEntryTranslationsAsync(
+                entry,
+                targetLanguage,
+                TranslateToForEnrichmentAsync,
+                TranslateExampleForEnrichmentAsync,
+                cancellationToken);
+            return entry;
+        }
+
+        /// <inheritdoc />
         public async Task<Sense> GetSenseAsync(string senseId, string etag = null, CancellationToken cancellationToken = default)
         {
             ArgumentException.ThrowIfNullOrEmpty(senseId, nameof(senseId));
@@ -154,6 +168,23 @@ namespace Lexicala.NET
             var responseObject = JsonSerializer.Deserialize<Sense>(content, JsonSerializerDefaults.Options);
             responseObject.Metadata = GetResponseMetadata(response.Headers);
             return responseObject;
+        }
+
+        /// <inheritdoc />
+        public async Task<Sense> GetSenseWithTranslationsAsync(string senseId, string targetLanguage, string etag = null, CancellationToken cancellationToken = default)
+        {
+            ValidateLanguageCode(targetLanguage, nameof(targetLanguage));
+
+            var sense = await GetSenseAsync(senseId, etag, cancellationToken);
+            await _translationEnricher.EnrichSenseTranslationsAsync(
+                sense,
+                sourceText: sense.Definition,
+                sourceLanguage: null,
+                targetLanguage,
+                TranslateToForEnrichmentAsync,
+                TranslateExampleForEnrichmentAsync,
+                cancellationToken);
+            return sense;
         }
 
         /// <inheritdoc />
@@ -167,7 +198,7 @@ namespace Lexicala.NET
             if (!string.IsNullOrEmpty(language))
             {
                 ValidateLanguageCode(language, nameof(language));
-                query += $"&lang={Uri.EscapeDataString(language)}";
+                query += $"&language={Uri.EscapeDataString(language)}";
             }
 
             return ExecuteSearch(query, etag, cancellationToken);
@@ -188,6 +219,42 @@ namespace Lexicala.NET
             }
 
             return ExecuteSearch(query, etag, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<TranslationResponse> TranslateToAsync(string text, string targetLanguage, string language = null, string etag = null, CancellationToken cancellationToken = default)
+        {
+            var query = BuildTranslationQuery(Constants.TranslateTo, text, targetLanguage, language);
+            return ExecuteTranslationQuery(query, etag, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<TranslationResponse> TranslateExampleAsync(string text, string targetLanguage, string language = null, string etag = null, CancellationToken cancellationToken = default)
+        {
+            var query = BuildTranslationQuery(Constants.TranslateExample, text, targetLanguage, language);
+            return ExecuteTranslationQuery(query, etag, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<TranslationResponse> TranslatePhraseAsync(string text, string targetLanguage, string language = null, string etag = null, CancellationToken cancellationToken = default)
+        {
+            var query = BuildTranslationQuery(Constants.TranslatePhrase, text, targetLanguage, language);
+            return ExecuteTranslationQuery(query, etag, cancellationToken);
+        }
+
+        private static string BuildTranslationQuery(string endpoint, string text, string targetLanguage, string language)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(text, nameof(text));
+            ValidateLanguageCode(targetLanguage, nameof(targetLanguage));
+
+            var query = $"{endpoint}?target_language={Uri.EscapeDataString(targetLanguage)}&text={Uri.EscapeDataString(text)}";
+            if (!string.IsNullOrEmpty(language))
+            {
+                ValidateLanguageCode(language, nameof(language));
+                query += $"&language={Uri.EscapeDataString(language)}";
+            }
+
+            return query;
         }
 
         private static string BuildAdvancedSearchQueryString(string endpoint, AdvancedSearchRequest searchRequest)
@@ -316,6 +383,21 @@ namespace Lexicala.NET
             return responseObject;
         }
 
+        private async Task<TranslationResponse> ExecuteTranslationQuery(string querystring, string etag, CancellationToken cancellationToken)
+        {
+            using var response = await ExecuteRequestAsync(HttpMethod.Get, querystring, etag, cancellationToken);
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            var responseObject = JsonSerializer.Deserialize<TranslationResponse>(content, JsonSerializerDefaults.Options) ?? new TranslationResponse();
+            responseObject.Metadata = GetResponseMetadata(response.Headers);
+            return responseObject;
+        }
+
+        private Task<TranslationResponse> TranslateToForEnrichmentAsync(string text, string targetLanguage, string sourceLanguage, CancellationToken cancellationToken)
+            => TranslateToAsync(text, targetLanguage, sourceLanguage, cancellationToken: cancellationToken);
+
+        private Task<TranslationResponse> TranslateExampleForEnrichmentAsync(string text, string targetLanguage, string sourceLanguage, CancellationToken cancellationToken)
+            => TranslateExampleAsync(text, targetLanguage, sourceLanguage, cancellationToken: cancellationToken);
+
         private static SearchResponse DeserializeSearchResponse(string content)
         {
             var responseObject = JsonSerializer.Deserialize<SearchResponse>(content, JsonSerializerDefaults.Options);
@@ -439,7 +521,29 @@ namespace Lexicala.NET
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
             var message = GetErrorMessageFromContent(content) ?? response.ReasonPhrase ?? "An error occurred while calling the Lexicala API.";
 
-            _logger.LogError("API request failed with status {StatusCode}. Error message: {Message}", response.StatusCode, message);
+            if (response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+            {
+                var resetSeconds = -1;
+                if (response.Headers.TryGetValues(ResponseHeaders.HeaderRateLimitReset, out var resetValues))
+                {
+                    int.TryParse(resetValues.FirstOrDefault(), out resetSeconds);
+                }
+
+                if (resetSeconds > 0)
+                {
+                    _logger.LogError(
+                        "API rate limit exceeded (HTTP 429). Quota resets in {ResetSeconds}s. Request failed without retrying because the reset time exceeds the retry threshold.",
+                        resetSeconds);
+                }
+                else
+                {
+                    _logger.LogError("API rate limit exceeded (HTTP 429). No reset time available in response headers.");
+                }
+            }
+            else
+            {
+                _logger.LogError("API request failed with status {StatusCode}. Error message: {Message}", response.StatusCode, message);
+            }
 
             return new LexicalaApiException(message, response.StatusCode, content, GetResponseMetadata(response.Headers));
         }

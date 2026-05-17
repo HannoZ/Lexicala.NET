@@ -1,5 +1,10 @@
 # Change log
+
 ## Lexicala.NET
+
+3.2.0 - Added translation capabilities for lite endpoints, including translation enrichment. Improved response handling consistency across client models.
+
+3.1.0 - Expanded supported Lexicala API surface with additional search and retrieval endpoints (including advanced search variants). Improved parser robustness for broader response shapes.
 
 3.0.0 - Major update: Migrated from Newtonsoft.Json to System.Text.Json for better performance. Replaced console tester app with ASP.NET Core minimal Web API host with full Swagger/OpenAPI support.  Enhanced error handling and logging. Now targets .NET 10.0 and .NET 8.0
 

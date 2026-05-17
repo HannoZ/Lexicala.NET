@@ -7,6 +7,7 @@ using Lexicala.NET.Parsing;
 using Lexicala.NET.Response;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Extensions.Http;
 
@@ -17,61 +18,106 @@ namespace Lexicala.NET
     /// </summary>
     public static class DependencyRegistration
     {
-        /// <summary>
-        /// Registers Lexicala services using configuration from the "Lexicala" section.
-        /// </summary>
         /// <param name="services">The service collection.</param>
-        /// <param name="configuration">The application configuration.</param>
-        /// <returns>The updated service collection.</returns>
-        public static IServiceCollection RegisterLexicala(this IServiceCollection services, IConfiguration configuration)
+        extension(IServiceCollection services)
         {
-            var config = configuration.GetSection("Lexicala").Get<LexicalaConfig>();
-            return RegisterLexicala(services, config);
-        }
-
-        /// <summary>
-        /// Registers Lexicala services using an explicit configuration object.
-        /// </summary>
-        /// <param name="services">The service collection.</param>
-        /// <param name="config">The Lexicala configuration.</param>
-        /// <returns>The updated service collection.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="config"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException">Thrown when <see cref="LexicalaConfig.ApiKey"/> is missing.</exception>
-        public static IServiceCollection RegisterLexicala(this IServiceCollection services, LexicalaConfig config)
-        {
-            if (config == null)
+            /// <summary>
+            /// Registers Lexicala services using configuration from the "Lexicala" section.
+            /// </summary>
+            /// <param name="configuration">The application configuration.</param>
+            /// <returns>The updated service collection.</returns>
+            public IServiceCollection RegisterLexicala(IConfiguration configuration)
             {
-                throw new ArgumentNullException(nameof(config));
+                services.Configure<LexicalaConfig>(configuration.GetSection("Lexicala"));
+                return RegisterLexicala(services);
             }
 
-            if (string.IsNullOrWhiteSpace(config.ApiKey))
+            /// <summary>
+            /// Registers Lexicala services using an explicit configuration object.
+            /// </summary>
+            /// <param name="config">The Lexicala configuration.</param>
+            /// <returns>The updated service collection.</returns>
+            public IServiceCollection RegisterLexicala(LexicalaConfig config)
             {
-                throw new ArgumentException("ApiKey must be provided and cannot be empty", nameof(config.ApiKey));
-            }
-
-            services.AddHttpClient<ILexicalaClient, LexicalaClient>(client =>
+                services.Configure<LexicalaConfig>(o =>
                 {
-                    client.BaseAddress = LexicalaConfig.BaseAddress;
-                    client.DefaultRequestHeaders.Add(LexicalaConfig.RapidApiKeyHeader, config.ApiKey);
-                    client.DefaultRequestHeaders.Add(LexicalaConfig.RapidApiHostHeader, LexicalaConfig.RapidApiHostValue);
-                })
-                .AddPolicyHandler(CreateRetryPolicy());
+                    o.ApiKey = config.ApiKey;
+                    o.UseLiteEndpoints = config.UseLiteEndpoints;
+                });
+                return RegisterLexicala(services);
+            }
 
-            services.AddSingleton(config);
-            services.AddMemoryCache();
-            services.AddSingleton<ILexicalaSearchParser, LexicalaSearchParser>();
+            private IServiceCollection RegisterLexicala()
+            {
+                services.AddHttpClient<ILexicalaClient, LexicalaClient>((provider, client) =>
+                    {
+                        var config = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<LexicalaConfig>>().Value;
+                        client.BaseAddress = LexicalaConfig.BaseAddress;
+                        client.DefaultRequestHeaders.Add(LexicalaConfig.RapidApiKeyHeader, config.ApiKey);
+                        client.DefaultRequestHeaders.Add(LexicalaConfig.RapidApiHostHeader, LexicalaConfig.RapidApiHostValue);
+                    })
+                    .AddPolicyHandler((serviceProvider, _) =>
+                        CreateRetryPolicy(serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger<LexicalaClient>()));
 
-            return services;
+                services.AddMemoryCache();
+                services.AddSingleton<ILexicalaSearchParser, LexicalaSearchParser>();
+
+                return services;
+            }
         }
 
-        private static IAsyncPolicy<HttpResponseMessage> CreateRetryPolicy()
+        /// <summary>
+        /// The maximum delay the retry policy will wait between attempts.
+        /// If the API signals a reset time greater than this threshold, the request fails
+        /// immediately instead of retrying — there is no point waiting longer than this
+        /// because any subsequent attempt would also exceed the remaining quota window.
+        /// </summary>
+        private static readonly TimeSpan MaxRetryDelay = TimeSpan.FromSeconds(60);
+
+        private static IAsyncPolicy<HttpResponseMessage> CreateRetryPolicy(ILogger logger)
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
-                .OrResult(response => response.StatusCode == HttpStatusCode.TooManyRequests)
+                .OrResult(response =>
+                {
+                    if (response.StatusCode != HttpStatusCode.TooManyRequests)
+                    {
+                        return false;
+                    }
+
+                    // Only retry if the rate-limit reset window fits within our max delay.
+                    // If the server says the quota won't reset for longer than MaxRetryDelay,
+                    // retrying would never succeed within that window — fail immediately.
+                    if (response.Headers.TryGetValues(ResponseHeaders.HeaderRateLimitReset, out var resetValues) &&
+                        int.TryParse(resetValues.FirstOrDefault(), out var resetSeconds) &&
+                        resetSeconds > (int)MaxRetryDelay.TotalSeconds)
+                    {
+                        logger.LogWarning(
+                            "Rate limit exceeded (HTTP 429). API quota resets in {ResetSeconds}s which exceeds the retry threshold ({ThresholdSec}s). Not retrying.",
+                            resetSeconds, (int)MaxRetryDelay.TotalSeconds);
+                        return false;
+                    }
+
+                    return true;
+                })
                 .RetryAsync(3, async (outcome, retryAttempt, _) =>
                 {
                     var retryDelay = GetRetryDelay(outcome.Result, retryAttempt);
+
+                    if (outcome.Result?.StatusCode == HttpStatusCode.TooManyRequests)
+                    {
+                        logger.LogWarning(
+                            "Rate limit exceeded (HTTP 429). Waiting {RetryDelaySec}s before retry attempt {RetryAttempt}/3.",
+                            (int)retryDelay.TotalSeconds, retryAttempt);
+                    }
+                    else
+                    {
+                        logger.LogWarning(
+                            outcome.Exception,
+                            "Request failed with status {StatusCode}. Waiting {RetryDelaySec}s before retry attempt {RetryAttempt}/3.",
+                            outcome.Result?.StatusCode, (int)retryDelay.TotalSeconds, retryAttempt);
+                    }
+
                     if (retryDelay > TimeSpan.Zero)
                     {
                         await Task.Delay(retryDelay);
@@ -83,12 +129,12 @@ namespace Lexicala.NET
         {
             if (response != null)
             {
-                if (response.Headers.RetryAfter?.Delta is TimeSpan delta && delta > TimeSpan.Zero)
+                if (response.Headers.RetryAfter?.Delta is { } delta && delta > TimeSpan.Zero)
                 {
                     return delta;
                 }
 
-                if (response.Headers.RetryAfter?.Date is DateTimeOffset date)
+                if (response.Headers.RetryAfter?.Date is { } date)
                 {
                     var retryAfterDateDelay = date - DateTimeOffset.UtcNow;
                     if (retryAfterDateDelay > TimeSpan.Zero)

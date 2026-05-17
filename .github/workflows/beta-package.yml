@@ -22,5 +22,15 @@ jobs:
       run: dotnet test ./source/Lexicala.NET.slnx --no-restore --verbosity normal
     - name: Pack
       run: dotnet pack ./source/Lexicala.NET/Lexicala.NET.csproj --configuration Release --no-build --version-suffix "beta.${{ github.run_number }}" --output ./artifacts
+    - name: Resolve package file
+      id: package
+      shell: pwsh
+      run: |
+        $versionPrefix = dotnet msbuild ./source/Lexicala.NET/Lexicala.NET.csproj -nologo -getProperty:VersionPrefix
+        $versionPrefix = $versionPrefix.Trim()
+        $version = "$versionPrefix-beta.${{ github.run_number }}"
+        "package_file=./artifacts/Lexicala.NET.$version.nupkg" >> $env:GITHUB_OUTPUT
     - name: Publish to NuGet
-      run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push "${{ steps.package.outputs.package_file }}" --api-key "$env:NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
