@@ -1,15 +1,13 @@
-name: Build Test Package
+name: Publish Beta Package
 
 on:
-  push:
-    branches: [ master ]
-    paths-ignore: ['**.md']
+  workflow_dispatch:
 
 jobs:
   build:
 
     runs-on: windows-latest
-    
+
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
@@ -23,6 +21,6 @@ jobs:
     - name: Test
       run: dotnet test ./source/Lexicala.NET.slnx --no-restore --verbosity normal
     - name: Pack
-      run: dotnet pack ./source/Lexicala.NET/Lexicala.NET.csproj --configuration Release --no-build --output ./artifacts
+      run: dotnet pack ./source/Lexicala.NET/Lexicala.NET.csproj --configuration Release --no-build --version-suffix "beta.${{ github.run_number }}" --output ./artifacts
     - name: Publish to NuGet
-      run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json

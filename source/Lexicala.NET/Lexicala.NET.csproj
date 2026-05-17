@@ -17,7 +17,7 @@
 		<PackageReleaseNotes>A .NET client for the Lexicala api. 
 See readme file on project page for further details.</PackageReleaseNotes>
 		<Copyright></Copyright>
-		<Version>3.1.0</Version>
+		<VersionPrefix>3.2.0</VersionPrefix>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 	<ItemGroup>
