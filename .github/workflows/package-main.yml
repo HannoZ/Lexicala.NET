@@ -3,7 +3,7 @@ name: Build Test Package
 on:
   push:
     branches: [ master ]
-    paths-ignore: ['**.md']
+    paths-ignore: ['**.md', '.github/**']
 
 jobs:
   build:
@@ -22,8 +22,7 @@ jobs:
       run: dotnet build ./source/Lexicala.NET.slnx --configuration Release --no-restore
     - name: Test
       run: dotnet test ./source/Lexicala.NET.slnx --no-restore --verbosity normal
-    - name: Publish to Nuget
-      uses: alirezanet/publish-nuget@v3.0.4
-      with: 
-          PROJECT_FILE_PATH: ./source/Lexicala.NET/Lexicala.NET.csproj
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+    - name: Pack
+      run: dotnet pack ./source/Lexicala.NET/Lexicala.NET.csproj --configuration Release --no-build --output ./artifacts
+    - name: Publish to NuGet
+      run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
