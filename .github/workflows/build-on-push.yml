@@ -6,6 +6,10 @@ on:
     # don't run on master because we already have another action for that 
     branches-ignore: [master]
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   build:
 
