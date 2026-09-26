@@ -31,7 +31,7 @@ Key repository information:
 
 Current API surface highlights:
 
-- Supported client endpoints include `/test`, `/languages`, `/search`, `/search-entries`, `/search-rdf`, `/search-definitions`, `/fluky-search`, `/entries`, `/senses`, and advanced search variants.
+- Supported client endpoints include `/test`, `/languages`, `/search`, `/search-entries`, `/search-rdf`, `/search-by-definitions`, `/fluky-search`, `/entries`, `/senses`, and advanced search variants.
 - The `/me` endpoint has been removed and should not be described as supported.
 
 When answering questions about this repository, reference this file for the canonical project layout and repository-level details.

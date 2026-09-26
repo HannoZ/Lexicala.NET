@@ -49,6 +49,15 @@ namespace Lexicala.NET.Response.Entries
         public Dictionary<string, TranslationObject> Translations { get; set; } = [];
 
         /// <summary>
+        /// Gets or sets the list of language codes for which translations are available (lite endpoint).
+        /// </summary>
+        /// <remarks>
+        /// Populated by the lite entry endpoints instead of full <see cref="Translations"/> objects.
+        /// </remarks>
+        [JsonPropertyName("available_translations")]
+        public string[] AvailableTranslations { get; set; } = [];
+
+        /// <summary>
         /// Gets or sets usage examples for this sense.
         /// </summary>
         [JsonPropertyName("examples")] 

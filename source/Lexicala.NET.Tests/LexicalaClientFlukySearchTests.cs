@@ -72,5 +72,54 @@ namespace Lexicala.NET.Client.Tests
             response.Results.Length.ShouldBe(1);
             response.Results[0].Id.ShouldBe("EN_TEST");
         }
+
+        [TestMethod]
+        public async Task LexicalaClient_FlukySearch_RealPayload_ParsesId()
+        {
+            string json = await LoadResponseFromFile("fluky-search.json");
+
+            HandlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(json));
+
+            var response = await Client.FlukySearchAsync(source: Sources.Global, language: "en");
+
+            response.NResults.ShouldBe(1);
+            response.Results.Length.ShouldBe(1);
+            response.Results[0].Id.ShouldBe("EN_DEd1d432e9f98e");
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_FlukySearch_RealPayload_ParsesHeadword()
+        {
+            string json = await LoadResponseFromFile("fluky-search.json");
+
+            HandlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(json));
+
+            var response = await Client.FlukySearchAsync(source: Sources.Global, language: "en");
+
+            var entry = response.Results[0];
+            entry.Language.ShouldBe("en");
+            entry.Headword.Headword.Text.ShouldBe("streak");
+        }
+
+        [TestMethod]
+        public async Task LexicalaClient_FlukySearch_RealPayload_ParsesSenses()
+        {
+            string json = await LoadResponseFromFile("fluky-search.json");
+
+            HandlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(SetupOkResponseMessage(json));
+
+            var response = await Client.FlukySearchAsync(source: Sources.Global, language: "en");
+
+            var entry = response.Results[0];
+            entry.Senses.Length.ShouldBe(2);
+            entry.Senses[0].Id.ShouldBe("EN_SE7dceb9fb5542");
+            entry.Senses[0].Definition.ShouldBe("to move somewhere very quickly");
+        }
     }
 }

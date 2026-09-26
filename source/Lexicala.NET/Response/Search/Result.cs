@@ -8,11 +8,23 @@ namespace Lexicala.NET.Response.Search
         [JsonPropertyName("id")]
         public string Id { get; set; }
 
+        [JsonPropertyName("entry_id")]
+        public string EntryId { get; set; }
+
         [JsonPropertyName("language")]
         public string Language { get; set; }
 
         [JsonPropertyName("headword")]
         public HeadwordObject Headword { get; set; }
+
+        [JsonPropertyName("pos")]
+        public string Pos { get; set; }
+
+        [JsonPropertyName("sense_id")]
+        public string SenseId { get; set; }
+
+        [JsonPropertyName("definition")]
+        public string Definition { get; set; }
 
         [JsonPropertyName("senses")] 
         public Sense[] Senses { get; set; } = [];

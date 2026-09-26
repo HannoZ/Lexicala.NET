@@ -1,0 +1,83 @@
+{
+  "id": "ES_DE55546d93a4a9",
+  "source": "global",
+  "language": "es",
+  "version": 1,
+  "frequency": "75439",
+  "headword": {
+    "text": "trepar",
+    "pronunciation": {
+      "value": "tɾe'paɾ"
+    },
+    "pos": "verb",
+    "valency": "intransitive"
+  },
+  "senses": [
+    {
+      "id": "ES_SEc436bcfd17e2",
+      "definition": "subir una altura usando los pies y las manos",
+      "synonyms": [
+        "escalar"
+      ],
+      "examples": [
+        {
+          "text": "Trepó al tejado para buscar una pelota."
+        },
+        {
+          "text": "Trepan con gran habilidad para recoger los dátiles."
+        }
+      ],
+      "available_translations": [
+        "br",
+        "da",
+        "en",
+        "ja",
+        "nl",
+        "no",
+        "sv"
+      ]
+    },
+    {
+      "id": "ES_SEdbcb0f7d59f8",
+      "definition": "crecer enredándose en un soporte",
+      "semantic_subcategory": "referido a ciertas plantas",
+      "examples": [
+        {
+          "text": "La enredadera trepó por la pared y la cubrió totalmente."
+        },
+        {
+          "text": "La hiedra trepa por el muro."
+        }
+      ],
+      "available_translations": [
+        "br",
+        "da",
+        "en",
+        "ja",
+        "nl",
+        "sv"
+      ]
+    },
+    {
+      "id": "ES_SE632a351f4872",
+      "definition": "subir de jerarquía en un trabajo valiéndose de cualquier medio",
+      "semantic_subcategory": "ascender",
+      "examples": [
+        {
+          "text": "Logró trepar hasta la gerencia a costa de sus compañeros."
+        },
+        {
+          "text": "Hará cualquier cosa con tal de trepar en la empresa."
+        }
+      ],
+      "available_translations": [
+        "br",
+        "da",
+        "en",
+        "ja",
+        "nl",
+        "sv"
+      ]
+    }
+  ]
+}

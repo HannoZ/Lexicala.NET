@@ -150,7 +150,7 @@ namespace Lexicala.NET.Demo.Api
                 .WithSummary("Advanced search in RDF/JSON-LD format")
                 .WithDescription("Search for entries using advanced filter parameters and return results serialised as RDF/JSON-LD.");
 
-            app.MapGet("/search-definitions", async (ILexicalaClient client, string text, string? language, string? etag, CancellationToken cancellationToken) =>
+            app.MapGet("/search-by-definitions", async (ILexicalaClient client, string text, string? language, string? etag, CancellationToken cancellationToken) =>
                 await client.SearchDefinitionsAsync(text, language, etag, cancellationToken))
                 .WithName("SearchDefinitions")
                 .WithTags("Definitions")

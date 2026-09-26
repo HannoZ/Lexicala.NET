@@ -6,6 +6,7 @@ using Lexicala.NET.Demo.Api.Game;
 using Lexicala.NET.Response.Entries;
 using Lexicala.NET.Response.Languages;
 using Lexicala.NET.Response.Search;
+using Lexicala.NET.Response.Translation;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -222,6 +223,71 @@ namespace Lexicala.NET.Client.Tests
         {
             await Should.ThrowAsync<ArgumentException>(() =>
                 _service.SubmitAnswerAsync(Guid.NewGuid(), null!));
+        }
+
+        [TestMethod]
+        public async Task CreateRoundAsync_TranslationFallback_DoesNotUseSourceLanguageText()
+        {
+            _clientMock
+                .Setup(c => c.FlukySearchAsync(It.IsAny<string>(), "en", It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new SearchResponse
+                {
+                    Results = [new Result { Id = "EN0001" }]
+                });
+
+            _clientMock
+                .Setup(c => c.GetEntryAsync("EN0001", null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Entry
+                {
+                    Id = "EN0001",
+                    Language = "en",
+                    HeadwordObject = new Lexicala.NET.Response.Entries.Headword { Text = "Given" },
+                    Senses =
+                    [
+                        new Lexicala.NET.Response.Entries.Sense
+                        {
+                            Definition = "already stated",
+                            Translations = new Dictionary<string, TranslationObject>()
+                        }
+                    ]
+                });
+
+            // translate-to cannot provide a usable value, forcing phrase fallback
+            _clientMock
+                .Setup(c => c.TranslateToAsync("Given", "es", "en", null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new TranslationResponse
+                {
+                    Results = []
+                });
+
+            // phrase response includes source-language text and nested target translation
+            _clientMock
+                .Setup(c => c.TranslatePhraseAsync("Given", "es", "en", null, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new TranslationResponse
+                {
+                    Results =
+                    [
+                        System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(
+                            "{\"lemma\":\"given\",\"language\":\"en\",\"text\":\"given that\",\"target_language\":\"es\",\"translation\":[{\"text\":\"dado que\"}]}"
+                        )
+                    ]
+                });
+
+            var distractorResponses = new Queue<SearchResponse>(
+            [
+                BuildDistractorResponse("casa"),
+                BuildDistractorResponse("perro"),
+                BuildDistractorResponse("árbol")
+            ]);
+
+            _clientMock
+                .Setup(c => c.FlukySearchAsync(It.IsAny<string>(), "es", It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => distractorResponses.Dequeue());
+
+            var round = await _service.CreateRoundAsync("es", CancellationToken.None);
+
+            round.Choices.ShouldContain("dado que");
+            round.Choices.ShouldNotContain("given that");
         }
 
         [TestMethod]

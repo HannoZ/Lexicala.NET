@@ -63,12 +63,27 @@ namespace Lexicala.NET
         /// <summary>
         /// Search definitions endpoint path.
         /// </summary>
-        internal const string SearchDefinitions = "/search-definitions";
+        internal const string SearchDefinitions = "/search-by-definitions";
 
         /// <summary>
         /// Fluky search endpoint path (random word discovery).
         /// </summary>
         internal const string FlukySearch = "/fluky-search";
+
+        /// <summary>
+        /// Translate to endpoint path.
+        /// </summary>
+        internal const string TranslateTo = "/translate-to";
+
+        /// <summary>
+        /// Translate example endpoint path.
+        /// </summary>
+        internal const string TranslateExample = "/translate-example";
+
+        /// <summary>
+        /// Translate phrase endpoint path.
+        /// </summary>
+        internal const string TranslatePhrase = "/translate-phrase";
 
         /// <summary>
         /// Maximum threshold for pagination and sampling parameters to prevent excessive API requests.

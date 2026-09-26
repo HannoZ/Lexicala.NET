@@ -50,9 +50,16 @@ Set `UseLiteEndpoints` to `true` if your subscription only allows Lite entry/sen
 - `/entries-lite/{entryId}` instead of `/entries/{entryId}`
 - `/senses-lite/{senseId}` instead of `/senses/{senseId}`
 
+To restore missing translation details when using lite endpoints, use the translation-enriched methods:
+
+- `GetEntryWithTranslationsAsync(entryId, targetLanguage)`
+- `GetSenseWithTranslationsAsync(senseId, targetLanguage)`
+
+These methods call translation endpoints to enrich missing sense and example translations.
+
 ### 3. Register Services
 
-In your `Program.cs` (for .NET 6+):
+In your `Program.cs`:
 
 ```csharp
 using Lexicala.NET;
@@ -238,7 +245,7 @@ The repository includes an ASP.NET Core minimal Web API demo host with Swagger U
    dotnet run
    ```
 
-3. Open Swagger UI in your browser:
+4. Open Swagger UI in your browser:
    - HTTP: `http://localhost:5000/swagger`
    - HTTPS: `https://localhost:5001/swagger`
 
@@ -252,7 +259,7 @@ Available endpoints:
 - `GET /search-entries` - Basic search with full entries
 - `GET /search-entries-lite` - Basic search with full entries in lite mode (`UseLiteEndpoints=true`)
 - `GET /search-rdf` - Basic search in RDF/JSON-LD format
-- `GET /search-definitions` - Free-text search in definitions
+- `GET /search-by-definitions` - Free-text search in definitions
 - `GET /fluky-search` - Random word discovery
 - `GET /entries/{entryId}` - Get dictionary entry by ID
 - `GET /entries-lite/{entryId}` - Get dictionary entry by ID in lite mode (`UseLiteEndpoints=true`)
@@ -277,6 +284,9 @@ Missing endpoints compared to Rapid Api test console / Lexicala MCP tooling - th
 - `GET /semantic-categories`
 - `GET /subcategorizations`
 - `GET /synonyms`
+
+Implemented in this SDK (not exposed by the demo API host routes):
+
 - `GET /translate-to`
 - `GET /translate-example`
 - `GET /translate-phrase`
@@ -286,7 +296,7 @@ For React frontend development, CORS is enabled for:
 - `http://localhost:3000`
 - `http://localhost:5173`
 
-## Sense Sprint Demo Game
+## Demo Game
 
 A dedicated React + Vite frontend for a word guessing game is available at `source/Demo/sense-sprint-web`.
 
@@ -303,12 +313,14 @@ The web demo currently includes two game modes. `Sense Sprint` is the lower-cost
 3. Install dependencies and start the dev server:
 
    **PowerShell:**
+
    ```powershell
    npm.cmd install
    npm.cmd run dev
    ```
 
    **Bash / Command Prompt:**
+
    ```bash
    npm install
    npm run dev
@@ -355,27 +367,27 @@ The library validates and supports these commonly used API parameter values:
 
 The library implements the following Lexicala API endpoints:
 
-**Utility Endpoints**
+### Utility Endpoints
 
 - `/test` - Test API connectivity
 - `/languages` - Get available languages
 
-**Search Endpoints**
+### Search Endpoints
 
 - `/search` - Basic search
 - `/search-entries` - Search with full entries
 - `/search-entries-lite` - Search with full entries in lite mode (`UseLiteEndpoints=true`)
 - `/search-rdf` - Search in RDF/JSON-LD format
-- `/search-definitions` - Free-text search in definitions
+- `/search-by-definitions` - Free-text search in definitions
 - `/fluky-search` - Random word discovery
 
-**Advanced Search Endpoints**
+### Advanced Search Endpoints
 
 - `/search-advanced` - Advanced search with custom parameters
 - `/search-entries-advanced` - Advanced search with full entries
 - `/search-rdf-advanced` - Advanced search in RDF/JSON-LD format
 
-**Entry and Sense Endpoints**
+### Entry and Sense Endpoints
 
 - `/entries` - Get entry details by ID
 - `/entries-lite` - Get entry details by ID in lite mode (`UseLiteEndpoints=true`)
@@ -383,7 +395,56 @@ The library implements the following Lexicala API endpoints:
 - `/senses-lite` - Get sense details by ID in lite mode (`UseLiteEndpoints=true`)
 - `/rdf` - Get entry in RDF/JSON-LD format
 
+### Translation Endpoints
+
+- `/translate-to` - Translate a lexical unit into a target language
+- `/translate-example` - Translate an example sentence into a target language
+- `/translate-phrase` - Translate a phrase into a target language
+
+### Lite Translation Enrichment
+
+- `GetEntryWithTranslationsAsync` - Retrieves an entry (including lite mode) and enriches missing sense/example translations using translation endpoints
+- `GetSenseWithTranslationsAsync` - Retrieves a sense (including lite mode) and enriches missing sense/example translations using translation endpoints
+
 For complete API documentation, visit the [Lexicala API Documentation](https://api.lexicala.com/documentation).
+
+## Rate Limiting
+
+The Lexicala API enforces a daily request quota. When the quota is exhausted the API returns **HTTP 429 Too Many Requests** and includes an `X-RateLimit-requests-Reset` header indicating how many seconds remain until the quota resets.
+
+### Retry behaviour
+
+The client uses a Polly-based retry policy with the following rules:
+
+| Condition | Behaviour |
+|-----------|-----------|
+| Transient errors (5xx, network) | Retry up to 3 times with exponential back-off (max 8 s per wait) |
+| HTTP 429 — reset ≤ 60 s | Retry up to 3 times, waiting the server-indicated number of seconds between attempts |
+| HTTP 429 — reset > 60 s | **Fail immediately** — no retry; a `LexicalaApiException` with `StatusCode = 429` is thrown |
+
+The 60-second threshold prevents the application from stalling when the quota won't reset for minutes or hours. In that scenario every retry attempt would also receive a 429, so the library surfaces the failure straight away instead of blocking.
+
+### Logging
+
+When a request fails due to rate limiting, structured log messages are emitted:
+
+- **Warning** (before each retry): `Rate limit exceeded (HTTP 429). Waiting {n}s before retry attempt {x}/3.`
+- **Warning** (skip-retry path): `Rate limit exceeded (HTTP 429). API quota resets in {n}s which exceeds the retry threshold (60s). Not retrying.`
+- **Error** (after final failure): `API rate limit exceeded (HTTP 429). Quota resets in {n}s. Request failed without retrying because the reset time exceeds the retry threshold.`
+
+### Handling the exception
+
+```csharp
+try
+{
+    var result = await client.BasicSearchAsync("hello", "en");
+}
+catch (LexicalaApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+{
+    var secondsUntilReset = ex.Metadata?.RateLimits?.Reset;
+    Console.WriteLine($"Daily quota exceeded. Quota resets in {secondsUntilReset}s.");
+}
+```
 
 ## Contributing
 

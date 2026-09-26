@@ -16,6 +16,8 @@ namespace Lexicala.NET.Response.Search
                 case JsonTokenType.StartArray:
                     var arrayValue = JsonSerializer.Deserialize<Headword[]>(ref reader, options);
                     return new HeadwordObject { HeadwordElementArray = arrayValue };
+                case JsonTokenType.String:
+                    return new HeadwordObject { Headword = new Headword { Text = reader.GetString() } };
             }
 
             throw new JsonException("Cannot unmarshal type HeadwordObject");

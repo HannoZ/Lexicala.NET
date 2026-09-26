@@ -6,13 +6,17 @@ on:
     # don't run on master because we already have another action for that 
     branches-ignore: [master]
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   build:
 
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:

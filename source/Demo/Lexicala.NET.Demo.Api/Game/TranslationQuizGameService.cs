@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Lexicala.NET.Request;
 using Lexicala.NET.Response.Entries;
 using Lexicala.NET.Response.Search;
+using Lexicala.NET.Response.Translation;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
@@ -232,6 +233,7 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
 
         // Find a translation in the target language from any sense
         var correctTranslation = FindTranslation(entry, targetLanguage);
+        correctTranslation ??= await FindTranslationViaPhraseEndpointAsync(sourceWord, targetLanguage, cancellationToken);
         if (string.IsNullOrWhiteSpace(correctTranslation))
         {
             return null;
@@ -337,7 +339,7 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
 
     private static string GetDistractorPoolCacheKey(string targetLanguage) => $"{DistractorPoolCacheKeyPrefix}{targetLanguage}";
 
-    private static string? FindTranslation(Lexicala.NET.Response.Entries.Entry entry, string targetLanguage)
+    private static string? FindTranslation(Entry entry, string targetLanguage)
     {
         foreach (var sense in entry.Senses)
         {
@@ -356,7 +358,7 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
         return null;
     }
 
-    private static string? GetFirstHeadword(Lexicala.NET.Response.Search.Result? result)
+    private static string? GetFirstHeadword(Result? result)
     {
         if (result is null)
         {
@@ -367,6 +369,116 @@ public sealed class TranslationQuizGameService : ITranslationQuizGameService
         return hw.HeadwordElementArray is { Length: > 0 }
             ? hw.HeadwordElementArray[0].Text
             : hw.Headword?.Text;
+    }
+
+    private async Task<string?> FindTranslationViaPhraseEndpointAsync(string sourceText, string targetLanguage, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var translated = await _lexicalaClient.TranslateToAsync(sourceText, targetLanguage, "en", cancellationToken: cancellationToken);
+            var best = TryExtractBestTranslation(translated, sourceText, targetLanguage);
+            if (!string.IsNullOrWhiteSpace(best))
+            {
+                return best;
+            }
+
+            translated = await _lexicalaClient.TranslatePhraseAsync(sourceText, targetLanguage, "en", cancellationToken: cancellationToken);
+            return TryExtractBestTranslation(translated, sourceText, targetLanguage);
+        }
+        catch (LexicalaApiException ex)
+        {
+            _logger.LogDebug(ex, "Translation fallback failed for source '{SourceText}' to '{TargetLanguage}'", sourceText, targetLanguage);
+            return null;
+        }
+    }
+
+    private static string? TryExtractBestTranslation(TranslationResponse response, string sourceText, string targetLanguage)
+    {
+        foreach (var result in response.Results)
+        {
+            var candidate = TryExtractText(result, sourceText, targetLanguage, "en");
+            if (!string.IsNullOrWhiteSpace(candidate))
+            {
+                return candidate;
+            }
+        }
+
+        return null;
+    }
+
+    private static string? TryExtractText(System.Text.Json.JsonElement element, string sourceText, string targetLanguage, string sourceLanguage)
+    {
+        if (element.ValueKind == System.Text.Json.JsonValueKind.Object)
+        {
+            if (element.TryGetProperty("translations", out var translationsElement) &&
+                translationsElement.ValueKind == System.Text.Json.JsonValueKind.Object &&
+                translationsElement.TryGetProperty(targetLanguage, out var targetTranslations))
+            {
+                var fromTranslations = TryExtractText(targetTranslations, sourceText, targetLanguage, sourceLanguage);
+                if (!string.IsNullOrWhiteSpace(fromTranslations))
+                {
+                    return fromTranslations;
+                }
+            }
+
+            if (element.TryGetProperty("translation", out var translationElement))
+            {
+                var fromTranslation = TryExtractText(translationElement, sourceText, targetLanguage, sourceLanguage);
+                if (!string.IsNullOrWhiteSpace(fromTranslation))
+                {
+                    return fromTranslation;
+                }
+            }
+
+            if (element.TryGetProperty("text", out var textElement) &&
+                textElement.ValueKind == System.Text.Json.JsonValueKind.String)
+            {
+                var text = textElement.GetString();
+                var language = element.TryGetProperty("language", out var languageElement) && languageElement.ValueKind == System.Text.Json.JsonValueKind.String
+                    ? languageElement.GetString()
+                    : null;
+
+                var isSourceLanguageText = !string.IsNullOrWhiteSpace(language) && string.Equals(language, sourceLanguage, StringComparison.OrdinalIgnoreCase);
+
+                if (!string.IsNullOrWhiteSpace(text)
+                    && !string.Equals(text, sourceText, StringComparison.OrdinalIgnoreCase)
+                    && !isSourceLanguageText)
+                {
+                    return text;
+                }
+            }
+
+            foreach (var property in element.EnumerateObject())
+            {
+                var nested = TryExtractText(property.Value, sourceText, targetLanguage, sourceLanguage);
+                if (!string.IsNullOrWhiteSpace(nested))
+                {
+                    return nested;
+                }
+            }
+        }
+        else if (element.ValueKind == System.Text.Json.JsonValueKind.Array)
+        {
+            foreach (var item in element.EnumerateArray())
+            {
+                var nested = TryExtractText(item, sourceText, targetLanguage, sourceLanguage);
+                if (!string.IsNullOrWhiteSpace(nested))
+                {
+                    return nested;
+                }
+            }
+        }
+
+        if (element.ValueKind == System.Text.Json.JsonValueKind.String)
+        {
+            var text = element.GetString();
+            if (!string.IsNullOrWhiteSpace(text) && !string.Equals(text, sourceText, StringComparison.OrdinalIgnoreCase))
+            {
+                return text;
+            }
+        }
+
+        return null;
     }
 
     private TranslationQuizRoundState GetRequiredRound(Guid roundId)

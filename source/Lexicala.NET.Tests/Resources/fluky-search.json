@@ -1,0 +1,213 @@
+{
+  "id": "EN_DEd1d432e9f98e",
+  "source": "global",
+  "language": "en",
+  "filename": "mlds-EN-1086.xml",
+  "entry_id": "EN00010162",
+  "version": 1,
+  "frequency": "48008",
+  "headword": {
+    "text": "streak",
+    "pronunciation": {
+      "value": "strik"
+    },
+    "pos": "verb",
+    "homograph_number": 2,
+    "valency": "intransitive",
+    "additional_inflections": [
+      "streaked",
+      "streaked",
+      "streaking",
+      "streaks"
+    ]
+  },
+  "senses": [
+    {
+      "id": "EN_SE7dceb9fb5542",
+      "definition": "to move somewhere very quickly",
+      "translations": {
+        "id": "TC00046665",
+        "br": {
+          "text": "mover-se rapidamente"
+        },
+        "ca": {
+          "text": "anar molt ràpid",
+          "gender": "masculine",
+          "inflections": [
+            {
+              "text": "anar molt ràpida",
+              "gender": "feminine"
+            }
+          ]
+        },
+        "da": {
+          "text": "stryge"
+        },
+        "es": [
+          {
+            "text": "ir rápidamente"
+          },
+          {
+            "text": "entrar/salir/pasar como un rayo"
+          }
+        ],
+        "fr": {
+          "text": "passer comme une flèche"
+        },
+        "ja": {
+          "text": "疾走（しっそう）する",
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "shissoo suru"
+            }
+          ]
+        },
+        "no": {
+          "text": "suse"
+        },
+        "pl": {
+          "text": "poszybować"
+        },
+        "sv": {
+          "text": "stryka (över)"
+        },
+        "vl": {
+          "text": "anar molt ràpid",
+          "gender": "masculine",
+          "inflections": [
+            {
+              "text": "anar molt ràpida",
+              "gender": "feminine"
+            }
+          ]
+        }
+      },
+      "examples": [
+        {
+          "text": "A military jet streaked across the sky.",
+          "translations": {
+            "id": "TC00046666",
+            "br": {
+              "text": "Um jato militar cruzou o céu rapidamente."
+            },
+            "da": {
+              "text": "Et militærfly strøg hen over himlen."
+            },
+            "es": {
+              "text": "Un avión militar cruzó el cielo como un rayo."
+            },
+            "fr": {
+              "text": "Un avion à réaction militaire traversa le ciel comme une flèche."
+            },
+            "ja": {
+              "text": "軍用機が空を横切った。",
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Gun=yooki ga sora o yokogitta."
+                }
+              ]
+            },
+            "no": {
+              "text": "Et militært jagerfly suste over himmelen."
+            },
+            "pl": {
+              "text": "Wojskowy odrzutowiec poszybował po niebie."
+            },
+            "sv": {
+              "text": "Ett jetplan från militären strök över himlen."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "EN_SE2410a3fa1b0c",
+      "definition": "to make streaks on something",
+      "translations": {
+        "id": "TC00046667",
+        "br": {
+          "text": "riscar"
+        },
+        "ca": {
+          "text": "solcar"
+        },
+        "da": [
+          {
+            "text": "plette"
+          },
+          {
+            "text": "lave striber"
+          }
+        ],
+        "es": {
+          "text": "golpear"
+        },
+        "fr": {
+          "text": "strier"
+        },
+        "ja": {
+          "text": "縞（しま）にする",
+          "alternative_scripts": [
+            {
+              "type": "romaji",
+              "text": "shima ni suru"
+            }
+          ]
+        },
+        "no": {
+          "text": "lage striper"
+        },
+        "pl": {
+          "text": "spływać"
+        },
+        "sv": {
+          "text": "göra rännilar"
+        },
+        "vl": {
+          "text": "solcar"
+        }
+      },
+      "examples": [
+        {
+          "text": "Rain streaked the windows.",
+          "translations": {
+            "id": "TC00046668",
+            "br": {
+              "text": "A chuva riscava as janelas."
+            },
+            "da": {
+              "text": "Regnen lavede striber på ruderne."
+            },
+            "es": {
+              "text": "La lluvia golpeaba las ventanas."
+            },
+            "fr": {
+              "text": "La pluie stria les fenêtres."
+            },
+            "ja": {
+              "text": "雨が窓に当たり流れた。",
+              "alternative_scripts": [
+                {
+                  "type": "romaji",
+                  "text": "Ame ga mado ni atari nagareta."
+                }
+              ]
+            },
+            "no": {
+              "text": "Regnet lagde striper på vinduene."
+            },
+            "pl": {
+              "text": "Deszcz spływał po oknach."
+            },
+            "sv": {
+              "text": "Regnet gjorde rännilar på fönstren."
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "senses_len": 2
+}
